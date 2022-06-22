@@ -1,4 +1,4 @@
-package model.events;
+package de.lmu.ifi.sosylab.model.events;
 
 public abstract class GameEvent {
   /**

@@ -1,7 +1,9 @@
+package de.lmu.ifi.sosylab;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import model.AzulModel;
-import model.ColorTile;
+import de.lmu.ifi.sosylab.model.AzulModel;
+import de.lmu.ifi.sosylab.model.ColorTile;
 
 public class AzulMain {
 

@@ -1,4 +1,4 @@
-package model;
+package de.lmu.ifi.sosylab.model;
 
 public class ColorTile extends Tile{
   private final Color color;

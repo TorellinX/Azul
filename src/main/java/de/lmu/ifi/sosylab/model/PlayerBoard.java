@@ -1,4 +1,4 @@
-package model;
+package de.lmu.ifi.sosylab.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;

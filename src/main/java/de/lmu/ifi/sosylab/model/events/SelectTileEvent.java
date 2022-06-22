@@ -1,6 +1,6 @@
-package model.events;
+package de.lmu.ifi.sosylab.model.events;
 
-import model.Color;
+import de.lmu.ifi.sosylab.model.Color;
 
 public class SelectTileEvent extends GameEvent{
 

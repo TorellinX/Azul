@@ -1,8 +1,7 @@
-package model;
+package de.lmu.ifi.sosylab.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 
 public class Table {

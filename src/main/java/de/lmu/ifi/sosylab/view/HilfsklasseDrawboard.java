@@ -5,11 +5,15 @@ import java.awt.*;
 import java.io.Serial;
 
 
-public class AzulPlayingView extends JFrame{
+public class HilfsklasseDrawboard extends JFrame{
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public AzulPlayingView(){
+    private final DrawboardPlayerBoard drawboardplayerboard;
+
+
+    public HilfsklasseDrawboard(){
+        drawboardplayerboard = new DrawboardPlayerBoard();
     }
 
 
@@ -24,15 +28,10 @@ public class AzulPlayingView extends JFrame{
 
 
 
-        GraphicPlayerBoard graphicPlayerBoardLeft1 = new GraphicPlayerBoard();
-        GraphicPlayerBoard graphicPlayerBoardLeft2 = new GraphicPlayerBoard();
-        GraphicPlayerBoard graphicPlayerBoardRight1 = new GraphicPlayerBoard();
-        GraphicPlayerBoard graphicPlayerBoardRight2 = new GraphicPlayerBoard();
         GraphicTwoFactories twoFactories1 = new GraphicTwoFactories();
         GraphicTwoFactories twoFactories2 = new GraphicTwoFactories();
         GraphicTwoFactories twoFactories3 = new GraphicTwoFactories();
         GraphicThreeFactories threeFactories = new GraphicThreeFactories();
-
 
         //Oberes Panel wird mit Combobox gefüllt.
         JPanel panelUp = new JPanel();
@@ -46,8 +45,7 @@ public class AzulPlayingView extends JFrame{
         JPanel panelLeft = new JPanel();
         BoxLayout boxlayoutleft = new BoxLayout(panelLeft, BoxLayout.Y_AXIS);
         panelLeft.setLayout(boxlayoutleft);
-        panelLeft.add(graphicPlayerBoardLeft1.playerBoardPanel);
-        panelLeft.add(graphicPlayerBoardLeft2.playerBoardPanel);
+        panelLeft.add(drawboardplayerboard);
         panelLeft.setBackground(backroundColor);
 
         //Rechtes Panel wird erstellt und mit Spielfeld gefüllt.

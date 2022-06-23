@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+/**
+ * Demo class containing some test methods for class MyObject.
+ */
 @TestInstance(Lifecycle.PER_CLASS)
 public class MyObjectTest {
 

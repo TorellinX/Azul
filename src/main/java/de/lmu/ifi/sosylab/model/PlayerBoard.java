@@ -50,6 +50,13 @@ public class PlayerBoard {
     wall[row][column] = true;
   }
 
+  private boolean isTileFree(Color color, int row) {
+    //TODO: add validation
+    // TODO: tests
+    int column = (row + color.ordinal()) % WALL_SIZE;
+    return wall[row][column];
+  }
+
   public String getNickname() {
     String nicknameCopy = new StringBuffer(nickname).toString();
     return nicknameCopy;

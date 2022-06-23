@@ -3,6 +3,8 @@ package de.lmu.ifi.sosylab.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 
 public class Table {
 
@@ -12,13 +14,15 @@ public class Table {
   public static final int TILES_PER_COLOR = 20;
   public static final int TILES_PER_PLATE = 4;
 
-  private ArrayList<Tile>[] plates;
+  private ArrayList<ArrayList<Tile>> plates;
   ArrayList<Tile> tableCenter;
   ArrayList<ColorTile> bag;
   HashSet<ColorTile> box;
   PlayerBoard[] playerBoards;
 
   ArrayList<ColorTile> selectedTiles = new ArrayList<>();
+
+  Random random = new Random();
 
 
 
@@ -55,7 +59,9 @@ public class Table {
   }
 
 
-  private ArrayList<Tile>[] createPlates(int size) {
+  private ArrayList<ArrayList<Tile>> createPlates(int size) {
+    // TODO: validation
+    // TODO: tests
     int numberOfPlates;
     switch(size){
       case 2:
@@ -70,28 +76,34 @@ public class Table {
       default:
         throw new IllegalArgumentException("Wrong number of players.");
     }
-    return (ArrayList<Tile>[]) new ArrayList[numberOfPlates];
+    ArrayList<ArrayList<Tile>> platesList = new ArrayList<>();
+    for(int i = 0; i < numberOfPlates; i++ ){
+      platesList.add(new ArrayList<>());
+    }
+    return platesList;
   }
 
-  private void fillPlatesWithTilesFromBag(ArrayList<Tile>[] plates) {
+  private void fillPlatesWithTilesFromBag(ArrayList<ArrayList<Tile>> plates) {
     // TODO: validation (if the bag has not enough tiles, ect.)
-    for(int i = 0; i < plates.length; i++ ){
-      plates[i] = new ArrayList<>();
+    // TODO: tests
+    for(int i = 0; i < plates.size(); i++ ){
       for (int j = 0; j < TILES_PER_PLATE; j++){
-        plates[i].add(pickRandomTile(bag));
+        plates.get(i).add(pickRandomTile(bag));
       }
     }
   }
 
   private Tile pickRandomTile(ArrayList<ColorTile> tiles){
     // TODO: validation (if the bag is empty, ect.)
+    // TODO: tests
     int size = tiles.size();
-    int randomIndex = (int) (Math.random() * size);
+    int randomIndex = random.nextInt(size);
     return tiles.remove(randomIndex);
   }
 
   public ArrayList<ColorTile> pickSameColorTiles(ArrayList<Tile> tiles, Color color){
     // TODO add validation
+    // TODO: tests
     ArrayList<ColorTile> sameColorTiles = new ArrayList<>();
     for(Tile tile : tiles) {
       if(tile instanceof PenaltyTile) {
@@ -105,7 +117,7 @@ public class Table {
   }
 
   //temp test
-  public ArrayList<Tile>[] getPlates(){ // Tile[][] ?
+  public ArrayList<ArrayList<Tile>> getPlates(){ // Tile[][] ?
     // TODO: return copy of plates
     return plates;
   }
@@ -113,11 +125,8 @@ public class Table {
   private void moveFullPatternLineToBox(int row, PlayerBoard playerBoard) {
     // TODO: validation
     // TODO: tests
-    ColorTile[] fullPatternLine = playerBoard.patternLines[row];
-    ArrayList<ColorTile> tilesList = (ArrayList<ColorTile>) Arrays.asList(fullPatternLine);
-    tilesList.remove(0); // One Tile remains in the wall
-    box.addAll(tilesList);
-    Arrays.fill(fullPatternLine, null);
+    box.addAll(List.of(playerBoard.patternLines[row]));
+    Arrays.fill(playerBoard.patternLines[row], null);
   }
 
   /**

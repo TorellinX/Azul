@@ -29,6 +29,7 @@ public class Table {
     box = new HashSet<>();
     playerBoards = createPlayerBoards(players);
     plates = createPlates(players.size());
+    fillPlatesWithTilesFromBag(plates);
   }
 
 
@@ -45,6 +46,7 @@ public class Table {
   }
 
   private PlayerBoard[] createPlayerBoards(ArrayList<String> players) {
+    // TODO: tests
     PlayerBoard[] playerBoards = new PlayerBoard[players.size()];
     for (int i = 0; i < players.size(); i++) {
       playerBoards[i] = new PlayerBoard(players.get(i), this);
@@ -69,6 +71,10 @@ public class Table {
         throw new IllegalArgumentException("Wrong number of players.");
     }
     ArrayList<Tile>[] plates = new ArrayList[numberOfPlates]; // << !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    return plates;
+  }
+
+  private void fillPlatesWithTilesFromBag(ArrayList<Tile>[] plates) {
     // TODO: validation (if the bag has not enough tiles, ect.)
     for(int i = 0; i < plates.length; i++ ){
       plates[i] = new ArrayList<>();
@@ -76,7 +82,6 @@ public class Table {
         plates[i].add(pickRandomTile(bag));
       }
     }
-    return plates;
   }
 
   private Tile pickRandomTile(ArrayList<ColorTile> tiles){

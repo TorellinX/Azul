@@ -70,8 +70,7 @@ public class Table {
       default:
         throw new IllegalArgumentException("Wrong number of players.");
     }
-    ArrayList<Tile>[] plates = new ArrayList[numberOfPlates]; // << !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    return plates;
+    return (ArrayList<Tile>[]) new ArrayList[numberOfPlates];
   }
 
   private void fillPlatesWithTilesFromBag(ArrayList<Tile>[] plates) {

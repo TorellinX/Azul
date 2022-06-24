@@ -23,8 +23,8 @@ public class AzulMain {
     AzulModel model = new AzulModel(testPlayers);
     System.out.println(model.getPlayers());
     System.out.println(model.getState());
-    System.out.println(ring(model.getTable().getPlates()));
-    System.out.println(model.getTable().pickSameColorTiles(model.getTable().getPlates()[0],((ColorTile) model.getTable().getPlates()[0].get(0)).getColor()));
-    */
+    System.out.println((model.getTable().getPlates()));
+    System.out.println(model.getTable().pickSameColorTiles(model.getTable().getPlates().get(0),((ColorTile) model.getTable().getPlates().get(0).get(0)).getColor()));
+
   }
 }

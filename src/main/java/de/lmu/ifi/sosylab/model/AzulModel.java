@@ -20,7 +20,8 @@ public class AzulModel {
   }
 
   public ArrayList<String> getPlayers() {
-    return (ArrayList<String>) players.clone();
+    // TODO: return copy of players
+    return players;
   }
 
   public State getState() {

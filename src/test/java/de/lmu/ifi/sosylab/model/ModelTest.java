@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-// import de.lmu.ifi.sosylab.model.AzulModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,29 +33,31 @@ public class ModelTest {
     }
   }
 
-  /* // model classes are required
-  AzulModel newModel(ArrayList<String> testPlayers) {return new AzulModel(testPlayers);}
+  AzulModel newModel(ArrayList<String> testPlayers) {
+    return new AzulModel(testPlayers);
+  }
 
   @Test
-  public void modelPlayers() {
+  public void getPlayers_whenPlayersExist() {
     AzulModel model = newModel(testPlayers);
     assertIterableEquals(model.getPlayers(), testPlayers);
   }
 
   @Test
-  public void shiftFirstPlayer_whenActivePlayerIs0(){
+  public void shiftActivePlayer_whenActivePlayerIs0() {
     AzulModel model = newModel(testPlayers);
     model.setActivePlayer(0);
-    model.s
-    assertTrue();
+    model.shiftActivePlayer();
+    assertEquals(model.getActivePlayer(), 1);
   }
 
   @Test
-  public void shiftFirstPlayer_whenActivePlayerIsMax(){
+  public void shiftActivePlayer_whenActivePlayerIsMax() {
     AzulModel model = newModel(testPlayers);
-    model.setActivePlayer(testPlayers.size());
+    model.setActivePlayer(testPlayers.size() - 1);
+    model.shiftActivePlayer();
+    assertEquals(model.getActivePlayer(), 0);
   }
 
-   */
 
 }

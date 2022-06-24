@@ -7,15 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 /**
  * Tests for the implementation of the model.
@@ -23,12 +16,12 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 public class ModelTest {
 
   private static ArrayList<String> testPlayers;
-  private static final int numberOfPlayers = 4;
+  private static final int NUMBER_OF_PLAYERS = 4;
 
   @BeforeAll
   static void setUp() {
     testPlayers = new ArrayList<>();
-    for (int i = 0; i < numberOfPlayers; i++) {
+    for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
       testPlayers.add("Player" + i);
     }
   }

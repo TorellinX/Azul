@@ -25,8 +25,7 @@ public class Table {
   Random random = new Random();
 
 
-
-  public Table(ArrayList<String> players){
+  public Table(ArrayList<String> players) {
     tableCenter = new ArrayList<>();
     tableCenter.add(new PenaltyTile());
     bag = createBag();
@@ -63,7 +62,7 @@ public class Table {
     // TODO: validation
     // TODO: tests
     int numberOfPlates;
-    switch(size){
+    switch (size) {
       case 2:
         numberOfPlates = PLATES_2_PLAYERS;
         break;
@@ -77,7 +76,7 @@ public class Table {
         throw new IllegalArgumentException("Wrong number of players.");
     }
     ArrayList<ArrayList<Tile>> platesList = new ArrayList<>();
-    for(int i = 0; i < numberOfPlates; i++ ){
+    for (int i = 0; i < numberOfPlates; i++) {
       platesList.add(new ArrayList<>());
     }
     return platesList;
@@ -86,14 +85,14 @@ public class Table {
   private void fillPlatesWithTilesFromBag(ArrayList<ArrayList<Tile>> plates) {
     // TODO: validation (if the bag has not enough tiles, ect.)
     // TODO: tests
-    for(int i = 0; i < plates.size(); i++ ){
-      for (int j = 0; j < TILES_PER_PLATE; j++){
+    for (int i = 0; i < plates.size(); i++) {
+      for (int j = 0; j < TILES_PER_PLATE; j++) {
         plates.get(i).add(pickRandomTile(bag));
       }
     }
   }
 
-  private Tile pickRandomTile(ArrayList<ColorTile> tiles){
+  private Tile pickRandomTile(ArrayList<ColorTile> tiles) {
     // TODO: validation (if the bag is empty, ect.)
     // TODO: tests
     int size = tiles.size();
@@ -101,15 +100,15 @@ public class Table {
     return tiles.remove(randomIndex);
   }
 
-  public ArrayList<ColorTile> pickSameColorTiles(ArrayList<Tile> tiles, Color color){
+  public ArrayList<ColorTile> pickSameColorTiles(ArrayList<Tile> tiles, Color color) {
     // TODO add validation
     // TODO: tests
     ArrayList<ColorTile> sameColorTiles = new ArrayList<>();
-    for(Tile tile : tiles) {
-      if(tile instanceof PenaltyTile) {
+    for (Tile tile : tiles) {
+      if (tile instanceof PenaltyTile) {
         continue;
       }
-      if(((ColorTile) tile).getColor() == color ) {
+      if (((ColorTile) tile).getColor() == color) {
         sameColorTiles.add((ColorTile) tile);
       }
     }
@@ -117,7 +116,7 @@ public class Table {
   }
 
   //temp test
-  public ArrayList<ArrayList<Tile>> getPlates(){ // Tile[][] ?
+  public ArrayList<ArrayList<Tile>> getPlates() { // Tile[][] ?
     // TODO: return copy of plates
     return plates;
   }
@@ -132,13 +131,13 @@ public class Table {
   /**
    * Moves color tiles from floor line to box and penalty tile to the table center.
    *
-   * @param playerBoard
+   * @param playerBoard the spicified player board
    */
-  private void moveFloorLineToBox(PlayerBoard playerBoard){
+  private void moveFloorLineToBox(PlayerBoard playerBoard) {
     // TODO: validation
     // TODO: tests
     for (Tile tile : playerBoard.floorLine) {
-      if(tile instanceof PenaltyTile) {
+      if (tile instanceof PenaltyTile) {
         tableCenter.add(tile);
         continue;
       }

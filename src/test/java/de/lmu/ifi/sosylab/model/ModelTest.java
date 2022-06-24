@@ -59,20 +59,5 @@ public class ModelTest {
     assertEquals(model.getActivePlayer(), 0);
   }
 
-  @Test
-  public void shiftFirstPlayer_whenFirstPlayerIsRandom() {
-    AzulModel model = newModel(testPlayers);
-    int firstPlayerBefore = model.getFirstPlayer();
-    model.shiftFirstPlayer();
-    if (firstPlayerBefore < model.getPlayers().size() - 1) {
-      assertEquals(model.getFirstPlayer(), firstPlayerBefore + 1);
-    } else if (firstPlayerBefore == model.getPlayers().size() - 1) {
-      assertEquals(model.getFirstPlayer(), 0);
-    } else {
-      fail("First player index must be less than the number of players");
-    }
-
-  }
-
 
 }

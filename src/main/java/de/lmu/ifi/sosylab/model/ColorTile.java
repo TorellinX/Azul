@@ -1,9 +1,13 @@
 package de.lmu.ifi.sosylab.model;
 
-public class ColorTile extends Tile{
+/**
+ * Tiles with a color.
+ */
+public class ColorTile extends Tile {
+
   private final Color color;
 
-  public ColorTile(Color color){
+  public ColorTile(Color color) {
     this.color = color;
   }
 
@@ -12,7 +16,7 @@ public class ColorTile extends Tile{
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return color.toString();
   }
 }

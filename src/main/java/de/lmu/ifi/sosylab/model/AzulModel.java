@@ -6,6 +6,11 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Random;
 
+// TODO: refine JavaDoc
+
+/**
+ * Manages the logic of the Azul Game.
+ */
 public class AzulModel {
 
   private ArrayList<String> players;
@@ -20,6 +25,11 @@ public class AzulModel {
 
   Random random = new Random();
 
+  /**
+   * Constructs a new game with the specified list of players.
+   *
+   * @param players list of players
+   */
   public AzulModel(ArrayList<String> players) {
     support = new PropertyChangeSupport(this);
     this.table = new Table(players);
@@ -50,13 +60,6 @@ public class AzulModel {
    */
   void shiftActivePlayer() {
     activePlayer = (activePlayer + 1) % (players.size());
-  }
-
-  /**
-   * Shifts the index of the first player to the next player for the next round.
-   */
-  void shiftFirstPlayer() {
-    firstPlayer = (firstPlayer + 1) % (players.size());
   }
 
   /**
@@ -92,7 +95,7 @@ public class AzulModel {
   /**
    * Sets the index of the active player to the first player index value.
    */
-  public void setActivePayerToFirstPlayer() {
+  public void setActivePlayerToFirstPlayer() {
     setActivePlayer(firstPlayer);
   }
 
@@ -104,6 +107,25 @@ public class AzulModel {
   public int getFirstPlayer() {
     int firstPlayerCopy = firstPlayer;
     return firstPlayerCopy;
+  }
+
+  /**
+   * Sets the first player index to the specified value.
+   *
+   * @param firstPlayer new value of the first player index.
+   * @throws IllegalArgumentException if the specified index is greater or equal than the number of
+   *                                  players  or negative
+   */
+  void setFirstPlayer(int firstPlayer) {
+    if (firstPlayer >= players.size()) {
+      throw new IllegalArgumentException(
+          "The first player index must be less than the number of players.");
+    }
+    if (firstPlayer < 0) {
+      throw new IllegalArgumentException(
+          "The first player index must be positive.");
+    }
+    this.firstPlayer = firstPlayer;
   }
 
 }

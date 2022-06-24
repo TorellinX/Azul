@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Contais all game components on the table.
+ */
 public class Table {
 
   public static final int PLATES_2_PLAYERS = 5;
@@ -24,7 +27,11 @@ public class Table {
 
   Random random = new Random();
 
-
+  /**
+   * Creates a new table with game components.
+   *
+   * @param players the list with players
+   */
   public Table(ArrayList<String> players) {
     tableCenter = new ArrayList<>();
     tableCenter.add(new PenaltyTile());
@@ -100,6 +107,13 @@ public class Table {
     return tiles.remove(randomIndex);
   }
 
+  /**
+   * Picks tiles that have the same color.
+   *
+   * @param tiles collection with tiles
+   * @param color the color to be picked
+   * @return tiles that have the same color
+   */
   public ArrayList<ColorTile> pickSameColorTiles(ArrayList<Tile> tiles, Color color) {
     // TODO add validation
     // TODO: tests

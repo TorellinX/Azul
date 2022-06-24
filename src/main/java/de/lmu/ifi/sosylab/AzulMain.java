@@ -25,6 +25,6 @@ public class AzulMain {
     System.out.println(model.getState());
     System.out.println((model.getTable().getPlates()));
     System.out.println(model.getTable().pickSameColorTiles(model.getTable().getPlates().get(0),((ColorTile) model.getTable().getPlates().get(0).get(0)).getColor()));
-
+    */
   }
 }

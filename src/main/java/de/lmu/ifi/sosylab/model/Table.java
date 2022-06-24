@@ -106,6 +106,18 @@ public class Table {
     return plates;
   }
 
+  //temp test
+  public ArrayList<Tile> getTableCenter(){
+    // TODO: return copy of tableCenter
+    return tableCenter;
+  }
+
+  //temp test
+  public PlayerBoard[] getBoards(){
+    // TODO: return copy of tableCenter
+    return playerBoards;
+  }
+
   private void moveFullPatternLineToBox(int row, PlayerBoard playerBoard) {
     // TODO: validation
     // TODO: tests

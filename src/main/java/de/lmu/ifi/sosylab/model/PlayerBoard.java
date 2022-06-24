@@ -17,6 +17,12 @@ public class PlayerBoard {
   public PlayerBoard(String nickname, Table table){
     this.nickname = nickname;
     this.table = table;
+    this.wall = new boolean[WALL_SIZE][WALL_SIZE];
+    for (int i = 0; i < WALL_SIZE; i++) {
+      for (int j = 0; j < WALL_SIZE; j++) {
+        this.wall[i][j] = false;
+      }
+    }
   }
 
   /**

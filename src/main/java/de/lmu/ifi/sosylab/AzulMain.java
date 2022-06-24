@@ -1,13 +1,21 @@
 package de.lmu.ifi.sosylab;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import de.lmu.ifi.sosylab.model.AzulModel;
 import de.lmu.ifi.sosylab.model.ColorTile;
 
+
 public class AzulMain {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
+    try {
+      new Shell().run();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    /*
     ArrayList<String> testPlayers = new ArrayList<>();
     testPlayers.add("Player1");
     testPlayers.add("Player2");
@@ -15,8 +23,8 @@ public class AzulMain {
     AzulModel model = new AzulModel(testPlayers);
     System.out.println(model.getPlayers());
     System.out.println(model.getState());
-    System.out.println(Arrays.deepToString(model.getTable().getPlates()));
+    System.out.println(ring(model.getTable().getPlates()));
     System.out.println(model.getTable().pickSameColorTiles(model.getTable().getPlates()[0],((ColorTile) model.getTable().getPlates()[0].get(0)).getColor()));
-
+    */
   }
 }

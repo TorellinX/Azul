@@ -205,11 +205,11 @@ class Shell {
 
   private void printPlayingField(AzulModel model) {
     // factories and center
-    ArrayList<Tile>[] plates = model.getTable().getPlates();
+    var plates = model.getTable().getPlates();
     ArrayList<Tile> pool = model.getTable().getTableCenter();
     System.out.print("Factories: ");
-    for (int i = 0; i < plates.length; i++) {
-      System.out.print((i + 1) + ": " + plates[i].toString() + "; ");
+    for (int i = 0; i < plates.size(); i++) {
+      System.out.print((i + 1) + ": " + plates.get(i).toString() + "; ");
       if (i == 4) {
         System.out.println("");
       }
@@ -226,7 +226,7 @@ class Shell {
       // ColorTile patternLines[][] = model.getTable().getBoards()[k].getPatternLines();
       System.out.println(player + ":");
       for (int i = 0; i < 5; i++) {
-        System.out.print("<Soon: poroperly formatted pattern line here ;)>   ");
+        System.out.print("<Soon: properly formatted pattern line here ;)>   ");
         for (int j = 0; j < 5; j++) {
           if (booleanWall[i][j]) {
             System.out.print("[" + colorPatchedWall()[i][j] + "]");

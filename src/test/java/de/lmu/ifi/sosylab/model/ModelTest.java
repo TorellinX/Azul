@@ -38,13 +38,13 @@ public class ModelTest {
   }
 
   @Test
-  public void modelPlayers() {
+  public void getPlayers_whenPlayersExist() {
     AzulModel model = newModel(testPlayers);
     assertIterableEquals(model.getPlayers(), testPlayers);
   }
 
   @Test
-  public void shiftFirstPlayer_whenActivePlayerIs0() {
+  public void shiftActivePlayer_whenActivePlayerIs0() {
     AzulModel model = newModel(testPlayers);
     model.setActivePlayer(0);
     model.shiftActivePlayer();
@@ -52,11 +52,27 @@ public class ModelTest {
   }
 
   @Test
-  public void shiftFirstPlayer_whenActivePlayerIsMax() {
+  public void shiftActivePlayer_whenActivePlayerIsMax() {
     AzulModel model = newModel(testPlayers);
     model.setActivePlayer(testPlayers.size() - 1);
     model.shiftActivePlayer();
     assertEquals(model.getActivePlayer(), 0);
   }
+
+  @Test
+  public void shiftFirstPlayer_whenFirstPlayerIsRandom() {
+    AzulModel model = newModel(testPlayers);
+    int firstPlayerBefore = model.getFirstPlayer();
+    model.shiftFirstPlayer();
+    if (firstPlayerBefore < model.getPlayers().size() - 1) {
+      assertEquals(model.getFirstPlayer(), firstPlayerBefore + 1);
+    } else if (firstPlayerBefore == model.getPlayers().size() - 1) {
+      assertEquals(model.getFirstPlayer(), 0);
+    } else {
+      fail("First player index must be less than the number of players");
+    }
+
+  }
+
 
 }

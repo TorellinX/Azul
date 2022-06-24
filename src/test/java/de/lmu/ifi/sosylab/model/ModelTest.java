@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -30,7 +29,7 @@ public class ModelTest {
   @BeforeAll
   static void setUp() {
     testPlayers = new ArrayList<>();
-    for(int i = 0; i < numberOfPlayers; i++) {
+    for (int i = 0; i < numberOfPlayers; i++) {
       testPlayers.add("Player" + i);
     }
   }

@@ -29,7 +29,7 @@ class Shell {
   private static final String HELP = """
       Azul - possible commands:
       forfeit      calculate current scores and end game
-      help         print this help 
+      help         print this help
       new x        (re)start a game with x players (min 2, max 4)
       pick s:x y   pick tile x (color) from source s and set to row y
                    -> colors: be-blue, bk-black, yw-yellow, rd-red, we-white
@@ -37,7 +37,8 @@ class Shell {
                    -> factory example: 2 bl be we we
                    -> table center example: c <p> rd rd we bk rd yw yw
                    -> row 1..5
-      quit         quit the program""";
+      quit         quit the program
+      """;
 
 
   /**

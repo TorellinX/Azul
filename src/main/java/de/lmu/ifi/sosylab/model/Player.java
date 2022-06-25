@@ -1,5 +1,6 @@
 package de.lmu.ifi.sosylab.model;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Player {
@@ -13,9 +14,8 @@ public class Player {
   public Player(String nickname, PlayerState state) {
     this.nickname = nickname;
     this.state = state;
+    this.playerBoard = new PlayerBoard();
   }
-
-  
 
   public String getNickname() {
     return nickname;

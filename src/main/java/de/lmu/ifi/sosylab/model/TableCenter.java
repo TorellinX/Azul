@@ -14,20 +14,18 @@ public class TableCenter {
 
   private record SelectedTilesAndMaybePenaltyTile(List<ColorTile> colorTiles,
                                                   Optional<PenaltyTile> penaltyTile) {
-
   }
 
   public TableCenter() {
     penaltyTileOptional = Optional.of(new PenaltyTile());
   }
 
-  public void addColorTiles(List<ColorTile> colorTiles) {
-    this.colorTiles.addAll(colorTiles);
+  public void addColorTiles(List<ColorTile> tiles) {
+    this.colorTiles.addAll(tiles);
   }
 
-
-  public void addPenaltyTile() {
-    penaltyTileOptional = Optional.of(new PenaltyTile());
+  public void addPenaltyTile(PenaltyTile tile) {
+    penaltyTileOptional = Optional.of(tile);
   }
 
   public List<Tile> getTiles() {
@@ -37,14 +35,15 @@ public class TableCenter {
   }
 
   public SelectedTilesAndMaybePenaltyTile pickTiles(Color color) {
-    SelectedTilesAndMaybePenaltyTile selectedTilesAndMaybePenaltyTile = new SelectedTilesAndMaybePenaltyTile(
-        colorTiles.stream().filter(t -> t.getColor() == color).toList(),
+    List<ColorTile> selectedColorTiles = this.colorTiles.stream().filter(t -> t.getColor() == color).toList();
+    SelectedTilesAndMaybePenaltyTile returnedTiles = new SelectedTilesAndMaybePenaltyTile(
+        selectedColorTiles,
         penaltyTileOptional
     );
-    colorTiles.removeAll(colorTiles.stream().filter(t -> t.getColor() == color).toList());
+    colorTiles.removeAll(selectedColorTiles);
     if (penaltyTileOptional.isPresent()) {
       penaltyTileOptional = Optional.empty();
     }
-    return selectedTilesAndMaybePenaltyTile;
+    return returnedTiles;
   }
 }

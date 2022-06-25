@@ -6,17 +6,14 @@ import java.util.Arrays;
 public class PlayerBoard {
   private final static int WALL_SIZE = 5;
 
-  private final String nickname;
-  private final Table table;
   private int score;
   ColorTile[][] patternLines;
   boolean[][] wall;
   ArrayList<Tile> floorLine;
 
 
-  public PlayerBoard(String nickname, Table table){
-    this.nickname = nickname;
-    this.table = table;
+  public PlayerBoard(){
+
   }
 
   /**
@@ -55,11 +52,6 @@ public class PlayerBoard {
     // TODO: tests
     int column = (row + color.ordinal()) % WALL_SIZE;
     return wall[row][column];
-  }
-
-  public String getNickname() {
-    String nicknameCopy = new StringBuffer(nickname).toString();
-    return nicknameCopy;
   }
 
   public int getScore() {

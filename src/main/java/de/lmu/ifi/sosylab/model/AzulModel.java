@@ -1,9 +1,10 @@
 package de.lmu.ifi.sosylab.model;
 
-import static java.util.Objects.requireNonNull;
+
 
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 // TODO: refine JavaDoc
@@ -13,34 +14,29 @@ import java.util.Random;
  */
 public class AzulModel {
 
-  private ArrayList<String> players;
-  private State state = null;
-  private final PropertyChangeSupport support;
-  private Table table;
+  private final List<Player> players;
+  private State state = State.RUNNING;
+
+  private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+  private Game game;
 
   // index of the active player for the factory offer phase
   private int activePlayer;
   // index of the first player for the round
   private int firstPlayer;
 
-  Random random = new Random();
-
   /**
    * Constructs a new game with the specified list of players.
    *
    * @param players list of players
    */
-  public AzulModel(ArrayList<String> players) {
-    support = new PropertyChangeSupport(this);
-    this.table = new Table(players);
-    state = State.RUNNING;
+  public AzulModel(List<Player> players) {
     this.players = players;
-    firstPlayer = random.nextInt(players.size());
-    activePlayer = firstPlayer;
-
+    game = new Game(this.players);
+    state = State.RUNNING;
   }
 
-  public ArrayList<String> getPlayers() {
+  public List<Player> getPlayers() {
     // TODO: return copy of players
     return players;
   }
@@ -50,9 +46,9 @@ public class AzulModel {
     return state;
   }
 
-  public Table getTable() {
+  public Game getTable() {
     // TODO: return a copy of the table?????
-    return table;
+    return game;
   }
 
   /**

@@ -55,7 +55,7 @@ public class PlayerBoard {
     wall[row][column] = true;
   }
 
-  private boolean isTileFree(Color color, int row) {
+  public boolean isTileFree(Color color, int row) {
     //TODO: add validation
     // TODO: tests
     int column = (row + color.ordinal()) % WALL_SIZE;

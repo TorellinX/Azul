@@ -34,4 +34,13 @@ public class AzulModel {
     return table;
   }
 
+  public boolean pickFromTableCenter(String player, Tile tile, int row) {
+    return false;
+  }
+
+  public boolean pickFromPlate(String player, Tile tile, int plateId) {
+    return false;
+  }
+
+  // end class
 }

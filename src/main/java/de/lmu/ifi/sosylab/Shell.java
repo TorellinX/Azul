@@ -97,10 +97,35 @@ class Shell {
               case "pick":
                 String[] pickArgTok = tokens[1].trim().split(":");
                 if (pickArgTok[0].equals("c")) {
-                  System.out.println("pick from table center not yet implemented");
+                  int rowNumber = Integer.parseInt(tokens[2]) - 1;
+                  var tableCenter = model.getTable().getTableCenter();
+                  boolean pickCheck = true;
+                  // penality tile kann nicht gecastet werden
+                  for (Tile tile : tableCenter) {
+                    ColorTile colorTile = (ColorTile) tile;
+                    if (colorTile.getColor() == getColorFromCode(pickArgTok[1])) {
+                      pickCheck = false;
+                    }
+                  }
+                  if (pickCheck) {
+                    System.out.println("Error! No such color on plate.");
+                    break;
+                  }
+                  ArrayList<ColorTile> pickedTiles = model.getTable().pickSameColorTiles(tableCenter, getColorFromCode(pickArgTok[1]));
+                  // set pattern line
+                  // TODO: check for color free and overshoot and move to floorLine!
+                  // int occupied = model.getTable().getBoards()[k].getPatternLines()[i].getOccupancy();
+                  if (!model.getTable().getBoards()[playerIndex].isTileFree(pickedTiles.get(0).getColor(), rowNumber)) {
+                    model.getTable().getBoards()[playerIndex].setPatternLine(rowNumber, pickedTiles.size(), pickedTiles.get(0));
+                    model.getTable().removeTilesFromTableCenter(pickedTiles.get(0));
+                  } else {
+                    System.out.println("Error! Chosen row is already assigned to another color.");
+                    break;
+                  }
+                  // System.out.println("pick from table center not yet implemented");
                 } else {
                   int plateNumber = Integer.parseInt(pickArgTok[0]) - 1;
-                  int rowNumber =Integer.parseInt(tokens[2]) - 1;
+                  int rowNumber = Integer.parseInt(tokens[2]) - 1;
                   var plate = model.getTable().getPlates().get(plateNumber);
                   boolean pickCheck = true;
                   for (Tile tile : plate) {
@@ -114,14 +139,21 @@ class Shell {
                     break;
                   }
                   ArrayList<ColorTile> pickedTiles = model.getTable().pickSameColorTiles(plate, getColorFromCode(pickArgTok[1]));
-                  model.getTable().getBoards()[playerIndex].setPatternLine(rowNumber, pickedTiles.size(),pickedTiles.get(0));
-                  for (Tile tile : plate) {
-                    ColorTile colorTile = (ColorTile) tile;
-                    if (colorTile.getColor() != getColorFromCode(pickArgTok[1])) {
-                      model.getTable().addTileToTableCenter(tile);
+                  // set pattern line
+                  // TODO: check for color free and overshoot and move to floorLine!
+                  if (!model.getTable().getBoards()[playerIndex].isTileFree(pickedTiles.get(0).getColor(), rowNumber)) {
+                    model.getTable().getBoards()[playerIndex].setPatternLine(rowNumber, pickedTiles.size(), pickedTiles.get(0));
+                    for (Tile tile : plate) {
+                      ColorTile colorTile = (ColorTile) tile;
+                      if (colorTile.getColor() != getColorFromCode(pickArgTok[1])) {
+                        model.getTable().addTileToTableCenter(tile);
+                      }
                     }
+                    model.getTable().clearPlate(plateNumber);
+                  } else {
+                    System.out.println("Error! Chosen row is already assigned to another color.");
+                    break;
                   }
-                  model.getTable().clearPlate(plateNumber);
                 }
 
                 // TODO. -> right now just steps the player asked to pick and set.

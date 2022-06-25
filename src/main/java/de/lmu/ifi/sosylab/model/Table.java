@@ -139,6 +139,10 @@ public class Table {
     return tableCenter;
   }
 
+  public void removeTilesFromTableCenter(Tile tile) {
+    while(tableCenter.remove(tile)) {}
+  }
+
   //temp test
   public PlayerBoard[] getBoards(){
     // TODO: return copy of tableCenter

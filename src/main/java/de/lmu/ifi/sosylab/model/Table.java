@@ -116,6 +116,17 @@ public class Table {
     return sameColorTiles;
   }
 
+  public void addTileToTableCenter (Tile tile) {
+    tableCenter.add(tile);
+  }
+
+  public void clearPlate(int index) {
+    int k = plates.get(index).size();
+    for (int i = 0; i < k; i++) {
+      plates.get(index).set(i, null);
+    }
+  }
+
   //temp test
   public ArrayList<ArrayList<Tile>> getPlates(){ // Tile[][] ?
     // TODO: return copy of plates
@@ -134,11 +145,15 @@ public class Table {
     return playerBoards;
   }
 
+  // Following method just adapted to PatternLine as object. Unclear value...
+  // Need not stay one tile on wall??
   private void moveFullPatternLineToBox(int row, PlayerBoard playerBoard) {
     // TODO: validation
     // TODO: tests
-    box.addAll(List.of(playerBoard.patternLines[row]));
-    Arrays.fill(playerBoard.patternLines[row], null);
+    for (int i = 0; i < playerBoard.patternLines[row].getOccupancy(); i++) {
+      box.add(playerBoard.patternLines[row].getColorTile());
+    }
+    playerBoard.patternLines[row].setOccupancy(0);
   }
 
   /**

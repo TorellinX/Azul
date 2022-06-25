@@ -9,7 +9,7 @@ public class PlayerBoard {
   private final String nickname;
   private final Table table;
   private int score;
-  ColorTile[][] patternLines;
+  PatternLine[] patternLines;
   boolean[][] wall;
   ArrayList<Tile> floorLine;
 
@@ -17,11 +17,17 @@ public class PlayerBoard {
   public PlayerBoard(String nickname, Table table){
     this.nickname = nickname;
     this.table = table;
+    // initialize boolean wall
     this.wall = new boolean[WALL_SIZE][WALL_SIZE];
     for (int i = 0; i < WALL_SIZE; i++) {
       for (int j = 0; j < WALL_SIZE; j++) {
         this.wall[i][j] = false;
       }
+    }
+    // create pattern lines array
+    patternLines = new PatternLine[5];
+    for (int i = 0; i < 5; i++) {
+      patternLines[i] = new PatternLine(i + 1);
     }
   }
 
@@ -32,20 +38,13 @@ public class PlayerBoard {
    * @return true, if the row is full
    */
   public boolean isFull(int row){
-    // TODO: validation
-    // TODO: check
-    for (int i = 0; i < patternLines[row].length; i++) {
-      if (patternLines[row][i] == null){
-        return false;
-      }
-    }
-    return true;
+    return patternLines[row].getCapacity() == patternLines[row].getOccupancy();
   }
 
   public Color getPatternLineColor(int row){
     // TODO: validation (Line must be not empty, etc.)
     // TODO: tests
-    Color color = patternLines[row][patternLines[row].length - 1].getColor();
+    Color color = patternLines[row].getColorTile().getColor();
     return color;
   }
 
@@ -63,6 +62,11 @@ public class PlayerBoard {
     return wall[row][column];
   }
 
+  public void setPatternLine(int row, int count, ColorTile colorTile){
+    patternLines[row].setColorTile(colorTile);
+    patternLines[row].setOccupancy(count);
+  }
+
   public String getNickname() {
     String nicknameCopy = new StringBuffer(nickname).toString();
     return nicknameCopy;
@@ -73,10 +77,10 @@ public class PlayerBoard {
     return scoreCopy;
   }
 
-  public ColorTile[][] getPatternLines() {
-    ColorTile[][] patternLinesCopy = new ColorTile[patternLines.length][];
+  public PatternLine[] getPatternLines() {
+    PatternLine[] patternLinesCopy = new PatternLine[patternLines.length];
     for(int i = 0; i < patternLines.length; i++) {
-      patternLinesCopy[i] = Arrays.copyOf(patternLines[i], patternLines[i].length); // Tiles are references!
+      patternLinesCopy[i] = patternLines[i];         // some deep copy??
     }
     return patternLinesCopy;
   }

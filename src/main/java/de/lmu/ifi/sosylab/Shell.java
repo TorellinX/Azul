@@ -2,6 +2,7 @@ package de.lmu.ifi.sosylab;
 
 import de.lmu.ifi.sosylab.model.AzulModel;
 import de.lmu.ifi.sosylab.model.ColorTile;
+import de.lmu.ifi.sosylab.model.PenaltyTile;
 import de.lmu.ifi.sosylab.model.PlayerBoard;
 import de.lmu.ifi.sosylab.model.State;
 import java.io.IOException;
@@ -50,7 +51,7 @@ class Shell {
   void run() throws IOException {
     List<String> noParaCommands = Arrays.asList("forfeit", "help", "quit");
     List<String> paraCommands = Arrays.asList("new", "pick");
-    List<String> colorCodes = Arrays.asList("be", "bk", "rd", "we", "ye");
+    List<String> colorCodes = Arrays.asList("be", "bk", "rd", "we", "yw");
 
     Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
 
@@ -79,6 +80,7 @@ class Shell {
             break;
           case "forfeit":
             // TODO. -> right now just repeats current printout
+            // This command maybe obsolete, as it seems not useful for testing the model.
             break;
           default:
             String[] tokens = input.trim().split("\\s+");
@@ -93,6 +95,35 @@ class Shell {
                 playerIndex = 0;
                 break;
               case "pick":
+                String[] pickArgTok = tokens[1].trim().split(":");
+                if (pickArgTok[0].equals("c")) {
+                  System.out.println("pick from table center not yet implemented");
+                } else {
+                  int plateNumber = Integer.parseInt(pickArgTok[0]) - 1;
+                  int rowNumber =Integer.parseInt(tokens[2]) - 1;
+                  var plate = model.getTable().getPlates().get(plateNumber);
+                  boolean pickCheck = true;
+                  for (Tile tile : plate) {
+                    ColorTile colorTile = (ColorTile) tile;
+                    if (colorTile.getColor() == getColorFromCode(pickArgTok[1])) {
+                      pickCheck = false;
+                    }
+                  }
+                  if (pickCheck) {
+                    System.out.println("Error! No such color on plate.");
+                    break;
+                  }
+                  ArrayList<ColorTile> pickedTiles = model.getTable().pickSameColorTiles(plate, getColorFromCode(pickArgTok[1]));
+                  model.getTable().getBoards()[playerIndex].setPatternLine(rowNumber, pickedTiles.size(),pickedTiles.get(0));
+                  for (Tile tile : plate) {
+                    ColorTile colorTile = (ColorTile) tile;
+                    if (colorTile.getColor() != getColorFromCode(pickArgTok[1])) {
+                      model.getTable().addTileToTableCenter(tile);
+                    }
+                  }
+                  model.getTable().clearPlate(plateNumber);
+                }
+
                 // TODO. -> right now just steps the player asked to pick and set.
                 if ((playerIndex + 1) < playerList.size()) {
                   playerIndex++;
@@ -106,7 +137,7 @@ class Shell {
 
         }
 
-        if (!input.equals("quit")) {
+        if (!(input.equals("quit") || input.equals("help"))) {
           printPlayingField(model);
           System.out.print("\n");
           if (model.getState().equals(State.RUNNING)) {
@@ -186,9 +217,8 @@ class Shell {
     }
   }
 
-  private Color getColorFromInput(String inputPick) {
-    String[] tokens = inputPick.split(":");
-    switch (tokens[1].trim()) {
+  private Color getColorFromCode(String colorCode) {
+    switch (colorCode) {
       case "bk":
         return Color.BLACK;
       case "be":
@@ -224,10 +254,22 @@ class Shell {
     int k = 0;
     for (String player : playerList) {
       boolean booleanWall[][] = model.getTable().getBoards()[k].getWall();
-      // ColorTile patternLines[][] = model.getTable().getBoards()[k].getPatternLines();
-      System.out.println(player + ":");
+       System.out.println(player + ":");
+      // player board rows
       for (int i = 0; i < 5; i++) {
-        System.out.print("<Soon: properly formatted pattern line here ;)>   ");
+        // pattern line
+        int occupied = model.getTable().getBoards()[k].getPatternLines()[i].getOccupancy();
+        for (int m = 0; m < 4 - i; m++) {
+          System.out.print("    ");
+        }
+        for (int m = 4 - i; m < 5; m++) {
+          if (m < (5 - occupied)) {
+            System.out.print("(  )");
+          } else {
+            System.out.print("(" + getColorCodeFromColorTile(model.getTable().getBoards()[k].getPatternLines()[i].getColorTile()) + ")");
+          }
+        }
+        // wall line
         for (int j = 0; j < 5; j++) {
           if (booleanWall[i][j]) {
             System.out.print("[" + colorPatchedWall()[i][j] + "]");
@@ -237,7 +279,43 @@ class Shell {
         }
         System.out.print("\n");
       }
-      System.out.print("\n");
+      // floor line
+      if (model.getTable().getBoards()[k].getFloorLine() == null) {
+        for (int i = 0; i < 7; i++) {
+          if (i < 2) {
+            System.out.print("{-1}");
+            System.out.print("(  )");
+          } else if ((i >= 2) && (i < 5)) {
+            System.out.print("{-2}");
+            System.out.print("(  )");
+          } else {
+            System.out.print("{-3}");
+            System.out.print("(  )");
+          }
+        }
+      } else {
+        for (int i = 0; i < model.getTable().getBoards()[k].getFloorLine().size(); i++) {
+          Tile floorLineTile = model.getTable().getBoards()[k].getFloorLine().get(i);
+          if (i < 2) {
+            System.out.print("{-1}");
+            if (floorLineTile instanceof PenaltyTile) {
+              System.out.print("(-1)");
+            } else if (floorLineTile instanceof ColorTile) {
+              System.out.print("(" + getColorCodeFromColorTile((ColorTile) floorLineTile) + ")");
+            }
+          } else if ((i >= 2) && (i < 5)) {
+            System.out.print("{-2}");
+            System.out.print("(" + getColorCodeFromColorTile((ColorTile) floorLineTile) + ")");
+          } else {
+            System.out.print("{-3}");
+            System.out.print("(" + getColorCodeFromColorTile((ColorTile) floorLineTile) + ")");
+          }
+        }
+        for (int i = 7 - model.getTable().getBoards()[k].getFloorLine().size(); i < 7; i++) {
+          System.out.print("(  )");
+        }
+      }
+      System.out.println("\n");
       k++;
     }
   }
@@ -263,7 +341,24 @@ class Shell {
     return wall;
   }
 
+  private String getColorCodeFromColorTile(ColorTile colorTile){
+    Color color = colorTile.getColor();
+    switch (color) {
+      case BLACK:
+        return "bk";
+      case BLUE:
+        return "be";
+      case RED:
+        return "rd";
+      case WHITE:
+        return "we";
+      case YELLOW:
+        return "yw";
+      default:
+        return "";
+    }
 
+  }
 
   // end class
 }

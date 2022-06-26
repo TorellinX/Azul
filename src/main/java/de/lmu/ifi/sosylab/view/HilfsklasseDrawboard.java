@@ -28,7 +28,6 @@ public class HilfsklasseDrawboard extends JFrame{
 
         DrawboardPlayerBoard drawboardplayerboard = new DrawboardPlayerBoard();
 
-
         GraphicTwoFactories twoFactories1 = new GraphicTwoFactories();
         GraphicTwoFactories twoFactories2 = new GraphicTwoFactories();
         GraphicTwoFactories twoFactories3 = new GraphicTwoFactories();

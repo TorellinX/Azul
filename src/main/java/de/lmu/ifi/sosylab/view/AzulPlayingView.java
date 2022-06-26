@@ -16,6 +16,7 @@ public class AzulPlayingView extends JFrame{
     public static void main(String[] args) {
 
         JFrame frame = new JFrame("BorderLayout");
+        frame.setTitle("Azul");
 
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
@@ -37,7 +38,7 @@ public class AzulPlayingView extends JFrame{
         //Oberes Panel wird mit Combobox gefüllt.
         JPanel panelUp = new JPanel();
         panelUp.setLayout(new FlowLayout());
-        JComboBox<String> menu = new JComboBox<String>(new String[] {"restart", "leave", "end game"});
+        JComboBox<String> menu = new JComboBox<String>(new String[] {"menu", "restart", "leave", "end game"});
         panelUp.add(menu);
         panelUp.setBackground(backroundColor);
 

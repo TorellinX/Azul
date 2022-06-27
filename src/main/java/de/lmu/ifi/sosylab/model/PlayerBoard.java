@@ -15,7 +15,7 @@ public class PlayerBoard {
 
 
   public PlayerBoard() {
-    patternLines = createPatternLines();
+    patternLines = new ColorTile[5][];
 
   }
 
@@ -29,18 +29,14 @@ public class PlayerBoard {
 
   public int countFreeFieldsInRow(int rowIndex) {
     ColorTile[] row = patternLines[rowIndex];
-    for (int i = row.length - 1; i >= 0; i--) {
+    for (int i = 0; i < row.length; i++) {
       if (row[i] == null) {
-        return i + 1;
+        return row.length - i;
       }
     }
     return 0;
   }
 
-  /**
-   * @param row
-   * @return the next free index or -1
-   */
   public int patternLineIndex(int row) {
     for (int i = 0; i < patternLines[row].length; i++) {
       if (patternLines[row][i] == null) {
@@ -53,9 +49,6 @@ public class PlayerBoard {
   public Color getPatternLineColor(int row) {
     // TODO: validation (Line must be not empty, etc.)
     // TODO: tests
-    if (patternLines[row][patternLines[row].length - 1] == null) {
-      return null;
-    }
     Color color = patternLines[row][patternLines[row].length - 1].getColor();
     return color;
   }
@@ -102,13 +95,6 @@ public class PlayerBoard {
   }
 
 
-  /**
-   * Adds selected ColorTiles of the same color to the specified row from left to right. If there
-   * are more tiles than there are free spaces in a row, tiles will be added to the floorLine.
-   *
-   * @param tiles    tiles to be added
-   * @param rowIndex row of the PatternLines
-   */
   public void addColorTilesToLine(List<ColorTile> tiles, int rowIndex) {
     int freeFields = countFreeFieldsInRow(rowIndex);
     if (freeFields == 0) {
@@ -122,14 +108,14 @@ public class PlayerBoard {
         addTileToFloorLine(tile);
       }
     }
-    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex)
-        || patternLineIndex(rowIndex) == 0) {
+    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex) || patternLineIndex(rowIndex) == 0) {
       ColorTile[] row = patternLines[rowIndex];
       for (int i = 0; i < tiles.size(); i++) {
-        if (freeFields > 0) {
-          row[freeFields - 1] = tiles.get(i);
+        if(freeFields >= tiles.size()) {
+          row[row.length - freeFields + i] = tiles.get(i);
           freeFields--;
-        } else {
+        }
+        else {
           addTileToFloorLine(tiles.get(i));
         }
       }
@@ -137,7 +123,6 @@ public class PlayerBoard {
   }
 
   public void addTileToFloorLine(Tile tile) {
-    // TODO: floorLine should contain max. 7 Tiles! The rest goes in the box
     floorLine.add(tile);
   }
 

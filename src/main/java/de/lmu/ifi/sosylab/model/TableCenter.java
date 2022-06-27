@@ -39,6 +39,7 @@ public class TableCenter {
     return colorTiles;
   }
 
+
   public SelectedTilesAndMaybePenaltyTile pickTiles(Color color) {
     List<ColorTile> selectedColorTiles = this.colorTiles.stream().filter(t -> t.getColor() == color)
         .toList();

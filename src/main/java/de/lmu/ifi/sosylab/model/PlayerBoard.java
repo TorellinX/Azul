@@ -100,11 +100,16 @@ public class PlayerBoard {
         addTileToFloorLine(tile);
       }
     }
-    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex)
-        || patternLineIndex(rowIndex) == 0) {
+    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex) || patternLineIndex(rowIndex) == 0) {
       ColorTile[] row = patternLines[rowIndex];
       for (int i = 0; i < tiles.size(); i++) {
-        row[row.length - freeFields + i] = tiles.get(i);
+        if(freeFields >= tiles.size()) {
+          row[row.length - freeFields + i] = tiles.get(i);
+          freeFields--;
+        }
+        else {
+          addTileToFloorLine(tiles.get(i));
+        }
       }
     }
   }

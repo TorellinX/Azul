@@ -79,10 +79,12 @@ public class GameModel {
    * Remove first TILES_PER_PLATE tiles from bag (which should already be shuffled).
    */
   private List<ColorTile> getAndRemoveTilesFromBagForPlate() {
+    // TODO: check if enough tiles in Bag
     return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
   }
 
   public void pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
+    //TODO: Tiles present check
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
     player.playerBoard.addColorTilesToLine(tiles.selected(), row);
     if (tiles.remaining().isPresent()) {
@@ -91,11 +93,12 @@ public class GameModel {
   }
 
   public void pickTilesFromTableCenter(Color color, Player player, int row) {
+    //TODO: Tiles present check
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
-    player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
     if (tiles.penaltyTile().isPresent()) {
       player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
     }
+    player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
   }
 
   public List<Plate> getPlates() {

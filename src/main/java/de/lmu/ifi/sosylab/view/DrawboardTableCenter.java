@@ -130,8 +130,6 @@ class DrawboardTableCenter extends JPanel{
         //Beispielstein am Tisch:
         g.setColor(Color.gray);
         g.fillRect(25,505,35,35);
-        g.setColor(Color.red);
-        g.fillRect(65,505,35,35);
         g.setColor(Color.blue);
         g.fillRect(105,505,35,35);
         g.setColor(Color.green);
@@ -146,10 +144,6 @@ class DrawboardTableCenter extends JPanel{
         g.fillRect(305,505,35,35);
         g.setColor(Color.blue);
         g.fillRect(345,505,35,35);
-        g.setColor(Color.green);
-        g.fillRect(25,545,35,35);
-        g.setColor(Color.green);
-        g.fillRect(65,545,35,35);
         g.setColor(Color.blue);
         g.fillRect(105,545,35,35);
         g.setColor(Color.green);
@@ -164,10 +158,6 @@ class DrawboardTableCenter extends JPanel{
         g.fillRect(305,545,35,35);
         g.setColor(Color.blue);
         g.fillRect(345,545,35,35);
-        g.setColor(Color.blue);
-        g.fillRect(25,585,35,35);
-        g.setColor(Color.green);
-        g.fillRect(65,585,35,35);
         g.setColor(Color.black);
         g.fillRect(105,585,35,35);
         g.setColor(Color.blue);
@@ -182,10 +172,6 @@ class DrawboardTableCenter extends JPanel{
         g.fillRect(305,585,35,35);
         g.setColor(Color.yellow);
         g.fillRect(345,585,35,35);
-        g.setColor(Color.blue);
-        g.fillRect(25,625,35,35);
-        g.setColor(Color.black);
-        g.fillRect(65,625,35,35);
         g.setColor(Color.yellow);
         g.fillRect(105,625,35,35);
         g.setColor(Color.red);
@@ -198,7 +184,5 @@ class DrawboardTableCenter extends JPanel{
         g.fillRect(265,625,35,35);
         g.setColor(Color.black);
         g.fillRect(305,625,35,35);
-        g.setColor(Color.red);
-        g.fillRect(345,625,35,35);
     }
 }

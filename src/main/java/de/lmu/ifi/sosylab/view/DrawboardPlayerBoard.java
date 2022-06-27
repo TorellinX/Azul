@@ -11,12 +11,9 @@ public class DrawboardPlayerBoard extends JPanel {
     private static final long serialVersionUID = 1L;
     private JPanel drawboardplayerboard;
     private Graphics2D g;
-    private Object FontStyle;
-
 
     public DrawboardPlayerBoard(){
-        setPreferredSize(new Dimension(400,400));
-
+        setPreferredSize(new Dimension(400,700));
         repaint();
     }
 
@@ -25,19 +22,21 @@ public class DrawboardPlayerBoard extends JPanel {
     }
 
 
-
-
     @Override
 
     protected void paintComponent(Graphics g){
 
         super.paintComponent(g);
         g = (Graphics2D) g;
-        g.setColor(Color.black);
 
+
+        //Zuerst wird das ober Spielfeld gezeichnet, das immer gebraucht wird.
+        //username links oben wird geschrieben
+        g.setColor(Color.black);
         g.drawString("user 1", 5,15);
 
         //Rechtecke der Patternlines werden gezeichnet.
+        ((Graphics2D) g).setStroke(new BasicStroke(1));
         g.drawRect(145, 5, 35, 35);
         g.drawRect(110, 40, 35, 35);
         g.drawRect(145, 40, 35, 35);
@@ -57,40 +56,41 @@ public class DrawboardPlayerBoard extends JPanel {
 
         Color playerboardcolor = new Color(204, 201, 199);
         g.setColor(playerboardcolor);
-        g.fillRoundRect(200,0,185, 185, 20, 20);
+        g.fillRoundRect(200,5,181, 181, 20, 20);
+
 
         //Ränder der Rechtecke der Wall werden gezeichnet.
         ((Graphics2D) g).setStroke(new BasicStroke(2));
         g.setColor(Color.blue);
-        g.drawRect(205,7,31,31);
-        g.drawRect(240,42,31,31);
-        g.drawRect(275,77,31,31);
-        g.drawRect(310,112,31,31);
-        g.drawRect(345,147,31,31);
+        g.drawRect(205,10,31,31);
+        g.drawRect(240,45,31,31);
+        g.drawRect(275,80,31,31);
+        g.drawRect(310,115,31,31);
+        g.drawRect(345,150,31,31);
         g.setColor(Color.yellow);
-        g.drawRect(240,7,31,31);
-        g.drawRect(275,42,31,31);
-        g.drawRect(310,77,31,31);
-        g.drawRect(345,112,31,31);
-        g.drawRect(205,147,31,31);
+        g.drawRect(240,10,31,31);
+        g.drawRect(275,45,31,31);
+        g.drawRect(310,80,31,31);
+        g.drawRect(345,115,31,31);
+        g.drawRect(205,150,31,31);
         g.setColor(Color.red);
-        g.drawRect(275,7,31,31);
-        g.drawRect(310,42,31,31);
-        g.drawRect(345,77,31,31);
-        g.drawRect(205,112,31,31);
-        g.drawRect(240,147,31,31);
+        g.drawRect(275,10,31,31);
+        g.drawRect(310,45,31,31);
+        g.drawRect(345,80,31,31);
+        g.drawRect(205,115,31,31);
+        g.drawRect(240,150,31,31);
         g.setColor(Color.black);
-        g.drawRect(310,7,31,31);
-        g.drawRect(345,42,31,31);
-        g.drawRect(205,77,31,31);
-        g.drawRect(240,112,31,31);
-        g.drawRect(275,147,31,31);
+        g.drawRect(310,10,31,31);
+        g.drawRect(345,45,31,31);
+        g.drawRect(205,80,31,31);
+        g.drawRect(240,115,31,31);
+        g.drawRect(275,150,31,31);
         g.setColor(Color.green);
-        g.drawRect(345,7,31,31);
-        g.drawRect(205,42,31,31);
-        g.drawRect(240,77,31,31);
-        g.drawRect(275,112,31,31);
-        g.drawRect(310,147,31,31);
+        g.drawRect(345,10,31,31);
+        g.drawRect(205,45,31,31);
+        g.drawRect(240,80,31,31);
+        g.drawRect(275,115,31,31);
+        g.drawRect(310,150,31,31);
 
         g.setColor(Color.black);
 
@@ -118,10 +118,93 @@ public class DrawboardPlayerBoard extends JPanel {
         g.drawString("Punkte:", 5, 260);
         g.drawString("123", 50, 260);
 
-    }
 
 
-    public void setPreferredSize(int i, int i1) {
-        drawboardplayerboard.setSize(400,700);
+        //Hier wird das untere Spielfeld gezeichnet, das nur bei 3 Spielern gebraucht wird.
+        //username links oben wird geschrieben
+        g.setColor(Color.black);
+        g.drawString("user 3", 5,315);
+
+        //Rechtecke der Patternlines werden gezeichnet.
+
+        ((Graphics2D) g).setStroke(new BasicStroke(1));
+        g.drawRect(145, 305, 35, 35);
+        g.drawRect(110, 340, 35, 35);
+        g.drawRect(145, 340, 35, 35);
+        g.drawRect(75, 375, 35, 35);
+        g.drawRect(110, 375, 35, 35);
+        g.drawRect(145, 375, 35, 35);
+        g.drawRect(40, 410, 35, 35);
+        g.drawRect(75, 410, 35, 35);
+        g.drawRect(110, 410, 35, 35);
+        g.drawRect(145, 410, 35, 35);
+        g.drawRect(05, 445, 35, 35);
+        g.drawRect(40, 445, 35, 35);
+        g.drawRect(75, 445, 35, 35);
+        g.drawRect(110, 445, 35, 35);
+        g.drawRect(145, 445, 35, 35);
+
+
+        g.setColor(playerboardcolor);
+        g.fillRoundRect(200,300,185, 185, 20, 20);
+
+        //Ränder der Rechtecke der Wall werden gezeichnet.
+        ((Graphics2D) g).setStroke(new BasicStroke(2));
+        g.setColor(Color.blue);
+        g.drawRect(205,307,31,31);
+        g.drawRect(240,342,31,31);
+        g.drawRect(275,377,31,31);
+        g.drawRect(310,412,31,31);
+        g.drawRect(345,447,31,31);
+        g.setColor(Color.yellow);
+        g.drawRect(240,307,31,31);
+        g.drawRect(275,342,31,31);
+        g.drawRect(310,377,31,31);
+        g.drawRect(345,412,31,31);
+        g.drawRect(205,447,31,31);
+        g.setColor(Color.red);
+        g.drawRect(275,307,31,31);
+        g.drawRect(310,342,31,31);
+        g.drawRect(345,377,31,31);
+        g.drawRect(205,412,31,31);
+        g.drawRect(240,447,31,31);
+        g.setColor(Color.black);
+        g.drawRect(310,307,31,31);
+        g.drawRect(345,342,31,31);
+        g.drawRect(205,377,31,31);
+        g.drawRect(240,412,31,31);
+        g.drawRect(275,447,31,31);
+        g.setColor(Color.green);
+        g.drawRect(345,307,31,31);
+        g.drawRect(205,342,31,31);
+        g.drawRect(240,377,31,31);
+        g.drawRect(275,412,31,31);
+        g.drawRect(310,447,31,31);
+
+        g.setColor(Color.black);
+
+        //Minuspunkteleiste:
+        g.setColor(floorlinecolor);
+        g.drawString("-1", 15, 500);
+        g.drawRect(05, 505, 35, 35);
+        g.drawString("-1", 50, 500);
+        g.drawRect(40, 505, 35, 35);
+        g.drawString("-2", 85, 500);
+        g.drawRect(75, 505, 35, 35);
+        g.drawString("-2", 120, 500);
+        g.drawRect(110, 505, 35, 35);
+        g.drawString("-2", 155, 500);
+        g.drawRect(145, 505, 35, 35);
+        g.drawString("-3", 190, 500);
+        g.drawRect(180, 505, 35, 35);
+        g.drawString("-3", 225, 500);
+        g.drawRect(215, 505, 35, 35);
+
+        //Score:
+        g.setColor(score);
+        g.drawString("Punkte:", 5, 560);
+        g.drawString("123", 50, 560);
+
     }
+
 }

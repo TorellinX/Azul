@@ -2,11 +2,9 @@ package de.lmu.ifi.sosylab.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -15,42 +13,33 @@ import org.junit.jupiter.api.Test;
  */
 public class ModelTest {
 
-  private static ArrayList<String> testPlayers;
+  private static List<Player> testPlayers = new ArrayList<>();
   private static final int NUMBER_OF_PLAYERS = 4;
 
   @BeforeAll
   static void setUp() {
-    testPlayers = new ArrayList<>();
+
     for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-      testPlayers.add("Player" + i);
+      testPlayers.add(new Player("Player" + i));
     }
   }
 
-  AzulModel newModel(ArrayList<String> testPlayers) {
-    return new AzulModel(testPlayers);
+  GameModel newModel(List<Player> testPlayers) {
+    return new GameModel(testPlayers);
   }
 
   @Test
   public void getPlayers_whenPlayersExist() {
-    AzulModel model = newModel(testPlayers);
+    GameModel model = newModel(testPlayers);
     assertIterableEquals(model.getPlayers(), testPlayers);
   }
 
-  @Test
-  public void shiftActivePlayer_whenActivePlayerIs0() {
-    AzulModel model = newModel(testPlayers);
-    model.setActivePlayer(0);
-    model.shiftActivePlayer();
-    assertEquals(model.getActivePlayer(), 1);
-  }
 
   @Test
-  public void shiftActivePlayer_whenActivePlayerIsMax() {
-    AzulModel model = newModel(testPlayers);
-    model.setActivePlayer(testPlayers.size() - 1);
-    model.shiftActivePlayer();
-    assertEquals(model.getActivePlayer(), 0);
+  public void getAmountOfPlates_accordingToPlayers() {
+    GameModel model = newModel(testPlayers);
+    int amount = testPlayers.size() *2 +1;
+    assertEquals(model.getPlates().size(), amount);
   }
-
 
 }

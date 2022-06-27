@@ -103,7 +103,7 @@ public class PlayerBoard {
 
 
   /**
-   * Adds selected ColorTiles of the same color to the specified row from left to right. If there
+   * Adds selected ColorTiles of the same color to the specified row from right to left. If there
    * are more tiles than there are free spaces in a row, tiles will be added to the floorLine.
    *
    * @param tiles    tiles to be added

@@ -169,4 +169,8 @@ public class GameModel {
   private void shuffleBag() {
     Collections.shuffle(bag, random);
   }
+
+  public TableCenter getTableCenter() {
+    return tableCenter;
+  }
 }

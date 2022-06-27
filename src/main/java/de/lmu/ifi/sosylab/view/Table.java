@@ -3,9 +3,9 @@ package de.lmu.ifi.sosylab.view;
 import javax.swing.*;
 import java.awt.*;
 
-class TestFactories extends JPanel{
-    public TestFactories(){
-        repaint();
+class Table extends JPanel{
+    public Table(){
+        setPreferredSize(new Dimension(400,600));
     }
 
     @Override

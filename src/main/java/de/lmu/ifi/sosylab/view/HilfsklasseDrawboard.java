@@ -26,7 +26,10 @@ public class HilfsklasseDrawboard extends JFrame{
 
         Color backroundColor = new Color(135, 206, 250);
 
-        DrawboardPlayerBoard drawboardplayerboard = new DrawboardPlayerBoard();
+        DrawboardPlayerBoard drawboardplayerboardleft = new DrawboardPlayerBoard();
+        DrawboardPlayerBoard drawboardplayerboardright = new DrawboardPlayerBoard();
+        Table table = new Table();
+
 
         GraphicTwoFactories twoFactories1 = new GraphicTwoFactories();
         GraphicTwoFactories twoFactories2 = new GraphicTwoFactories();
@@ -58,20 +61,16 @@ public class HilfsklasseDrawboard extends JFrame{
         JPanel panelSouth = new JPanel();
         panelSouth.setBackground(backroundColor);
 
-
         Container c = frame.getContentPane();
         c.add(panelUp, BorderLayout.NORTH);
         c.add(panelSouth, BorderLayout.SOUTH);
-        c.add(drawboardplayerboard, BorderLayout.EAST);
-        c.add(drawboardplayerboard, BorderLayout.WEST);
-        c.add(panelCenter, BorderLayout.CENTER);
+        c.add(drawboardplayerboardleft, BorderLayout.EAST);
+        c.add(drawboardplayerboardright, BorderLayout.WEST);
+        c.add(table, BorderLayout.CENTER);
 
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1200, 700);
         frame.setVisible(true);
     }
-
-
-
 }
 

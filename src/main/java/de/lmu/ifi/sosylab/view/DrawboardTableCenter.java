@@ -3,8 +3,8 @@ package de.lmu.ifi.sosylab.view;
 import javax.swing.*;
 import java.awt.*;
 
-class DrawboardTable extends JPanel{
-    public DrawboardTable(){
+class DrawboardTableCenter extends JPanel{
+    public DrawboardTableCenter(){
         setPreferredSize(new Dimension(400,600));
     }
 
@@ -14,7 +14,7 @@ class DrawboardTable extends JPanel{
 
         super.paintComponent(g);
 
-        //Factories werden gemalt:
+        //Plates werden gemalt:
         g.setColor(Color.black);
         g.drawOval(0,0,100,100);
         g.drawOval(150,0,100,100);
@@ -42,21 +42,12 @@ class DrawboardTable extends JPanel{
 
 
         //Beispielstein am Spielfeld:
-        g.setColor(Color.red);
+        g.setColor(Color.gray);
         g.fillRect(10,505,40,40);
+        g.setColor(Color.red);
         g.fillRect(55,505,40,40);
         g.setColor(Color.blue);
         g.fillRect(10,550,40,40);
         g.setColor(Color.green);
-
-
-
-
-
-
-
-
-
-
     }
 }

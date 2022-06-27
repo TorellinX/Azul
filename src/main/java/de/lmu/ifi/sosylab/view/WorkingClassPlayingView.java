@@ -26,7 +26,7 @@ public class WorkingClassPlayingView extends JFrame{
         //Zeichenelemente werden übergeben.
         DrawboardPlayerBoard drawboardplayerboardleft = new DrawboardPlayerBoard();
         DrawboardPlayerBoard drawboardplayerboardright = new DrawboardPlayerBoard();
-        DrawboardTable drawboardTable = new DrawboardTable();
+        DrawboardTableCenter drawboardTableCenter = new DrawboardTableCenter();
 
         //Oberes Panel wird mit Combobox gefüllt.
         JPanel panelUp = new JPanel();
@@ -46,7 +46,7 @@ public class WorkingClassPlayingView extends JFrame{
         c.add(panelSouth, BorderLayout.SOUTH);
         c.add(drawboardplayerboardleft, BorderLayout.EAST);
         c.add(drawboardplayerboardright, BorderLayout.WEST);
-        c.add(drawboardTable, BorderLayout.CENTER);
+        c.add(drawboardTableCenter, BorderLayout.CENTER);
 
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1200, 700);

@@ -35,6 +35,7 @@ public class DrawboardPlayerBoard extends JPanel {
         g.setColor(Color.black);
         g.drawRect(160, 0, 40, 40);
 
+        //Rechtecke der Patternlines werden gezeichnet.
         g.setColor(Color.black);
         g.drawRect(120, 40, 40, 40);
         g.drawRect(160, 40, 40, 40);
@@ -57,7 +58,7 @@ public class DrawboardPlayerBoard extends JPanel {
         g.fillRoundRect(200,0,200, 200, 20, 20);
         //g.fillRect(200,0,200,200);
 
-        //Ränder der Rechtecke werden gezeichnet.
+        //Ränder der Rechtecke der Wall werden gezeichnet.
         ((Graphics2D) g).setStroke(new BasicStroke(2));
         g.setColor(Color.blue);
         g.drawRect(201,1,35,35);

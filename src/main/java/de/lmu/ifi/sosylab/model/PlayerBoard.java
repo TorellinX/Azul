@@ -126,8 +126,8 @@ public class PlayerBoard {
         addTileToFloorLine(tile);
       }
     }
-
-    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex) || getNextFreePatternLineIndex(rowIndex) == 0) {
+    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex)
+        || getNextFreePatternLineIndex(rowIndex) == 0) {
       ColorTile[] row = patternLines[rowIndex];
       for (int i = 0; i < tiles.size(); i++) {
         if (freeFields > 0) {

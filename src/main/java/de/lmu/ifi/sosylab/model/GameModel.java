@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Contais all game components on the table.
+ * Contains all game components on the table.
  */
 public class GameModel {
 
@@ -84,22 +84,29 @@ public class GameModel {
   }
 
   public void pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
-    //TODO: Tiles present check
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
-    player.playerBoard.addColorTilesToLine(tiles.selected(), row);
+    if (!player.playerBoard.isColorAlreadyOnWall(color, row)) {
+      player.playerBoard.addColorTilesToLine(tiles.selected(), row);
+    }else {
+      throw new IllegalArgumentException("Color tile is already on the wall!");
+    }
     if (tiles.remaining().isPresent()) {
       tableCenter.addColorTiles(tiles.remaining().get());
     }
   }
 
   public void pickTilesFromTableCenter(Color color, Player player, int row) {
-    //TODO: Tiles present check
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
     if (tiles.penaltyTile().isPresent()) {
       player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
     }
-    player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
+    if (!player.playerBoard.isColorAlreadyOnWall(color, row)) {
+      player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
+    }else {
+      throw new IllegalArgumentException("Color tile is already on the wall!");
+    }
   }
+
 
   public List<Plate> getPlates() {
     return plates;
@@ -127,7 +134,7 @@ public class GameModel {
   /**
    * Moves color tiles from floor line to box and penalty tile to the table center.
    *
-   * @param playerBoard the spicified player board
+   * @param playerBoard the specified player board
    */
   private void moveFloorLineToBox(PlayerBoard playerBoard) {
     for (Tile tile : playerBoard.floorLine) {

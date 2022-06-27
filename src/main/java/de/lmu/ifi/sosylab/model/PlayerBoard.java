@@ -53,7 +53,7 @@ public class PlayerBoard {
   }
 
 
-  private boolean isColorAlreadyOnWall(Color color, int row) {
+  public boolean isColorAlreadyOnWall(Color color, int row) {
     //TODO: add validation
     // TODO: tests
     int column = (row + color.ordinal()) % WALL_SIZE;

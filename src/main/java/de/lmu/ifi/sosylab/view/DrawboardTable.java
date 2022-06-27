@@ -27,8 +27,9 @@ class DrawboardTable extends JPanel{
         g.drawOval(225,350,100,100);
 
         //Spielfeld wird gemalen:
-        g.setColor(Color.gray);
-        g.fillRect(5,500, 390, 190);
+        Color tableColor = new Color(234, 182, 118);
+        g.setColor(tableColor);
+        g.fillRoundRect(5,500,390, 150, 20, 20);
 
         //Beispielsteine in Factory:
         g.setColor(Color.red);

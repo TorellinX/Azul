@@ -32,7 +32,7 @@ public class WorkingClassPlayingView extends JFrame{
         JPanel panelUp = new JPanel();
         panelUp.setSize(1200, 75);
         panelUp.setLayout(new FlowLayout());
-        JComboBox<String> menu = new JComboBox<String>(new String[] {"-menu","restart", "leave", "end game"});
+        JComboBox<String> menu = new JComboBox<String>(new String[] {"- menu -","restart", "leave", "end game"});
         panelUp.add(menu);
         panelUp.setBackground(backroundColor);
 

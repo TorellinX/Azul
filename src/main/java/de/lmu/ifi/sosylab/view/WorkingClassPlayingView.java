@@ -49,7 +49,7 @@ public class WorkingClassPlayingView extends JFrame{
         c.add(drawboardTableCenter, BorderLayout.CENTER);
 
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(1200, 700);
+        frame.setSize(1300, 800);
         frame.setVisible(true);
     }
 }

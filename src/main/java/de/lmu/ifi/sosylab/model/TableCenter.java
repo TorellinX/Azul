@@ -12,8 +12,9 @@ public class TableCenter {
   private List<ColorTile> colorTiles;
   private Optional<PenaltyTile> penaltyTileOptional;
 
-  private record SelectedTilesAndMaybePenaltyTile(List<ColorTile> colorTiles,
+  record SelectedTilesAndMaybePenaltyTile(List<ColorTile> colorTiles,
                                                   Optional<PenaltyTile> penaltyTile) {
+
   }
 
   public TableCenter() {
@@ -34,8 +35,13 @@ public class TableCenter {
     return list;
   }
 
+  public List<ColorTile> getColorTiles() {
+    return colorTiles;
+  }
+
   public SelectedTilesAndMaybePenaltyTile pickTiles(Color color) {
-    List<ColorTile> selectedColorTiles = this.colorTiles.stream().filter(t -> t.getColor() == color).toList();
+    List<ColorTile> selectedColorTiles = this.colorTiles.stream().filter(t -> t.getColor() == color)
+        .toList();
     SelectedTilesAndMaybePenaltyTile returnedTiles = new SelectedTilesAndMaybePenaltyTile(
         selectedColorTiles,
         penaltyTileOptional

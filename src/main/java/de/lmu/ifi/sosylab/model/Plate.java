@@ -2,10 +2,12 @@ package de.lmu.ifi.sosylab.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Plate {
 
-  public record SelectedAndRemainingTiles(List<ColorTile> selected, List<ColorTile> remaining) {
+  public record SelectedAndRemainingTiles(List<ColorTile> selected, Optional<List<ColorTile>> remaining) {
+
   }
 
   private PlateState state = PlateState.FULL;
@@ -33,7 +35,7 @@ public class Plate {
     }
     SelectedAndRemainingTiles selectedAndRemainingTiles = new SelectedAndRemainingTiles(
         tiles.stream().filter(t -> t.getColor() == color).toList(),
-        tiles.stream().filter(t -> t.getColor() != color).toList()
+        Optional.of(tiles.stream().filter(t -> t.getColor() != color).toList())
     );
     state = PlateState.EMPTY;
     tiles.clear();
@@ -47,4 +49,9 @@ public class Plate {
   public List<ColorTile> getTiles() {
     return tiles;
   }
+
+  public boolean containsColor(Color color) {
+    return tiles.stream().anyMatch(t -> t.getColor() == color);
+  }
+
 }

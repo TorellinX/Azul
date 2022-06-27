@@ -1,6 +1,5 @@
 package de.lmu.ifi.sosylab.model;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Player {
@@ -9,7 +8,7 @@ public class Player {
   private PlayerState state;
   private int score = 0;
   //private boolean isHost;
-  private PlayerBoard playerBoard;
+  PlayerBoard playerBoard;
 
   public Player(String nickname, PlayerState state) {
     this.nickname = nickname;
@@ -17,8 +16,19 @@ public class Player {
     this.playerBoard = new PlayerBoard();
   }
 
+  public Player(String nickname) {
+    this.nickname = nickname;
+    this.state = PlayerState.READY;
+    this.playerBoard = new PlayerBoard();
+  }
+
+
   public String getNickname() {
     return nickname;
+  }
+
+  public PlayerBoard getPlayerBoard() {
+    return playerBoard;
   }
 
   public PlayerState getState() {

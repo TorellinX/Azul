@@ -6,13 +6,13 @@ import java.io.Serial;
 import javax.swing.JPanel;
 import javax.swing.text.StyledEditorKit;
 
-public class DrawboardPlayerBoard extends JPanel {
+public class DrawboardPlayerBoardLeft extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JPanel drawboardplayerboard;
     private Graphics2D g;
 
-    public DrawboardPlayerBoard(){
+    public DrawboardPlayerBoardLeft(){
         setPreferredSize(new Dimension(400,700));
         repaint();
     }
@@ -30,7 +30,7 @@ public class DrawboardPlayerBoard extends JPanel {
         g = (Graphics2D) g;
 
 
-        //Zuerst wird das ober Spielfeld gezeichnet, das immer gebraucht wird.
+        //Zuerst wird das obere Spielfeld gezeichnet, das immer gebraucht wird.
         //username links oben wird geschrieben
         g.setColor(Color.black);
         g.drawString("user 1", 5,15);

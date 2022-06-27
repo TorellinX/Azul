@@ -63,12 +63,5 @@ class TestSpielfeld extends JPanel{
         g.drawRect(241,81,38,38);
         g.drawRect(281,121,38,38);
         g.drawRect(321,161,38,38);
-
-
-
-
-
-
-
-    }
+        }
 }

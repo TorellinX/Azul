@@ -42,22 +42,11 @@ public class HilfsklasseDrawboard extends JFrame{
         panelUp.setBackground(backroundColor);
 
 
-        //Linkes Panel wird erstellt und mit Spielfeld gefüllt.
-        JPanel panelLeft = new JPanel();
-        panelLeft.setSize(400,400);
-        panelLeft.add(drawboardplayerboard);
-        panelLeft.setBackground(backroundColor);
 
-        //Rechtes Panel wird erstellt und mit Spielfeld gefüllt.
-        JPanel panelRight = new JPanel();
-        panelRight.setSize(400,400);
-        BoxLayout boxlayoutright = new BoxLayout(panelRight, BoxLayout.Y_AXIS);
-        panelRight.setLayout(boxlayoutright);
-        panelRight.setBackground(backroundColor);
 
         //Mittleres Panel wird erstellt und mit Tellern gefüllt.
         JPanel panelCenter = new JPanel();
-        panelCenter.setSize(400,400);
+        panelCenter.setSize(200,400);
         BoxLayout boxlayoutcenter = new BoxLayout(panelCenter, BoxLayout.Y_AXIS);
         panelCenter.setLayout(boxlayoutcenter);
         //panelCenter.add(threeFactories.threeFactoriesPanel);
@@ -73,8 +62,8 @@ public class HilfsklasseDrawboard extends JFrame{
         Container c = frame.getContentPane();
         c.add(panelUp, BorderLayout.NORTH);
         c.add(panelSouth, BorderLayout.SOUTH);
-        c.add(panelRight, BorderLayout.EAST);
-        c.add(panelLeft, BorderLayout.WEST);
+        c.add(drawboardplayerboard, BorderLayout.EAST);
+        c.add(drawboardplayerboard, BorderLayout.WEST);
         c.add(panelCenter, BorderLayout.CENTER);
 
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

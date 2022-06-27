@@ -19,4 +19,16 @@ public class ColorTile extends Tile {
   public String toString() {
     return color.toString();
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ColorTile colorTile = (ColorTile) o;
+    return color.equals(colorTile.color);
+  }
 }

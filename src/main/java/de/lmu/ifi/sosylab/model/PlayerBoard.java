@@ -29,14 +29,18 @@ public class PlayerBoard {
 
   public int countFreeFieldsInRow(int rowIndex) {
     ColorTile[] row = patternLines[rowIndex];
-    for (int i = 0; i < row.length; i++) {
+    for (int i = row.length - 1; i >= 0; i--) {
       if (row[i] == null) {
-        return row.length - i;
+        return i + 1;
       }
     }
     return 0;
   }
 
+  /**
+   * @param row
+   * @return the next free index or -1
+   */
   public int getNextFreePatternLineIndex(int row) {
     for (int i = 0; i < patternLines[row].length; i++) {
       if (patternLines[row][i] == null) {
@@ -97,11 +101,19 @@ public class PlayerBoard {
     return wall;
   }
 
+
   public List<Tile> getFloorLine() {
     return floorLine;
   }
 
 
+  /**
+   * Adds selected ColorTiles of the same color to the specified row from right to left. If there
+   * are more tiles than there are free spaces in a row, tiles will be added to the floorLine.
+   *
+   * @param tiles    tiles to be added
+   * @param rowIndex row of the PatternLines
+   */
   public void addColorTilesToLine(List<ColorTile> tiles, int rowIndex) {
     int freeFields = countFreeFieldsInRow(rowIndex);
     if (freeFields == 0) {
@@ -115,14 +127,14 @@ public class PlayerBoard {
         addTileToFloorLine(tile);
       }
     }
-    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex) || getNextFreePatternLineIndex(rowIndex) == 0) {
+    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex)
+        || getNextFreePatternLineIndex(rowIndex) == 0) {
       ColorTile[] row = patternLines[rowIndex];
       for (int i = 0; i < tiles.size(); i++) {
-        if(freeFields >= tiles.size()) {
-          row[row.length - freeFields + i] = tiles.get(i);
+        if (freeFields > 0) {
+          row[freeFields - 1] = tiles.get(i);
           freeFields--;
-        }
-        else {
+        } else {
           addTileToFloorLine(tiles.get(i));
         }
       }
@@ -130,6 +142,7 @@ public class PlayerBoard {
   }
 
   public void addTileToFloorLine(Tile tile) {
+    // TODO: floorLine should contain max. 7 Tiles! The rest goes in the box
     floorLine.add(tile);
   }
 

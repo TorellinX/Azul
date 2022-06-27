@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.model;
 
+import java.util.Objects;
+
 /**
  * Tiles with a color.
  */
@@ -30,5 +32,10 @@ public class ColorTile extends Tile {
     }
     ColorTile colorTile = (ColorTile) o;
     return color.equals(colorTile.color);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(color);
   }
 }

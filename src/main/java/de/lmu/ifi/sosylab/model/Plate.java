@@ -6,7 +6,8 @@ import java.util.Optional;
 
 public class Plate {
 
-  public record SelectedAndRemainingTiles(List<ColorTile> selected, Optional<List<ColorTile>> remaining) {
+  public record SelectedAndRemainingTiles(List<ColorTile> selected,
+                                          Optional<List<ColorTile>> remaining) {
 
   }
 

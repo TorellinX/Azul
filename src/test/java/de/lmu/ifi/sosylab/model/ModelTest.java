@@ -38,7 +38,7 @@ public class ModelTest {
   @Test
   public void getAmountOfPlates_accordingToPlayers() {
     GameModel model = newModel(testPlayers);
-    int amount = testPlayers.size() *2 +1;
+    int amount = testPlayers.size() * 2 + 1;
     assertEquals(model.getPlates().size(), amount);
   }
 

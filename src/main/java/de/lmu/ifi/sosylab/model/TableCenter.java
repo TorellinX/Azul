@@ -13,7 +13,7 @@ public class TableCenter {
   private Optional<PenaltyTile> penaltyTileOptional;
 
   record SelectedTilesAndMaybePenaltyTile(List<ColorTile> colorTiles,
-                                                  Optional<PenaltyTile> penaltyTile) {
+                                          Optional<PenaltyTile> penaltyTile) {
 
   }
 

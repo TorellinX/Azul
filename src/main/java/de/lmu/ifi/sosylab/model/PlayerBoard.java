@@ -1,6 +1,5 @@
 package de.lmu.ifi.sosylab.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,10 +14,8 @@ public class PlayerBoard {
   private List<ColorTile> pickedTiles;
 
 
-
-
   public PlayerBoard() {
-      patternLines = new ColorTile[5][];
+    patternLines = new ColorTile[5][];
 
   }
 
@@ -34,7 +31,7 @@ public class PlayerBoard {
 
   public int patternLineIndex(int row) {
     for (int i = 0; i < patternLines[row].length; i++) {
-      if (patternLines[row][i] == null){
+      if (patternLines[row][i] == null) {
         return i;
       }
     }
@@ -99,11 +96,12 @@ public class PlayerBoard {
       throw new IllegalArgumentException("Color already on wall");
     }
     if (rowIndex == -1) {
-      for(Tile tile : tiles) {
-          addTileToFloorLine(tile);
+      for (Tile tile : tiles) {
+        addTileToFloorLine(tile);
       }
     }
-    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex) || patternLineIndex(rowIndex) == 0){
+    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex)
+        || patternLineIndex(rowIndex) == 0) {
       ColorTile[] row = patternLines[rowIndex];
       for (int i = 0; i < tiles.size(); i++) {
         row[row.length - freeFields + i] = tiles.get(i);

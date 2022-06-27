@@ -20,7 +20,6 @@ public class GameModel {
   public static final int TILES_PER_PLATE = 4;
 
 
-
   private final List<Player> players;
 
   private State state = State.RUNNING;
@@ -66,6 +65,7 @@ public class GameModel {
 
   /**
    * create Plates according to the amount of Players and fill them with Tiles.
+   *
    * @return a List of filled Plates.
    */
   private List<Plate> createAndFillPlates() {
@@ -91,11 +91,11 @@ public class GameModel {
   }
 
   public void pickTilesFromTableCenter(Color color, Player player, int row) {
-   SelectedTilesAndMaybePenaltyTile tiles =  tableCenter.pickTiles(color);
-   player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
-   if(tiles.penaltyTile().isPresent()){
-     player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
-   }
+    SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
+    player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
+    if (tiles.penaltyTile().isPresent()) {
+      player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
+    }
   }
 
   public List<Plate> getPlates() {
@@ -108,7 +108,7 @@ public class GameModel {
 
   public ArrayList<String> getPlayerNames() {
     ArrayList<String> names = new ArrayList<>();
-    for (Player player: players) {
+    for (Player player : players) {
       names.add(player.getNickname());
     }
     return names;
@@ -150,7 +150,7 @@ public class GameModel {
   private void endRound() {
     // TODO: checks and table cleanup (move tiles to box, ...).
     round++;
-    if(bag.isEmpty()){
+    if (bag.isEmpty()) {
       moveBoxTilesToBagAndShuffle();
     }
   }

@@ -179,4 +179,83 @@ public class GameModel {
   private void shuffleBag() {
     Collections.shuffle(bag, random);
   }
+
+  private void calculateScore(){
+    List<Player> players = getPlayers();
+
+    for (Player player : players) {
+      ColorTile[][] lines = player.playerBoard.patternLines;
+      for (int row = 0; row < lines.length; row++) {
+        if(player.playerBoard.getNextFreePatternLineIndex(row) == -1) {
+          Color color = player.playerBoard.getPatternLineColor(row);
+          player.playerBoard.addTileToWall(color, row);
+          int column = player.playerBoard.getColumnOnWall(color, row);
+          System.out.println(Arrays.deepToString(player.playerBoard.wall));
+          calculateScoreFromLinkedTiles(row, column);
+
+        }
+
+
+
+      }
+
+
+      // 2 points / horizontal
+      // 7 points / vertical
+      // 10 points / color
+
+      // - floorLine penalty points
+
+      // player.score = ...
+    }
+  }
+
+  private int calculateScoreFromLinkedTiles(int row, int column) {
+    // TODO
+    // 1 point pro tile for linked tiles horizontally
+    List<int[]> neighbors = getNeighbors(row, column);
+
+    // 1 point pro tile for linked tiles vertically
+
+    return 0;
+  }
+
+  private List<int[]> getNeighbors(int row, int column) {
+    // TODO: !!! only vertically/horizontally
+
+    List<int[]> neighbors = new ArrayList<>();
+    if (column != 0) {
+      neighbors.add(new int[]{column - 1, row});
+      if (row != 0) {
+        neighbors.add(new int[]{column - 1, row - 1});
+      }
+      if (row != PlayerBoard.WALL_SIZE - 1) {
+        neighbors.add(new int[]{column - 1, row + 1});
+      }
+    }
+    if (column != PlayerBoard.WALL_SIZE - 1) {
+      neighbors.add(new int[]{column + 1, row});
+      if (row != 0) {
+        neighbors.add(new int[]{column + 1, row - 1});
+      }
+      if (row != PlayerBoard.WALL_SIZE - 1) {
+        neighbors.add(new int[]{column + 1, row + 1});
+      }
+    }
+    if (row != 0) {
+      neighbors.add(new int[]{column, row - 1});
+    }
+    if (row != PlayerBoard.WALL_SIZE - 1) {
+      neighbors.add(new int[]{column, row + 1});
+    }
+    return neighbors;
+  }
+
+  public void test() {
+    ArrayList<ColorTile> redTile = new ArrayList<>();
+    redTile.add(new ColorTile(Color.RED));
+    getPlayers().get(0).playerBoard.addColorTilesToLine(redTile, 0);
+
+    calculateScore();
+  }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PlayerBoard {
 
-  private final static int WALL_SIZE = 5;
+  final static int WALL_SIZE = 5;
 
   private int score;
   ColorTile[][] patternLines;
@@ -41,7 +41,7 @@ public class PlayerBoard {
    * @param row
    * @return the next free index or -1
    */
-  public int patternLineIndex(int row) {
+  public int getNextFreePatternLineIndex(int row) {
     for (int i = 0; i < patternLines[row].length; i++) {
       if (patternLines[row][i] == null) {
         return i;
@@ -60,7 +60,7 @@ public class PlayerBoard {
     return color;
   }
 
-  private void addTileToWall(Color color, int row) {
+  void addTileToWall(Color color, int row) {
     //TODO: add validation
     // TODO: tests
     int column = (row + color.ordinal()) % WALL_SIZE;
@@ -71,8 +71,12 @@ public class PlayerBoard {
   public boolean isColorAlreadyOnWall(Color color, int row) {
     //TODO: add validation
     // TODO: tests
-    int column = (row + color.ordinal()) % WALL_SIZE;
+    int column = getColumnOnWall(color, row);
     return wall[row][column];
+  }
+
+  int getColumnOnWall(Color color, int row) {
+    return (row + color.ordinal()) % WALL_SIZE;
   }
 
   public int getScore() {
@@ -122,8 +126,8 @@ public class PlayerBoard {
         addTileToFloorLine(tile);
       }
     }
-    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex)
-        || patternLineIndex(rowIndex) == 0) {
+
+    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex) || getNextFreePatternLineIndex(rowIndex) == 0) {
       ColorTile[] row = patternLines[rowIndex];
       for (int i = 0; i < tiles.size(); i++) {
         if (freeFields > 0) {

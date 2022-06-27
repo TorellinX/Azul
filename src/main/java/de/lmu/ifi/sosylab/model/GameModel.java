@@ -120,6 +120,7 @@ public class GameModel {
     }
   }
 
+
   public List<Plate> getPlates() {
     return plates;
   }

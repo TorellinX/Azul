@@ -3,8 +3,8 @@ package de.lmu.ifi.sosylab.view;
 import javax.swing.*;
 import java.awt.*;
 
-class Table extends JPanel{
-    public Table(){
+class DrawboardTable extends JPanel{
+    public DrawboardTable(){
         setPreferredSize(new Dimension(400,600));
     }
 

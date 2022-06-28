@@ -1,8 +1,8 @@
-Changelog team-07:
+# Changelog team-07:
 
-#Erste Abgabe:
+## Erste Abgabe:
 
-##Graphische Oberfläche
+### Graphische Oberfläche
 
 > - Nutzer können sich mit einem frei gewählten Namen anmelden.
 > - Die graphische Oberfläche konfiguriert ein Azul Spiel gemäß der angemeldeten Spielerzahl.
@@ -11,10 +11,10 @@ Changelog team-07:
 > - Eine Regelverletzung bei der Auswahl der Reihen wird als pop-up Fenster agezeigt und die Auswahl muss wiederholt werden.
 > - Ziehen der Steine ist nicht möglich.
 
-##Funktionalität des Modells
+### Funktionalität des Modells
 
 > - Die Methode zur Auswahl der Steine aus der Fabrik implementiert auch gleich die Zuordnung der Steine der nicht gewählten Farbe in die Tischmitte. 
 > - In einer fabrik werden alle Steine der angeklickten Farbe ausgewählt.
 > - Die Methode zur Auswahl aus der Tischmitte ordnet den Strafstein automatisch dem ersten Spieler zu, der aus der Tischmitte Steine zieht.
-< - Am Rundenende wird automatisch der score für alle Spieler gemäß Anleitung ermittelt.
+> - Am Rundenende wird automatisch der score für alle Spieler gemäß Anleitung ermittelt.
 

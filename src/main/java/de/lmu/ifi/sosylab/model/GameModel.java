@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.model;
 
+import static java.util.Objects.requireNonNull;
+
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
 import java.beans.PropertyChangeSupport;
@@ -53,6 +55,13 @@ public class GameModel {
     this.players = players;
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
+    linkBoxToPlayerBoard();
+  }
+
+  private void linkBoxToPlayerBoard() {
+    for (Player player : players) {
+      player.playerBoard.box = this.box;
+    }
   }
 
   /**
@@ -180,82 +189,81 @@ public class GameModel {
     Collections.shuffle(bag, random);
   }
 
-  private void calculateScore(){
+  private void calculateScore() {
     List<Player> players = getPlayers();
-
     for (Player player : players) {
       ColorTile[][] lines = player.playerBoard.patternLines;
+      int scoreDifference = 0;
       for (int row = 0; row < lines.length; row++) {
-        if(player.playerBoard.getNextFreePatternLineIndex(row) == -1) {
+        if (player.playerBoard.getNextFreePatternLineIndex(row) == -1) {
           Color color = player.playerBoard.getPatternLineColor(row);
           player.playerBoard.addTileToWall(color, row);
           int column = player.playerBoard.getColumnOnWall(color, row);
-          System.out.println(Arrays.deepToString(player.playerBoard.wall));
-          calculateScoreFromLinkedTiles(row, column);
+          System.out.println(player.getNickname() + ": " + Arrays.deepToString(
+              player.playerBoard.wall)); // TTTTTTTTTTTTTTTTTTT
 
+          scoreDifference += countVerticalLinkedTiles(row, column, player);
+          scoreDifference += countHorizontalLinkedTiles(row, column, player);
         }
-
-
-
       }
-
-
-      // 2 points / horizontal
-      // 7 points / vertical
+      // 2 points / horizontal (row)
+      // 7 points / vertical (column)
       // 10 points / color
 
       // - floorLine penalty points
-
-      // player.score = ...
+      System.out.println("scoreDifference: " + scoreDifference);
+      player.score += scoreDifference;
+      if (player.score < 0) {
+        player.score = 0;
+      }
     }
   }
 
-  private int calculateScoreFromLinkedTiles(int row, int column) {
-    // TODO
-    // 1 point pro tile for linked tiles horizontally
-    List<int[]> neighbors = getNeighbors(row, column);
-
+  private int countVerticalLinkedTiles(int row, int column, Player player) {
     // 1 point pro tile for linked tiles vertically
+    if (row < 0 || row > PlayerBoard.WALL_SIZE || column < 0 || column > PlayerBoard.WALL_SIZE) {
+      throw new IllegalArgumentException("Row and column must be within wall size.");
+    }
+    requireNonNull(player);
 
-    return 0;
+    int counter = 1;    // tile itself
+    int currentRow = row - 1;
+    while (currentRow >= 0 && player.playerBoard.wall[currentRow][column]) {
+      counter++;
+      currentRow--;
+    }
+    currentRow = row + 1;
+    while (currentRow < PlayerBoard.WALL_SIZE && player.playerBoard.wall[currentRow][column]) {
+      counter++;
+      currentRow++;
+    }
+    System.out.println("vertical counter: " + counter);
+    return counter;
   }
 
-  private List<int[]> getNeighbors(int row, int column) {
-    // TODO: !!! only vertically/horizontally
+  private int countHorizontalLinkedTiles(int row, int column, Player player) {
+    // 1 point pro tile for linked tiles horizontally
+    if (row < 0 || row > PlayerBoard.WALL_SIZE || column < 0 || column > PlayerBoard.WALL_SIZE) {
+      throw new IllegalArgumentException("Row and column must be within wall size.");
+    }
+    requireNonNull(player);
 
-    List<int[]> neighbors = new ArrayList<>();
-    if (column != 0) {
-      neighbors.add(new int[]{column - 1, row});
-      if (row != 0) {
-        neighbors.add(new int[]{column - 1, row - 1});
-      }
-      if (row != PlayerBoard.WALL_SIZE - 1) {
-        neighbors.add(new int[]{column - 1, row + 1});
-      }
+    int counter = 1;    // tile itself
+    int currentCol = column - 1;
+    while (currentCol >= 0 && player.playerBoard.wall[row][currentCol]) {
+      counter++;
+      currentCol--;
     }
-    if (column != PlayerBoard.WALL_SIZE - 1) {
-      neighbors.add(new int[]{column + 1, row});
-      if (row != 0) {
-        neighbors.add(new int[]{column + 1, row - 1});
-      }
-      if (row != PlayerBoard.WALL_SIZE - 1) {
-        neighbors.add(new int[]{column + 1, row + 1});
-      }
+    currentCol = column + 1;
+    while (currentCol < PlayerBoard.WALL_SIZE && player.playerBoard.wall[row][currentCol]) {
+      counter++;
+      currentCol++;
     }
-    if (row != 0) {
-      neighbors.add(new int[]{column, row - 1});
-    }
-    if (row != PlayerBoard.WALL_SIZE - 1) {
-      neighbors.add(new int[]{column, row + 1});
-    }
-    return neighbors;
+    System.out.println("horizontal counter: " + counter);
+    return counter;
   }
 
   public void test() {
-    ArrayList<ColorTile> redTile = new ArrayList<>();
-    redTile.add(new ColorTile(Color.RED));
-    getPlayers().get(0).playerBoard.addColorTilesToLine(redTile, 0);
-
-    calculateScore();
   }
+
 }

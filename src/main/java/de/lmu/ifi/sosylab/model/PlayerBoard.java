@@ -1,5 +1,8 @@
 package de.lmu.ifi.sosylab.model;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,13 +13,13 @@ public class PlayerBoard {
   private int score;
   ColorTile[][] patternLines;
   boolean[][] wall = new boolean[WALL_SIZE][WALL_SIZE];
-  List<Tile> floorLine;
+  List<Tile> floorLine = new ArrayList<>(7);  // 7 just optimizes, does not limit the maximum size.
   private List<ColorTile> pickedTiles;
+  List<ColorTile> box;
 
 
   public PlayerBoard() {
     patternLines = createPatternLines();
-
   }
 
   private ColorTile[][] createPatternLines() {
@@ -115,6 +118,9 @@ public class PlayerBoard {
    */
   public void addColorTilesToLine(List<ColorTile> tiles, int rowIndex) {
     int freeFields = countFreeFieldsInRow(rowIndex);
+    if (tiles.size() == 0) {
+      throw new IllegalArgumentException("Trying to add an empty list of tiles to the patternLine.");
+    }
     if (freeFields == 0) {
       throw new IllegalArgumentException("Row is full");
     }
@@ -122,7 +128,7 @@ public class PlayerBoard {
       throw new IllegalArgumentException("Color already on wall");
     }
     if (rowIndex == -1) {
-      for (Tile tile : tiles) {
+      for (ColorTile tile : tiles) {
         addTileToFloorLine(tile);
       }
     }
@@ -141,8 +147,19 @@ public class PlayerBoard {
   }
 
   public void addTileToFloorLine(Tile tile) {
-    // TODO: floorLine should contain max. 7 Tiles! The rest goes in the box
+    if (floorLine.size() > 7) {
+      throw new RuntimeException("Maximum floorLine size exceeded.");
+    }
+    if (floorLine.size() == 7) {
+      addTileToBox((ColorTile) tile);
+      return;
+    }
     floorLine.add(tile);
+  }
+
+  void addTileToBox(ColorTile tile) {
+    requireNonNull((tile));
+    box.add(tile);
   }
 
 }

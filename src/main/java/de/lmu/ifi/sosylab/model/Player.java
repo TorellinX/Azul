@@ -6,7 +6,7 @@ public class Player {
 
   private final String nickname;
   private PlayerState state;
-  private int score = 0;
+  int score = 0;
   //private boolean isHost;
   PlayerBoard playerBoard;
 

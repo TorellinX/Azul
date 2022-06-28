@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AzulView extends JFrame {
+public class MainMenuView extends JFrame {
 
   private int width = 1200;
   private int hight = 700;
@@ -43,11 +43,8 @@ public class AzulView extends JFrame {
   private JButton openplayingfield;
 
 
-  PlayingView playingviewframe = new PlayingView();
 
-
-
-  public AzulView() {
+  public MainMenuView() {
     super("Azul");
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -65,6 +62,9 @@ public class AzulView extends JFrame {
     showMainMenu();
 
   }
+
+  PlayingView playingviewframe = new PlayingView();
+
 
   private void initialize() {
     layout = new CardLayout();

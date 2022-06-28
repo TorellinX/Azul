@@ -15,14 +15,21 @@ public class PlayingView extends JFrame{
     private static final long serialVersionUID = 1L;
 
     public PlayingView(){
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setResizable(false);
+        setSize(1200, 700);
+
+        createPlayingView();
+
             }
 
-    public static void main(String[] args) {
+    private void createPlayingView() {
 
         JFrame playingviewframe = new JFrame("Azul");
 
 
         playingviewframe.setLayout(new BorderLayout());
+
 
         Color backroundColor = new Color(135, 206, 250);
 
@@ -1131,7 +1138,6 @@ public class PlayingView extends JFrame{
             }
         });
 
-        playingviewframe.setVisible(true);
 
 
     }

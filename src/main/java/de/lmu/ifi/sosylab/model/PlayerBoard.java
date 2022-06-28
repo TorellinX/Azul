@@ -1,22 +1,25 @@
 package de.lmu.ifi.sosylab.model;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class PlayerBoard {
 
-  private final static int WALL_SIZE = 5;
+  final static int WALL_SIZE = 5;
 
   private int score;
   ColorTile[][] patternLines;
   boolean[][] wall = new boolean[WALL_SIZE][WALL_SIZE];
-  List<Tile> floorLine;
+  List<Tile> floorLine = new ArrayList<>(7);  // 7 just optimizes, does not limit the maximum size.
   private List<ColorTile> pickedTiles;
+  List<ColorTile> box;
 
 
   public PlayerBoard() {
     patternLines = createPatternLines();
-
   }
 
   private ColorTile[][] createPatternLines() {
@@ -28,6 +31,12 @@ public class PlayerBoard {
   }
 
   public int countFreeFieldsInRow(int rowIndex) {
+    if (rowIndex > WALL_SIZE) {
+      throw new IllegalArgumentException("Row Index must be within the wall size.");
+    }
+    if (rowIndex < 0) {
+      throw new IllegalArgumentException("Row Index must be positive");
+    }
     ColorTile[] row = patternLines[rowIndex];
     for (int i = row.length - 1; i >= 0; i--) {
       if (row[i] == null) {
@@ -41,7 +50,7 @@ public class PlayerBoard {
    * @param row
    * @return the next free index or -1
    */
-  public int patternLineIndex(int row) {
+  public int getNextFreePatternLineIndex(int row) {
     for (int i = 0; i < patternLines[row].length; i++) {
       if (patternLines[row][i] == null) {
         return i;
@@ -60,7 +69,7 @@ public class PlayerBoard {
     return color;
   }
 
-  private void addTileToWall(Color color, int row) {
+  void addTileToWall(Color color, int row) {
     //TODO: add validation
     // TODO: tests
     int column = (row + color.ordinal()) % WALL_SIZE;
@@ -71,8 +80,12 @@ public class PlayerBoard {
   private boolean isColorAlreadyOnWall(Color color, int row) {
     //TODO: add validation
     // TODO: tests
-    int column = (row + color.ordinal()) % WALL_SIZE;
+    int column = getColumnOnWall(color, row);
     return wall[row][column];
+  }
+
+  int getColumnOnWall(Color color, int row) {
+    return (row + color.ordinal()) % WALL_SIZE;
   }
 
   public int getScore() {
@@ -97,6 +110,7 @@ public class PlayerBoard {
     return wall;
   }
 
+
   public List<Tile> getFloorLine() {
     return floorLine;
   }
@@ -111,6 +125,9 @@ public class PlayerBoard {
    */
   public void addColorTilesToLine(List<ColorTile> tiles, int rowIndex) {
     int freeFields = countFreeFieldsInRow(rowIndex);
+    if (tiles.size() == 0) {
+      throw new IllegalArgumentException("Trying to add an empty list of tiles to the patternLine.");
+    }
     if (freeFields == 0) {
       throw new IllegalArgumentException("Row is full");
     }
@@ -118,12 +135,12 @@ public class PlayerBoard {
       throw new IllegalArgumentException("Color already on wall");
     }
     if (rowIndex == -1) {
-      for (Tile tile : tiles) {
+      for (ColorTile tile : tiles) {
         addTileToFloorLine(tile);
       }
     }
     if (tiles.get(0).getColor() == getPatternLineColor(rowIndex)
-        || patternLineIndex(rowIndex) == 0) {
+        || getNextFreePatternLineIndex(rowIndex) == 0) {
       ColorTile[] row = patternLines[rowIndex];
       for (int i = 0; i < tiles.size(); i++) {
         if (freeFields > 0) {
@@ -137,8 +154,19 @@ public class PlayerBoard {
   }
 
   public void addTileToFloorLine(Tile tile) {
-    // TODO: floorLine should contain max. 7 Tiles! The rest goes in the box
+    if (floorLine.size() > 7) {
+      throw new RuntimeException("Maximum floorLine size exceeded.");
+    }
+    if (floorLine.size() == 7) {
+      addTileToBox((ColorTile) tile);
+      return;
+    }
     floorLine.add(tile);
+  }
+
+  void addTileToBox(ColorTile tile) {
+    requireNonNull((tile));
+    box.add(tile);
   }
 
 }

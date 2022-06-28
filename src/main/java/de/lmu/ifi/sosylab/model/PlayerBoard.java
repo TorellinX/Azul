@@ -31,6 +31,12 @@ public class PlayerBoard {
   }
 
   public int countFreeFieldsInRow(int rowIndex) {
+    if (rowIndex > WALL_SIZE) {
+      throw new IllegalArgumentException("Row Index must be within the wall size.");
+    }
+    if (rowIndex < 0) {
+      throw new IllegalArgumentException("Row Index must be positive");
+    }
     ColorTile[] row = patternLines[rowIndex];
     for (int i = row.length - 1; i >= 0; i--) {
       if (row[i] == null) {

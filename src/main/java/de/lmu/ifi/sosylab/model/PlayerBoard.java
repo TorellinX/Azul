@@ -125,7 +125,8 @@ public class PlayerBoard {
   public void addColorTilesToLine(List<ColorTile> tiles, int rowIndex) {
     int freeFields = countFreeFieldsInRow(rowIndex);
     if (tiles.size() == 0) {
-      throw new IllegalArgumentException("Trying to add an empty list of tiles to the patternLine.");
+      throw new IllegalArgumentException(
+          "Trying to add an empty list of tiles to the patternLine.");
     }
     if (freeFields == 0) {
       throw new IllegalArgumentException("Row is full");
@@ -156,11 +157,27 @@ public class PlayerBoard {
     if (floorLine.size() > 7) {
       throw new RuntimeException("Maximum floorLine size exceeded.");
     }
+    if (tile instanceof PenaltyTile) {
+      // TODO
+      shiftTilesInPatternLine((PenaltyTile) tile);
+      floorLine.add(0, tile);
+    }
     if (floorLine.size() == 7) {
       addTileToBox((ColorTile) tile);
       return;
     }
     floorLine.add(tile);
+  }
+
+  private void shiftTilesInPatternLine(PenaltyTile penaltyTile) {
+    if (floorLine.size() == 7) {
+      addTileToBox((ColorTile) floorLine.get(floorLine.size() - 1));
+      floorLine.add(floorLine.size() - 1, null);
+    }
+    for (int i = floorLine.size() - 1; i >= 0; i--) {
+      floorLine.add(floorLine.get(i - 1));
+    }
+    // TODO
   }
 
   void addTileToBox(ColorTile tile) {

@@ -270,65 +270,81 @@ public class GameModel {
   }
 
   private int calculatePenaltyPoints(Player player) {
+    requireNonNull(player);
     int numberOfTilesInFloorLine = player.playerBoard.floorLine.size();
     return PENALTY_POINTS[numberOfTilesInFloorLine];
   }
 
 
-  private void calculateEndScore(Player player) {
-    // TODO
-    int comletedColumns = countCompletedColumns(player);
-    int comletedRows = countCompletedRows(player);
-    int completedColors = countCompletedColors(player);
-    // 2 points / horizontal (row)
-    // 7 points / vertical (column)
-    // 10 points / color
-    player.score += comletedRows * POINTS_PRO_ROW + comletedColumns * POINTS_PRO_COLUMN
-        + completedColors * POINTS_PRO_COLOR;
+  private void calculateEndScore() {
+    for (Player player : getPlayers()) {
+      int comletedColumns = countCompletedColumns(player);
+      int comletedRows = countCompletedRows(player);
+      int completedColors = countCompletedColors(player);
+      // 2 points / horizontal (row)
+      // 7 points / vertical (column)
+      // 10 points / color
+      player.score += comletedRows * POINTS_PRO_ROW + comletedColumns * POINTS_PRO_COLUMN
+          + completedColors * POINTS_PRO_COLOR;
+    }
   }
 
   private int countCompletedColumns(Player player) {
-    // TODO
-    return 0;
+    requireNonNull(player);
+    int counterCompletedColumns = 0;
+    for (int col = 0; col < PlayerBoard.WALL_SIZE; col++) {
+      int completesTiles = 0;
+      for (int row = 0; row < PlayerBoard.WALL_SIZE; row++) {
+        if (player.playerBoard.wall[row][col]) {
+          completesTiles++;
+        }
+      }
+      if (completesTiles == PlayerBoard.WALL_SIZE) {
+        counterCompletedColumns++;
+      }
+    }
+    System.out.println("Completed Columns: " + counterCompletedColumns);
+    return counterCompletedColumns;
   }
 
   private int countCompletedRows(Player player) {
-    // TODO
-    return 0;
+    requireNonNull(player);
+    int counterCompletedRows = 0;
+    for (boolean[] row : player.playerBoard.wall) {
+      int completesTiles = 0;
+      for (boolean tile : row) {
+        if (tile) {
+          completesTiles++;
+        }
+      }
+      if (completesTiles == PlayerBoard.WALL_SIZE) {
+        counterCompletedRows++;
+      }
+    }
+    System.out.println("Completed Rows: " + counterCompletedRows);
+    return counterCompletedRows;
   }
 
   private int countCompletedColors(Player player) {
-    // TODO
-    return 0;
+    requireNonNull(player);
+    int counterCompletedColors = 0;
+    for (Color color : Color.values()) {
+      int tilesOfColor = 0;
+      for (int row = 0; row < PlayerBoard.WALL_SIZE; row++) {
+        int column = player.playerBoard.getColumnOnWall(color, row);
+        if (player.playerBoard.wall[row][column]) {
+          tilesOfColor++;
+        }
+      }
+      if (tilesOfColor == PlayerBoard.WALL_SIZE) {
+        counterCompletedColors++;
+      }
+    }
+    System.out.println("Completed Colors: " + counterCompletedColors);
+    return counterCompletedColors;
   }
 
   public void test() {
-    ArrayList<ColorTile> redTile = new ArrayList<>();
-    redTile.add(new ColorTile(Color.RED));
-    redTile.add(new ColorTile(Color.RED));
-    redTile.add(new ColorTile(Color.RED));
-    redTile.add(new ColorTile(Color.RED));
-    ArrayList<ColorTile> yellowTiles = new ArrayList<>();
-    yellowTiles.add(new ColorTile(Color.YELLOW));
-    yellowTiles.add(new ColorTile(Color.YELLOW));
-    yellowTiles.add(new ColorTile(Color.YELLOW));
-    yellowTiles.add(new ColorTile(Color.YELLOW));
-    yellowTiles.add(new ColorTile(Color.YELLOW));
-    ArrayList<ColorTile> blueTiles = new ArrayList<>();
-    blueTiles.add(new ColorTile(Color.BLUE));
-    blueTiles.add(new ColorTile(Color.BLUE));
-    blueTiles.add(new ColorTile(Color.BLUE));
-    blueTiles.add(new ColorTile(Color.BLUE));
-    blueTiles.add(new ColorTile(Color.BLUE));
 
-    getPlayers().get(0).playerBoard.wall[1][0] = true;
-    getPlayers().get(0).playerBoard.wall[1][4] = true;
-    getPlayers().get(0).playerBoard.wall[1][2] = true;
-    getPlayers().get(0).playerBoard.wall[1][1] = true;
-    getPlayers().get(0).playerBoard.addColorTilesToLine(redTile, 1);
-    getPlayers().get(0).playerBoard.addColorTilesToLine(blueTiles, 4);
-
-    calculateRoundScore();
   }
-
 }

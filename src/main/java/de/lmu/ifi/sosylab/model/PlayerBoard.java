@@ -20,6 +20,7 @@ public class PlayerBoard {
 
   public PlayerBoard() {
     patternLines = createPatternLines();
+
   }
 
   private ColorTile[][] createPatternLines() {

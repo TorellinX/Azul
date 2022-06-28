@@ -19,6 +19,8 @@ public class AzulMain {
     );
     GameModel model = new GameModel(players);
 
+    // model.addPropertyChangeListener(GUI);
+
     System.out.println(model.getPlayerNames());
     // TODO: start view.
     /*AzulModel model = new AzulModel(testPlayers);

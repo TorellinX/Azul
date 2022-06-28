@@ -1,7 +1,10 @@
 package de.lmu.ifi.sosylab.model;
 
+import static java.util.Objects.requireNonNull;
+
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +22,10 @@ public class GameModel {
   public static final int TILES_PER_COLOR = 20;
   public static final int TILES_PER_PLATE = 4;
 
-
+  String GAME_STARTED = "Game started";
+  String MODEL_STATE_CHANGED = "Model state changed";
+  String NEW_DATA = "New data";
+  String NOT_ALLOWED = "Not allowed";
   private final List<Player> players;
 
   private State state = State.RUNNING;
@@ -41,6 +47,17 @@ public class GameModel {
 
   private final Random random = new Random();
 
+
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
+    requireNonNull(listener);
+    support.addPropertyChangeListener(listener);
+  }
+
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
+    requireNonNull(listener);
+    support.removePropertyChangeListener(listener);
+  }
+
   /**
    * Creates a new table with game components.
    */
@@ -53,7 +70,15 @@ public class GameModel {
     this.players = players;
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
+
+    // intended use: Game setup completed, paint board!
+    notifyListeners(GAME_STARTED);
   }
+
+  private void notifyListeners(String property) {
+    support.firePropertyChange(property, null, this);
+  }
+
 
   /**
    * select random Player.
@@ -83,6 +108,8 @@ public class GameModel {
     return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
   }
 
+  // This method should be split into a pick method without argument "row" returning some
+  // collection of picked tiles and a common place method to place the tiles with argument "lineIndex"
   public void pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
     //TODO: Tiles present check
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
@@ -90,8 +117,13 @@ public class GameModel {
     if (tiles.remaining().isPresent()) {
       tableCenter.addColorTiles(tiles.remaining().get());
     }
+
+    // intended use: notify GUI to allow for place event, as now tiles to place are available
+    notifyListeners(NEW_DATA);
   }
 
+  // This method should be split into a pick method without argument "row" returning some
+  // collection of picked tiles and a common place method to place the tiles with argument "lineIndex"
   public void pickTilesFromTableCenter(Color color, Player player, int row) {
     //TODO: Tiles present check
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
@@ -99,6 +131,24 @@ public class GameModel {
       player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
     }
     player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
+
+    // intended use: notify GUI to allow for place event, as now tiles to place are available
+    notifyListeners(NEW_DATA);
+  }
+
+  public void placeTiles (int lineIndex) {
+    // TODO: method to place tiles and making all the required checks and actions:
+    // line empty?
+    // color allowed?
+    // count free fields, fill tiles and push rest to floorline
+    // ...?
+
+    // intended use: ready for board update or placing error => repaint or notify user and repeat input
+    if (/* the place action is ok -> */ true) {
+      notifyListeners(MODEL_STATE_CHANGED);
+    } else {  // if place not possible, notify "repeat"
+      notifyListeners(NOT_ALLOWED);
+    }
   }
 
   public List<Plate> getPlates() {
@@ -122,6 +172,9 @@ public class GameModel {
     // TODO: tests
     box.addAll(List.of(playerBoard.patternLines[row]));
     Arrays.fill(playerBoard.patternLines[row], null);
+
+    // intended use: this method to close one evaluation step during scoring => thereafter: repaint!
+    notifyListeners(MODEL_STATE_CHANGED);
   }
 
   /**
@@ -138,6 +191,9 @@ public class GameModel {
       box.add((ColorTile) tile);
     }
     playerBoard.floorLine.clear();
+
+    // intended use: this method to close one evaluation step during scoring => thereafter: repaint!
+    notifyListeners(MODEL_STATE_CHANGED);
   }
 
   private void makeMove() {
@@ -145,11 +201,16 @@ public class GameModel {
 
     playerToMoveIndex = getNextPlayerIndex();
     playerToMove = players.get(playerToMoveIndex);
+    // the following if does not seem correct, as a round ends when all tiles are picked.
     if (playerToMoveIndex == startingPlayerIndex) {
       endRound();
     }
+
+    // no listener notification, as those are set with more detail in the move-methods.
+    // this concept may be subject to discussion.
   }
 
+  // This method needs reconsidering, see "makeMove()"
   private void endRound() {
     // TODO: checks and table cleanup (move tiles to box, ...).
     round++;

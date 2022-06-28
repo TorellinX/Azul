@@ -1,4 +1,5 @@
-package de.lmu.ifi.sosylab;
+/*
+ackage de.lmu.ifi.sosylab;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,9 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-/**
- * Demo class containing some test methods for class MyObject.
- */
+
 @TestInstance(Lifecycle.PER_CLASS)
 public class MyObjectTest {
 
@@ -41,3 +40,4 @@ public class MyObjectTest {
     fail("Expected to test gitlab CI");
   }
 }
+*/

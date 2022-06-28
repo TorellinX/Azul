@@ -19,6 +19,7 @@ public class AzulView extends JFrame {
   private static final String MAIN_MENU = "mainMenu";
   private static final String LOCAL_GAME = "localGame";
   private static final String MULTIPLAYER = "multiplayer";
+  private static final String PLAYING_VIEW = "playingview";
 
   private JPanel panel;
   //Button  Main Menu
@@ -32,12 +33,13 @@ public class AzulView extends JFrame {
   private JTextField nicknameLocal;
   //Buttons creat Multiplayer
   private JButton connect;
-  private JButton creatRoom;
+  private JButton createRoom;
   private JButton leaveOnlineMode;
   private JTextField nicknameOnline;
   private JTable localPlayer;
   private String userNameOnline;
   private int anzahlAnSpielern = 0;
+  private JButton openplayingfield;
 
 
 
@@ -52,6 +54,7 @@ public class AzulView extends JFrame {
     creatMainMenuPanel();
     createlocalplayerAddView();
     createMulitplayerView();
+    createPlayingView();
 
     addActionListener();
 
@@ -166,15 +169,43 @@ public class AzulView extends JFrame {
     JPanel panelBottomMultiplayer = new JPanel(new GridLayout(1, 3));
     connect = new JButton("Enter Room");
     leaveOnlineMode = new JButton("Leave");
-    creatRoom = new JButton("Creat new Room");
+    createRoom = new JButton("Creat new Room");
 
     panelBottomMultiplayer.add(connect);
     panelBottomMultiplayer.add(leaveOnlineMode);
-    panelBottomMultiplayer.add(creatRoom);
+    panelBottomMultiplayer.add(createRoom);
 
     multiplayerPanel.add(panelUpMultiplayer, BorderLayout.NORTH);
     multiplayerPanel.add(panelCenterMultiplayer, BorderLayout.CENTER);
     multiplayerPanel.add(panelBottomMultiplayer, BorderLayout.SOUTH);
+  }
+
+  private void createPlayingView() {
+    //create Playing View Panel
+
+    //JFrame playingviewframe = new JFrame();
+
+    //add(playingviewframe, PLAYING_VIEW);
+
+    //playingviewframe.setLayout(new BorderLayout());
+
+
+    Color backroundColor = new Color(135, 206, 250);
+
+
+    //Oberes Panel wird mit Combobox gefüllt.
+    JPanel panelUp = new JPanel();
+
+    add(panelUp, PLAYING_VIEW);
+
+    panelUp.setSize(1200, 75);
+    panelUp.setLayout(new FlowLayout());
+    JComboBox<String> menu = new JComboBox<String>(new String[] {"- menu -","restart", "leave", "end game"});
+    panelUp.add(menu);
+    panelUp.setBackground(backroundColor);
+
+    add(panelUp, PLAYING_VIEW);
+
   }
 
 
@@ -194,7 +225,8 @@ public class AzulView extends JFrame {
   }
 
   private void showGame() {
-
+    layout.show(getContentPane(), PLAYING_VIEW);
+    setVisible(true);
   }
 
   private void addActionListener() {
@@ -247,7 +279,7 @@ public class AzulView extends JFrame {
       }
     });
 
-    creatRoom.addActionListener(new ActionListener() {
+    createRoom.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         JFrame createRoomFrame = new JFrame();
@@ -302,4 +334,6 @@ public class AzulView extends JFrame {
 
     model.removeRow(row);
   }
+
+
 }

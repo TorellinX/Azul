@@ -60,6 +60,15 @@ public class PlayerBoard {
     return color;
   }
 
+  public boolean isPatternLineEmpty(int row) {
+    for (int i = 0; i < patternLines[row].length; i++) {
+      if (patternLines[row][i] != null) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private void addTileToWall(Color color, int row) {
     //TODO: add validation
     // TODO: tests
@@ -68,7 +77,7 @@ public class PlayerBoard {
   }
 
 
-  private boolean isColorAlreadyOnWall(Color color, int row) {
+  public boolean isColorAlreadyOnWall(Color color, int row) {
     //TODO: add validation
     // TODO: tests
     int column = (row + color.ordinal()) % WALL_SIZE;

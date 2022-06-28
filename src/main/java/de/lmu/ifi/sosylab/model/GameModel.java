@@ -110,44 +110,51 @@ public class GameModel {
 
   // This method should be split into a pick method without argument "row" returning some
   // collection of picked tiles and a common place method to place the tiles with argument "lineIndex"
-  public void pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
+  public List<ColorTile> pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
     //TODO: Tiles present check
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
-    player.playerBoard.addColorTilesToLine(tiles.selected(), row);
+    // player.playerBoard.addColorTilesToLine(tiles.selected(), row);
     if (tiles.remaining().isPresent()) {
       tableCenter.addColorTiles(tiles.remaining().get());
     }
 
     // intended use: notify GUI to allow for place event, as now tiles to place are available
     notifyListeners(NEW_DATA);
+
+    return tiles.selected();
   }
 
   // This method should be split into a pick method without argument "row" returning some
   // collection of picked tiles and a common place method to place the tiles with argument "lineIndex"
-  public void pickTilesFromTableCenter(Color color, Player player, int row) {
+  public List<ColorTile> pickTilesFromTableCenter(Color color, Player player, int row) {
     //TODO: Tiles present check
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
     if (tiles.penaltyTile().isPresent()) {
       player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
     }
-    player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
+    // player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
 
     // intended use: notify GUI to allow for place event, as now tiles to place are available
     notifyListeners(NEW_DATA);
+
+    return tiles.colorTiles();
   }
 
-  public void placeTiles (int lineIndex) {
-    // TODO: method to place tiles and making all the required checks and actions:
-    // line empty?
-    // color allowed?
-    // count free fields, fill tiles and push rest to floorline
-    // ...?
-
-    // intended use: ready for board update or placing error => repaint or notify user and repeat input
-    if (/* the place action is ok -> */ true) {
-      notifyListeners(MODEL_STATE_CHANGED);
-    } else {  // if place not possible, notify "repeat"
+  // Suggestion for a common place tiles method
+  public void placeTiles(List<ColorTile> tilesList, Player player, int lineIndex) {
+    // intended use of notifiers:
+    // -> ready for board update or placing error => repaint or notify user and repeat input
+    if (player.playerBoard.isColorAlreadyOnWall(tilesList.get(0).getColor(), lineIndex)) {
       notifyListeners(NOT_ALLOWED);
+      // return;
+    } else if (!player.playerBoard.isPatternLineEmpty(lineIndex)) {
+      if (!player.playerBoard.getPatternLineColor(lineIndex).equals(tilesList.get(0).getColor())) {
+        notifyListeners(NOT_ALLOWED);
+        // return;
+      }
+    } else {
+      player.playerBoard.addColorTilesToLine(tilesList, lineIndex);
+      notifyListeners(MODEL_STATE_CHANGED);
     }
   }
 

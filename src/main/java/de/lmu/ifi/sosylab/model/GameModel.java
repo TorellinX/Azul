@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.model;
 
+import static java.util.Objects.requireNonNull;
+
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
 import java.beans.PropertyChangeSupport;
@@ -18,6 +20,10 @@ public class GameModel {
 
   public static final int TILES_PER_COLOR = 20;
   public static final int TILES_PER_PLATE = 4;
+  private static final int POINTS_PRO_ROW = 2;
+  private static final int POINTS_PRO_COLUMN = 7;
+  private static final int POINTS_PRO_COLOR = 10;
+  private static final int[] PENALTY_POINTS = new int[]{0, -1, -2, -4, -6, -8, -11, -14};
 
 
   private final List<Player> players;
@@ -53,6 +59,13 @@ public class GameModel {
     this.players = players;
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
+    linkBoxToPlayerBoard();
+  }
+
+  private void linkBoxToPlayerBoard() {
+    for (Player player : players) {
+      player.playerBoard.box = this.box;
+    }
   }
 
   /**
@@ -172,4 +185,143 @@ public class GameModel {
   private void shuffleBag() {
     Collections.shuffle(bag, random);
   }
+
+  private void calculateRoundScore() {
+    List<Player> players = getPlayers();
+    for (Player player : players) {
+      ColorTile[][] lines = player.playerBoard.patternLines;
+      int scoreDifference = 0;
+      for (int row = 0; row < lines.length; row++) {
+        if (player.playerBoard.getNextFreePatternLineIndex(row) == -1) {
+          Color color = player.playerBoard.getPatternLineColor(row);
+          player.playerBoard.addTileToWall(color, row);
+          int column = player.playerBoard.getColumnOnWall(color, row);
+          int scoreVerticalLinkedTiles = countVerticalLinkedTiles(row, column, player);
+          int scoreHorizontalLinkedTiles = countHorizontalLinkedTiles(row, column, player);
+          if (scoreVerticalLinkedTiles == 0 && scoreHorizontalLinkedTiles == 0) {
+            scoreDifference += 1; // just tile itself
+          } else {
+            scoreDifference += scoreVerticalLinkedTiles + scoreHorizontalLinkedTiles;
+          }
+        }
+      }
+      scoreDifference += calculatePenaltyPoints(player);
+      player.score += scoreDifference;
+      if (player.score < 0) {
+        player.score = 0;
+      }
+    }
+  }
+
+  private int countVerticalLinkedTiles(int row, int column, Player player) {
+    // 1 point pro tile for linked tiles vertically
+    if (row < 0 || row > PlayerBoard.WALL_SIZE || column < 0 || column > PlayerBoard.WALL_SIZE) {
+      throw new IllegalArgumentException("Row and column must be within wall size.");
+    }
+    requireNonNull(player);
+
+    int counter = 0;
+    int currentRow = row - 1;
+    while (currentRow >= 0 && player.playerBoard.wall[currentRow][column]) { //tiles from above
+      counter++;
+      currentRow--;
+    }
+    currentRow = row + 1;
+    while (currentRow < PlayerBoard.WALL_SIZE
+        && player.playerBoard.wall[currentRow][column]) { // tiles from below
+      counter++;
+      currentRow++;
+    }
+    if (counter > 0) {
+      counter++; // tile itself is also linked
+    }
+    return counter;
+  }
+
+  private int countHorizontalLinkedTiles(int row, int column, Player player) {
+    // 1 point pro tile for linked tiles horizontally
+    if (row < 0 || row > PlayerBoard.WALL_SIZE || column < 0 || column > PlayerBoard.WALL_SIZE) {
+      throw new IllegalArgumentException("Row and column must be within wall size.");
+    }
+    requireNonNull(player);
+
+    int counter = 0;
+    int currentCol = column - 1;
+    while (currentCol >= 0 && player.playerBoard.wall[row][currentCol]) {
+      counter++;
+      currentCol--;
+    }
+    currentCol = column + 1;
+    while (currentCol < PlayerBoard.WALL_SIZE && player.playerBoard.wall[row][currentCol]) {
+      counter++;
+      currentCol++;
+    }
+    if (counter > 0) {
+      counter++; // tile itself is also linked
+    }
+    return counter;
+  }
+
+  private int calculatePenaltyPoints(Player player) {
+    int numberOfTilesInFloorLine = player.playerBoard.floorLine.size();
+    return PENALTY_POINTS[numberOfTilesInFloorLine];
+  }
+
+
+  private void calculateEndScore(Player player) {
+    // TODO
+    int comletedColumns = countCompletedColumns(player);
+    int comletedRows = countCompletedRows(player);
+    int completedColors = countCompletedColors(player);
+    // 2 points / horizontal (row)
+    // 7 points / vertical (column)
+    // 10 points / color
+    player.score += comletedRows * POINTS_PRO_ROW + comletedColumns * POINTS_PRO_COLUMN
+        + completedColors * POINTS_PRO_COLOR;
+  }
+
+  private int countCompletedColumns(Player player) {
+    // TODO
+    return 0;
+  }
+
+  private int countCompletedRows(Player player) {
+    // TODO
+    return 0;
+  }
+
+  private int countCompletedColors(Player player) {
+    // TODO
+    return 0;
+  }
+
+  public void test() {
+    ArrayList<ColorTile> redTile = new ArrayList<>();
+    redTile.add(new ColorTile(Color.RED));
+    redTile.add(new ColorTile(Color.RED));
+    redTile.add(new ColorTile(Color.RED));
+    redTile.add(new ColorTile(Color.RED));
+    ArrayList<ColorTile> yellowTiles = new ArrayList<>();
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    ArrayList<ColorTile> blueTiles = new ArrayList<>();
+    blueTiles.add(new ColorTile(Color.BLUE));
+    blueTiles.add(new ColorTile(Color.BLUE));
+    blueTiles.add(new ColorTile(Color.BLUE));
+    blueTiles.add(new ColorTile(Color.BLUE));
+    blueTiles.add(new ColorTile(Color.BLUE));
+
+    getPlayers().get(0).playerBoard.wall[1][0] = true;
+    getPlayers().get(0).playerBoard.wall[1][4] = true;
+    getPlayers().get(0).playerBoard.wall[1][2] = true;
+    getPlayers().get(0).playerBoard.wall[1][1] = true;
+    getPlayers().get(0).playerBoard.addColorTilesToLine(redTile, 1);
+    getPlayers().get(0).playerBoard.addColorTilesToLine(blueTiles, 4);
+
+    calculateRoundScore();
+  }
+
 }

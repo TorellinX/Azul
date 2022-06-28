@@ -6,12 +6,18 @@ import de.lmu.ifi.sosylab.model.Color;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.model.PlayerState;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class Controller {
+public class GameController implements Controller{
 
   GameModel model;
 
-  public Controller(GameModel model) {
+  //View view;
+
+  public GameController(GameModel model) {
     this.model = requireNonNull(model);
   }
 

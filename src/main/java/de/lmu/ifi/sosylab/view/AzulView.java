@@ -2,6 +2,7 @@ package main.java.de.lmu.ifi.sosylab.view;
 
 
 import de.lmu.ifi.sosylab.view.GraphicAzul;
+import de.lmu.ifi.sosylab.view.PlayingView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -42,6 +43,9 @@ public class AzulView extends JFrame {
   private JButton openplayingfield;
 
 
+  PlayingView playingviewframe = new PlayingView();
+
+
 
   public AzulView() {
     super("Azul");
@@ -54,11 +58,12 @@ public class AzulView extends JFrame {
     creatMainMenuPanel();
     createlocalplayerAddView();
     createMulitplayerView();
-    createPlayingView();
+    openPlayingView();
 
     addActionListener();
 
     showMainMenu();
+
   }
 
   private void initialize() {
@@ -180,31 +185,9 @@ public class AzulView extends JFrame {
     multiplayerPanel.add(panelBottomMultiplayer, BorderLayout.SOUTH);
   }
 
-  private void createPlayingView() {
-    //create Playing View Panel
 
-    //JFrame playingviewframe = new JFrame();
+  private void openPlayingView() {
 
-    //add(playingviewframe, PLAYING_VIEW);
-
-    //playingviewframe.setLayout(new BorderLayout());
-
-
-    Color backroundColor = new Color(135, 206, 250);
-
-
-    //Oberes Panel wird mit Combobox gefüllt.
-    JPanel panelUp = new JPanel();
-
-    add(panelUp, PLAYING_VIEW);
-
-    panelUp.setSize(1200, 75);
-    panelUp.setLayout(new FlowLayout());
-    JComboBox<String> menu = new JComboBox<String>(new String[] {"- menu -","restart", "leave", "end game"});
-    panelUp.add(menu);
-    panelUp.setBackground(backroundColor);
-
-    add(panelUp, PLAYING_VIEW);
 
   }
 
@@ -225,8 +208,10 @@ public class AzulView extends JFrame {
   }
 
   private void showGame() {
-    layout.show(getContentPane(), PLAYING_VIEW);
-    setVisible(true);
+    //create Playing View Panel
+    PlayingView playingView = new PlayingView();
+    playingView.setSize(1200,700);
+    playingView.setVisible(true);
   }
 
   private void addActionListener() {
@@ -267,8 +252,7 @@ public class AzulView extends JFrame {
 
     startGame.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e) {
-        showGame();
+      public void actionPerformed(ActionEvent e) { showGame();
       }
     });
 

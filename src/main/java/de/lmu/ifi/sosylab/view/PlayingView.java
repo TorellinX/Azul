@@ -14,20 +14,15 @@ public class PlayingView extends JFrame{
     @Serial
     private static final long serialVersionUID = 1L;
 
-
-
-
-
-
     public PlayingView(){
             }
 
-
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame("Azul");
+        JFrame playingviewframe = new JFrame("Azul");
 
-        frame.setLayout(new BorderLayout());
+
+        playingviewframe.setLayout(new BorderLayout());
 
         Color backroundColor = new Color(135, 206, 250);
 
@@ -606,16 +601,16 @@ public class PlayingView extends JFrame{
         panelSouth.setBackground(backroundColor);
 
         //Teile des Borderlayouts werden mit Panels und Graphikelementen gefüllt.
-        Container c = frame.getContentPane();
+        Container c = playingviewframe.getContentPane();
         c.add(panelUp, BorderLayout.NORTH);
         c.add(panelSouth, BorderLayout.SOUTH);
         c.add(drawboardplayerboardright, BorderLayout.EAST);
         c.add(drawboardplayerboardleft, BorderLayout.WEST);
         c.add(drawboardtablecenter, BorderLayout.CENTER);
 
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(1300, 800);
-        frame.setVisible(true);
+        playingviewframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        playingviewframe.setSize(1300, 800);
+        playingviewframe.setVisible(true);
 
 
         //ActionListeners Lines User 1
@@ -1135,6 +1130,8 @@ public class PlayingView extends JFrame{
             public void actionPerformed(ActionEvent e) {
             }
         });
+
+        playingviewframe.setVisible(true);
 
 
     }

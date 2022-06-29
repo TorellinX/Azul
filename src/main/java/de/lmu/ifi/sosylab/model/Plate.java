@@ -1,6 +1,7 @@
 package de.lmu.ifi.sosylab.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +71,8 @@ public class Plate {
   }
 
   public List<ColorTile> getTiles() {
-    return tiles;
+    List<ColorTile> unmodifiableTilesList = Collections.unmodifiableList(tiles);
+    return  unmodifiableTilesList;
   }
 
   public boolean containsColor(Color color) {

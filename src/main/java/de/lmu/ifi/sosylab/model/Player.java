@@ -1,5 +1,8 @@
 package de.lmu.ifi.sosylab.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -42,7 +45,10 @@ public class Player {
   }
 
   public PlayerBoard getPlayerBoard() {
-    return playerBoard;
+    List<PlayerBoard> boards = new ArrayList<>();
+    boards.add(playerBoard);
+    List<PlayerBoard> unmodifiableBoards = Collections.unmodifiableList(boards);
+    return unmodifiableBoards.get(0);
   }
 
   public PlayerState getState() {

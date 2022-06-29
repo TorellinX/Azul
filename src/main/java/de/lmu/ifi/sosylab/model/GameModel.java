@@ -50,7 +50,8 @@ public class GameModel {
     }
     tableCenter = new TableCenter();
     shuffleBag(); //shuffle Bag on Game Construction
-    this.players = players;
+    List<Player> immutablePlayerList = Collections.unmodifiableList(players);
+    this.players = immutablePlayerList;
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
     linkBoxToPlayerBoard();
@@ -125,11 +126,13 @@ public class GameModel {
   }
 
   public List<Plate> getPlates() {
-    return plates;
+    List<Plate> unmodifiablePlateList = Collections.unmodifiableList(plates);
+    return  unmodifiablePlateList;
   }
 
   public List<Player> getPlayers() {
-    return players;
+    List<Player> unmodifiablePlayersList = Collections.unmodifiableList(players);
+    return unmodifiablePlayersList;
   }
 
   /**

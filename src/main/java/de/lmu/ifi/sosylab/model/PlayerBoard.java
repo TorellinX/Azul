@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -142,12 +143,13 @@ public class PlayerBoard {
     for (int i = 0; i < wall.length; i++) {
       wallCopy[i] = Arrays.copyOf(wall[i], wall[0].length);
     }
-    return wall;
+    return wallCopy;
   }
 
 
   public List<Tile> getFloorLine() {
-    return floorLine;
+    List<Tile> unmodifiableTilesList = Collections.unmodifiableList(floorLine);
+    return unmodifiableTilesList;
   }
 
 

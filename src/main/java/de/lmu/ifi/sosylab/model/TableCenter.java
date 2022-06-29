@@ -1,6 +1,7 @@
 package de.lmu.ifi.sosylab.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
  */
 public class TableCenter {
 
-  private List<ColorTile> colorTiles;
+  private List<ColorTile> colorTiles = new ArrayList<>();
   private Optional<PenaltyTile> penaltyTileOptional;
 
   record SelectedTilesAndMaybePenaltyTile(List<ColorTile> colorTiles,
@@ -41,7 +42,8 @@ public class TableCenter {
   }
 
   public List<ColorTile> getColorTiles() {
-    return colorTiles;
+    List<ColorTile> unmodifiableColorTilesList = Collections.unmodifiableList(colorTiles);
+    return unmodifiableColorTilesList;
   }
 
   /**

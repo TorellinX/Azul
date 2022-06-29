@@ -9,6 +9,7 @@ import java.util.List;
 public class PlayerBoard {
 
   final static int WALL_SIZE = 5;
+  final static int FLOORLINE_SIZE = 7;
 
   private int score;
   ColorTile[][] patternLines;
@@ -32,10 +33,10 @@ public class PlayerBoard {
 
   public int countFreeFieldsInRow(int rowIndex) {
     if (rowIndex > WALL_SIZE) {
-      throw new IllegalArgumentException("Row Index must be within the wall size.");
+      throw new IllegalArgumentException("Row index must be within the wall size.");
     }
     if (rowIndex < 0) {
-      throw new IllegalArgumentException("Row Index must be positive");
+      throw new IllegalArgumentException("Row index must be positive");
     }
     ColorTile[] row = patternLines[rowIndex];
     for (int i = row.length - 1; i >= 0; i--) {
@@ -69,6 +70,12 @@ public class PlayerBoard {
     return color;
   }
 
+  /**
+   * The specified tile is added to the space of the same color in the specified line of the wall.
+   *
+   * @param color the color of the specified tile
+   * @param row   the specified line of the wall
+   */
   void addTileToWall(Color color, int row) {
     //TODO: add validation
     // TODO: tests
@@ -77,7 +84,7 @@ public class PlayerBoard {
   }
 
 
-  private boolean isColorAlreadyOnWall(Color color, int row) {
+  boolean isColorAlreadyOnWall(Color color, int row) {
     //TODO: add validation
     // TODO: tests
     int column = getColumnOnWall(color, row);
@@ -118,7 +125,8 @@ public class PlayerBoard {
 
   /**
    * Adds selected ColorTiles of the same color to the specified row from right to left. If there
-   * are more tiles than there are free spaces in a row, tiles will be added to the floorLine.
+   * are more tiles than there are free spaces in a row, remaining tiles will be added to the
+   * floorLine.
    *
    * @param tiles    tiles to be added
    * @param rowIndex row of the PatternLines
@@ -154,33 +162,51 @@ public class PlayerBoard {
     }
   }
 
+  /**
+   * Adds the specified tile to the floor line. If the tile to be added is a penalty tile, it will
+   * be placed at the beginning of the floor line (index 0). If the floor line was already full, the
+   * color tile, that was previously at the end of the floor line, will be moved to the box. If the
+   * tile to be added is a color tile, it will be added in the first free space of the floor line.
+   * If the floor line is already full, the color tile will be added to the box.
+   *
+   * @param tile the tile to be added to the floor line
+   */
   public void addTileToFloorLine(Tile tile) {
-    if (floorLine.size() > 7) {
+    if (floorLine.size() > FLOORLINE_SIZE) {
       throw new RuntimeException("Maximum floorLine size exceeded.");
     }
     if (tile instanceof PenaltyTile) {
-      // TODO
-      shiftTilesInPatternLine((PenaltyTile) tile);
-      floorLine.add(0, tile);
+      shiftTilesOfFloorLine();
+      floorLine.set(0, tile);
+      return;
     }
-    if (floorLine.size() == 7) {
+    if (floorLine.size() == FLOORLINE_SIZE) {
       addTileToBox((ColorTile) tile);
       return;
     }
     floorLine.add(tile);
   }
 
-  private void shiftTilesInPatternLine(PenaltyTile penaltyTile) {
-    if (floorLine.size() == 7) {
+  /**
+   * Shifts color tiles in the pattern line one slot to the right, the first slot at the beginning
+   * of the beginning of the floor line becomes empty (null).
+   */
+  private void shiftTilesOfFloorLine() {
+    if (floorLine.size() == FLOORLINE_SIZE) {
       addTileToBox((ColorTile) floorLine.get(floorLine.size() - 1));
-      floorLine.add(floorLine.size() - 1, null);
+      floorLine.set(floorLine.size() - 1, null);
     }
-    for (int i = floorLine.size() - 1; i >= 0; i--) {
-      floorLine.add(floorLine.get(i - 1));
+    for (int i = floorLine.size() - 1; i > 0; i--) {
+      floorLine.set(i, floorLine.get(i - 1));
     }
-    // TODO
+    floorLine.set(0, null);
   }
 
+  /**
+   * Adds the specified tile to the box.
+   *
+   * @param tile the tile to be added to the box
+   */
   void addTileToBox(ColorTile tile) {
     requireNonNull((tile));
     box.add(tile);

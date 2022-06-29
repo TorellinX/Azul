@@ -29,6 +29,11 @@ public class TableCenter {
     penaltyTileOptional = Optional.of(tile);
   }
 
+  /**
+   * Getter for the tiles on the table center.
+   *
+   * @return list of tiles including penalty tile if present
+   */
   public List<Tile> getTiles() {
     List<Tile> list = new ArrayList<>(colorTiles);
     penaltyTileOptional.ifPresent(list::add);
@@ -39,7 +44,13 @@ public class TableCenter {
     return colorTiles;
   }
 
-
+  /**
+   * Get the tiles from table center after a pick from table center. Includes the penalty tile if
+   * present. Picked tiles (in case including penalty tile) are removed from table center.
+   *
+   * @param color selected color
+   * @return record of picked tiles (in case with penalty tile)
+   */
   public SelectedTilesAndMaybePenaltyTile pickTiles(Color color) {
     List<ColorTile> selectedColorTiles = this.colorTiles.stream().filter(t -> t.getColor() == color)
         .toList();

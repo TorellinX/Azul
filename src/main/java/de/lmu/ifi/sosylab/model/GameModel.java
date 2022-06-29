@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Contais all game components on the table.
+ * Contains all game components on the table.
  */
 public class GameModel {
 
@@ -63,7 +63,7 @@ public class GameModel {
   }
 
   /**
-   * select random Player.
+   * Select random Player.
    */
   private void chooseRandomStartingPlayer() {
     startingPlayerIndex = playerToMoveIndex = random.nextInt(players.size());
@@ -71,7 +71,7 @@ public class GameModel {
   }
 
   /**
-   * create Plates according to the amount of Players and fill them with Tiles.
+   * Create Plates according to the amount of Players and fill them with Tiles.
    *
    * @return a List of filled Plates.
    */
@@ -90,6 +90,14 @@ public class GameModel {
     return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
   }
 
+  /**
+   * Takes a selected color tile from a plate and places it in the selected row.
+   *
+   * @param plate plate the tile was picked from
+   * @param color color of the tile
+   * @param player player to move
+   * @param row row to place the tile
+   */
   public void pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
     //TODO: Tiles present check
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
@@ -99,6 +107,14 @@ public class GameModel {
     }
   }
 
+  /**
+   * Takes a selected color tile from table center and places it in the selected row.
+   * Awards the player with the penalty tile if present (first pick).
+   *
+   * @param color color of the tile
+   * @param player player to move
+   * @param row row to place the tile
+   */
   public void pickTilesFromTableCenter(Color color, Player player, int row) {
     //TODO: Tiles present check
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
@@ -116,6 +132,11 @@ public class GameModel {
     return players;
   }
 
+  /**
+   * Provides the nicknames of the players.
+   *
+   * @return list of strings
+   */
   public ArrayList<String> getPlayerNames() {
     ArrayList<String> names = new ArrayList<>();
     for (Player player : players) {
@@ -215,8 +236,9 @@ public class GameModel {
         if (player.playerBoard.getNextFreePatternLineIndex(row) == -1) {
           Color color = player.playerBoard.getPatternLineColor(row);
           if (player.playerBoard.isColorAlreadyOnWall(color, row)) {
-            throw new RuntimeException("The space on the wall is already taken. This row #" + row +
-                " of patternLine should not have been filled with tiles of this color "
+            throw new RuntimeException("The space on the wall is already taken. This row #"
+                + row
+                + " of patternLine should not have been filled with tiles of this color "
                 + color.name());
           }
           player.playerBoard.addTileToWall(color, row);

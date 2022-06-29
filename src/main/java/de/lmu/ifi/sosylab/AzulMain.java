@@ -22,7 +22,7 @@ public class AzulMain {
     System.out.println(model.getPlayerNames());
     // TODO: start view.
 
-    model.test();
+
 
 
   }

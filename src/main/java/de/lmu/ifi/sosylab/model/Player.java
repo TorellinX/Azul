@@ -44,6 +44,12 @@ public class Player {
     return nickname;
   }
 
+
+  /**
+   * Get the player board of the current player instance.
+   *
+   * @return player board instance
+   */
   public PlayerBoard getPlayerBoard() {
     List<PlayerBoard> boards = new ArrayList<>();
     boards.add(playerBoard);

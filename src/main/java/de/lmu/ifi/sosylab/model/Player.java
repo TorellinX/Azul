@@ -2,6 +2,9 @@ package de.lmu.ifi.sosylab.model;
 
 import java.util.Objects;
 
+/**
+ * Player class holding information about a player.
+ */
 public class Player {
 
   private final String nickname;
@@ -10,12 +13,23 @@ public class Player {
   //private boolean isHost;
   PlayerBoard playerBoard;
 
+  /**
+   * Builds a player with state defined by argument.
+   *
+   * @param nickname string of player nickname
+   * @param state state the player is initiated with
+   */
   public Player(String nickname, PlayerState state) {
     this.nickname = nickname;
     this.state = state;
     this.playerBoard = new PlayerBoard();
   }
 
+  /**
+   * Builds a player with predefined state "ready".
+   *
+   * @param nickname string of player nickname
+   */
   public Player(String nickname) {
     this.nickname = nickname;
     this.state = PlayerState.READY;

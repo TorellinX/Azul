@@ -83,6 +83,14 @@ public class GameModel {
     return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
   }
 
+  /**
+   * Takes a selected color tile from a plate and places it in the selected row.
+   *
+   * @param plate plate the tile was picked from
+   * @param color color of the tile
+   * @param player player to move
+   * @param row row to place the tile
+   */
   public void pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
     //TODO: Tiles present check
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
@@ -92,6 +100,14 @@ public class GameModel {
     }
   }
 
+  /**
+   * Takes a selected color tile from table center and places it in the selected row.
+   * Awards the player with the penalty tile if present (first pick).
+   *
+   * @param color color of the tile
+   * @param player player to move
+   * @param row row to place the tile
+   */
   public void pickTilesFromTableCenter(Color color, Player player, int row) {
     //TODO: Tiles present check
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
@@ -109,6 +125,11 @@ public class GameModel {
     return players;
   }
 
+  /**
+   * Provides the nicknames of the players.
+   *
+   * @return list of strings
+   */
   public ArrayList<String> getPlayerNames() {
     ArrayList<String> names = new ArrayList<>();
     for (Player player : players) {

@@ -3,8 +3,10 @@ package de.lmu.ifi.sosylab.model;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,8 +16,8 @@ import org.junit.jupiter.api.Test;
  */
 public class ModelTest {
 
-  private static List<Player> testPlayers = new ArrayList<>();
   private static final int NUMBER_OF_PLAYERS = 4;
+  private static List<Player> testPlayers = new ArrayList<>();
 
   @BeforeAll
   static void setUp() {
@@ -32,36 +34,185 @@ public class ModelTest {
   @Test
   public void getPlayers_whenPlayersExist() {
     GameModel model = newModel(testPlayers);
-    assertIterableEquals(model.getPlayers(), testPlayers);
+    assertIterableEquals(testPlayers, model.getPlayers());
   }
-
 
   @Test
   public void getAmountOfPlates_accordingToPlayers() {
     GameModel model = newModel(testPlayers);
-    int amount = testPlayers.size() * 2 + 1;
-    assertEquals(model.getPlates().size(), amount);
+    int expectedAmount = testPlayers.size() * 2 + 1;
+    assertEquals(expectedAmount, model.getPlates().size());
   }
 
   @Test
-  public void addColorTilesToLine_whenFits() {
+  public void addColorTilesToPatternLine_whenFits() {
+    //Arrange test
     GameModel model = newModel(testPlayers);
     model.getPlayers().get(0).playerBoard.patternLines[4] = new ColorTile[]{null, null, null, null,
         new ColorTile(Color.RED)};
-    ArrayList<ColorTile> redTiles = new ArrayList<>();
+    ArrayList<ColorTile> addedRedTiles = new ArrayList<>();
     for (int i = 0; i < model.getPlayers().get(0).playerBoard.patternLines[4].length - 1; i++) {
-      redTiles.add(new ColorTile(Color.RED));
+      addedRedTiles.add(new ColorTile(Color.RED));
     }
-
-    model.getPlayers().get(0).playerBoard.addColorTilesToLine(redTiles, 4);
-
-    ColorTile[] redTilesInLine = new ColorTile[model.getPlayers()
+    ColorTile[] expectedLine = new ColorTile[model.getPlayers()
         .get(0).playerBoard.patternLines[4].length];
-    for (int i = 0; i < redTilesInLine.length; i++) {
-      redTilesInLine[i] = new ColorTile(Color.RED);
+    for (int i = 0; i < expectedLine.length; i++) {
+      expectedLine[i] = new ColorTile(Color.RED);
     }
 
-    assertArrayEquals(model.getPlayers().get(0).playerBoard.patternLines[4], redTilesInLine);
+    //Act test
+    model.getPlayers().get(0).playerBoard.addColorTilesToLine(addedRedTiles, 4);
+
+    //Assert test
+    assertArrayEquals(expectedLine, model.getPlayers().get(0).playerBoard.patternLines[4]);
+  }
+
+  @Test
+  public void addTileToFloorLine_floorLineWhenPenaltyTileIsBeingAddedToFullFloorLine() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.floorLine = new ArrayList<>();
+    for (int i = 0; i < PlayerBoard.FLOORLINE_SIZE; i++) {
+      Color currentColor = Color.values()[i % (Color.values().length - 1)];
+      testingPlayer.playerBoard.floorLine.add(new ColorTile(currentColor));
+    }
+    List<Tile> expectedFloorLine = new ArrayList<>(testingPlayer.playerBoard.floorLine);
+    expectedFloorLine.remove(testingPlayer.playerBoard.floorLine.size() - 1);
+    expectedFloorLine.add(0, new PenaltyTile());
+
+    //Act test
+    testingPlayer.playerBoard.addTileToFloorLine(new PenaltyTile());
+
+    //Assert test
+    assertEquals(expectedFloorLine, testingPlayer.playerBoard.floorLine);
+  }
+
+  @Test
+  public void addTileToFloorLine_boxWhenPenaltyTileIsBeingAddedToFullFloorLine() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.floorLine = new ArrayList<>();
+    for (int i = 0; i < PlayerBoard.FLOORLINE_SIZE; i++) {
+      Color currentColor = Color.values()[i % (Color.values().length - 1)];
+      testingPlayer.playerBoard.floorLine.add(new ColorTile(currentColor));
+    }
+    List<Tile> expectedBox = new ArrayList<>();
+    expectedBox.add(
+        testingPlayer.playerBoard.floorLine.get(testingPlayer.playerBoard.floorLine.size() - 1));
+
+    //Act test
+    testingPlayer.playerBoard.addTileToFloorLine(new PenaltyTile());
+
+    //Assert test
+    assertEquals(expectedBox, model.box);
+  }
+
+  @Test
+  public void addTileToFloorLine_floorLineWhenColorTileIsBeingAddedToFullFloorLine() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.floorLine = new ArrayList<>();
+    for (int i = 0; i < PlayerBoard.FLOORLINE_SIZE; i++) {
+      Color currentColor = Color.values()[i % (Color.values().length - 1)];
+      testingPlayer.playerBoard.floorLine.add(new ColorTile(currentColor));
+    }
+    List<Tile> expectedFloorLine = new ArrayList<>(testingPlayer.playerBoard.floorLine);
+
+    //Act test
+    testingPlayer.playerBoard.addTileToFloorLine(new ColorTile(Color.YELLOW));
+
+    //Assert test
+    assertEquals(expectedFloorLine, testingPlayer.playerBoard.floorLine);
+  }
+
+  @Test
+  public void addTileToFloorLine_boxWhenColorTileIsBeingAddedToFullFloorLine() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.floorLine = new ArrayList<>();
+    for (int i = 0; i < PlayerBoard.FLOORLINE_SIZE; i++) {
+      Color currentColor = Color.values()[i % (Color.values().length - 1)];
+      testingPlayer.playerBoard.floorLine.add(new ColorTile(currentColor));
+    }
+    List<Tile> expectedBox = new ArrayList<>();
+    ColorTile addedTile = new ColorTile(Color.YELLOW);
+    expectedBox.add(addedTile);
+
+    //Act test
+    testingPlayer.playerBoard.addTileToFloorLine(addedTile);
+
+    //Assert test
+    assertEquals(expectedBox, model.box);
+  }
+
+  @Test
+  public void moveFullPatternLineToBox_floorLineWhenPatternLineComplete() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    Player testingPlayer = model.getPlayers().get(0);
+    int rowIndex = 4;
+    ColorTile[] completeRow = new ColorTile[rowIndex + 1];
+    for (int i = 0; i < rowIndex + 1; i++) {
+      completeRow[i] = new ColorTile(Color.YELLOW);
+    }
+    testingPlayer.playerBoard.patternLines[rowIndex] = completeRow;
+    ColorTile[] expectedRow = new ColorTile[rowIndex + 1];
+
+    //Act test
+    model.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
+
+    //Assert test
+    assertArrayEquals(expectedRow, testingPlayer.playerBoard.patternLines[rowIndex]);
+  }
+
+  @Test
+  public void moveFullPatternLineToBox_boxWhenPatternLineComplete() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    Player testingPlayer = model.getPlayers().get(0);
+    int rowIndex = 4;
+    ColorTile[] completeRow = new ColorTile[rowIndex + 1];
+    for (int i = 0; i < rowIndex + 1; i++) {
+      completeRow[i] = new ColorTile(Color.YELLOW);
+    }
+    testingPlayer.playerBoard.patternLines[rowIndex] = completeRow;
+    List<Tile> expectedBox = new ArrayList<>();
+    for (int i = 0; i < rowIndex; i++) {
+      expectedBox.add(new ColorTile(Color.YELLOW));
+    }
+
+    //Act test
+    model.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
+
+    //Assert test
+    assertEquals(expectedBox, model.box);
+  }
+
+  @Test
+  public void moveFullPatternLineToBox_whenPatternLineIncomplete() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    Player testingPlayer = model.getPlayers().get(0);
+    int rowIndex = 4;
+    ColorTile[] incompleteRow = new ColorTile[rowIndex + 1];
+    for (int i = incompleteRow.length - 1; i > 0; i--) {
+      incompleteRow[i] = new ColorTile(Color.YELLOW);
+    }
+    testingPlayer.playerBoard.patternLines[rowIndex] = incompleteRow;
+
+    //Act test
+    try {
+      model.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
+      fail("The patten line is not complete");
+    } catch (RuntimeException e) {
+
+      //Assert test
+      assertEquals("The patten line must be complete", e.getMessage());
+    }
   }
 
 }

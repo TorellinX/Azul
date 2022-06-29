@@ -27,25 +27,19 @@ public class GameModel {
 
 
   private final List<Player> players;
-
-  private State state = State.RUNNING;
-
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-
   private final List<Plate> plates;
   private final TableCenter tableCenter;
   private final List<ColorTile> bag = Arrays.stream(Color.values())
       .flatMap(color -> IntStream.range(0, TILES_PER_COLOR).mapToObj(i -> new ColorTile(color)))
       .collect(Collectors.toList());
+  private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
-
+  private State state = State.RUNNING;
   private int startingPlayerIndex;
   private int playerToMoveIndex;
   private Player playerToMove;
-
   private int round = 1;
-
-  private final Random random = new Random();
 
   /**
    * Creates a new table with game components.
@@ -130,17 +124,36 @@ public class GameModel {
     return names;
   }
 
-  private void moveFullPatternLineToBox(int row, PlayerBoard playerBoard) {
-    // TODO: validation
-    // TODO: tests
-    box.addAll(List.of(playerBoard.patternLines[row]));
+  /**
+   * Moves all tiles except one from the specified complete patternLine to the box. One tile remains
+   * on the wall.
+   *
+   * @param row         the specified complete patternLine
+   * @param playerBoard the player board with the complete patternLine
+   */
+  void moveFullPatternLineToBox(int row, PlayerBoard playerBoard) {
+    requireNonNull(playerBoard);
+    if (row > PlayerBoard.WALL_SIZE) {
+      throw new IllegalArgumentException("Row Index must be within the wall size.");
+    }
+    if (row < 0) {
+      throw new IllegalArgumentException("Row index must be positive");
+    }
+    List<ColorTile> tiles = new ArrayList<>(Arrays.asList(playerBoard.patternLines[row]));
+    for (ColorTile tile : tiles) {
+      if (tile == null) {
+        throw new RuntimeException("The patten line must be complete");
+      }
+    }
+    tiles.remove(tiles.size() - 1); // one tile remains on the wall
+    box.addAll(tiles);
     Arrays.fill(playerBoard.patternLines[row], null);
   }
 
   /**
    * Moves color tiles from floor line to box and penalty tile to the table center.
    *
-   * @param playerBoard the spicified player board
+   * @param playerBoard the specified player board
    */
   private void moveFloorLineToBox(PlayerBoard playerBoard) {
     for (Tile tile : playerBoard.floorLine) {
@@ -165,6 +178,7 @@ public class GameModel {
 
   private void endRound() {
     // TODO: checks and table cleanup (move tiles to box, ...).
+    // the tiles from the patternLines and the floorLine are being moved during the scoring.
     round++;
     if (bag.isEmpty()) {
       moveBoxTilesToBagAndShuffle();
@@ -186,6 +200,12 @@ public class GameModel {
     Collections.shuffle(bag, random);
   }
 
+  /**
+   * Combines "Wall-tiling" and "Scoring" round phases for each player. For each complete line the
+   * space of the same color in the corresponding line of the wall becomes taken, points are
+   * immediately scored. The remaining tiles from the completed line are moved to the box. At the
+   * end of the Wall-tiling phase, penalty points from the floor line are scored.
+   */
   private void calculateRoundScore() {
     List<Player> players = getPlayers();
     for (Player player : players) {
@@ -194,25 +214,41 @@ public class GameModel {
       for (int row = 0; row < lines.length; row++) {
         if (player.playerBoard.getNextFreePatternLineIndex(row) == -1) {
           Color color = player.playerBoard.getPatternLineColor(row);
+          if (player.playerBoard.isColorAlreadyOnWall(color, row)) {
+            throw new RuntimeException("The space on the wall is already taken. This row #" + row +
+                " of patternLine should not have been filled with tiles of this color "
+                + color.name());
+          }
           player.playerBoard.addTileToWall(color, row);
           int column = player.playerBoard.getColumnOnWall(color, row);
           int scoreVerticalLinkedTiles = countVerticalLinkedTiles(row, column, player);
           int scoreHorizontalLinkedTiles = countHorizontalLinkedTiles(row, column, player);
           if (scoreVerticalLinkedTiles == 0 && scoreHorizontalLinkedTiles == 0) {
-            scoreDifference += 1; // just tile itself
+            scoreDifference += 1; // just the tile itself
           } else {
             scoreDifference += scoreVerticalLinkedTiles + scoreHorizontalLinkedTiles;
           }
+          moveFullPatternLineToBox(row, player.playerBoard);
         }
       }
       scoreDifference += calculatePenaltyPoints(player);
+      moveFloorLineToBox(player.playerBoard);
       player.score += scoreDifference;
       if (player.score < 0) {
-        player.score = 0;
+        player.score = 0; // the score can never drop below 0 points.
       }
     }
   }
 
+  /**
+   * Calculates the number of vertically linked to the placed tile tiles for the specified player.
+   *
+   * @param row    the row in which the tile was placed
+   * @param column the column in which the tile was placed
+   * @param player the player who owns this player board
+   * @return the number of vertically linked tiles
+   * @throws IllegalArgumentException if the row or the column index is outside of wall dimensions.
+   */
   private int countVerticalLinkedTiles(int row, int column, Player player) {
     // 1 point pro tile for linked tiles vertically
     if (row < 0 || row > PlayerBoard.WALL_SIZE || column < 0 || column > PlayerBoard.WALL_SIZE) {
@@ -238,6 +274,16 @@ public class GameModel {
     return counter;
   }
 
+  /**
+   * Calculates the number of horizontally linked to the placed tile tiles for the specified
+   * player.
+   *
+   * @param row    the row in which the tile was placed
+   * @param column the column in which the tile was placed
+   * @param player the player who owns this player board
+   * @return the number of horizontally linked tiles
+   * @throws IllegalArgumentException if the row or the column index is outside of wall dimensions.
+   */
   private int countHorizontalLinkedTiles(int row, int column, Player player) {
     // 1 point pro tile for linked tiles horizontally
     if (row < 0 || row > PlayerBoard.WALL_SIZE || column < 0 || column > PlayerBoard.WALL_SIZE) {
@@ -262,18 +308,28 @@ public class GameModel {
     return counter;
   }
 
+  /**
+   * Calculates penalty points from the floor line for the specified player.
+   *
+   * @param player the player who owns this player board
+   * @return penalty points
+   */
   private int calculatePenaltyPoints(Player player) {
     requireNonNull(player);
     int numberOfTilesInFloorLine = player.playerBoard.floorLine.size();
     return PENALTY_POINTS[numberOfTilesInFloorLine];
   }
 
-
+  /**
+   * Scores additional points for each player at the end of the game: - gain 2 points for each
+   * complete horizontal line on the wall. - gain 7 points for each complete vertical line on the
+   * wall. - gain 10 points for each each color of which the player has place 5 tiles an the wall.
+   */
   private void calculateEndScore() {
     for (Player player : getPlayers()) {
-      int comletedColumns = countCompletedColumns(player);
-      int comletedRows = countCompletedRows(player);
-      int completedColors = countCompletedColors(player);
+      int comletedColumns = countCompleteColumns(player);
+      int comletedRows = countCompleteRows(player);
+      int completedColors = countCompleteColors(player);
       // 2 points / horizontal (row)
       // 7 points / vertical (column)
       // 10 points / color
@@ -282,9 +338,15 @@ public class GameModel {
     }
   }
 
-  private int countCompletedColumns(Player player) {
+  /**
+   * Calculates the number of complete vertical lines for the specified player.
+   *
+   * @param player the player who owns this player board
+   * @return the number of complete vertical lines
+   */
+  private int countCompleteColumns(Player player) {
     requireNonNull(player);
-    int counterCompletedColumns = 0;
+    int counterCompleteColumns = 0;
     for (int col = 0; col < PlayerBoard.WALL_SIZE; col++) {
       int completesTiles = 0;
       for (int row = 0; row < PlayerBoard.WALL_SIZE; row++) {
@@ -293,16 +355,22 @@ public class GameModel {
         }
       }
       if (completesTiles == PlayerBoard.WALL_SIZE) {
-        counterCompletedColumns++;
+        counterCompleteColumns++;
       }
     }
-    System.out.println("Completed Columns: " + counterCompletedColumns);
-    return counterCompletedColumns;
+    System.out.println("Completed Columns: " + counterCompleteColumns);
+    return counterCompleteColumns;
   }
 
-  private int countCompletedRows(Player player) {
+  /**
+   * Calculates the number of complete horizontal lines for the specified player.
+   *
+   * @param player the player who owns this player board
+   * @return the number of complete horizontal lines
+   */
+  private int countCompleteRows(Player player) {
     requireNonNull(player);
-    int counterCompletedRows = 0;
+    int counterCompleteRows = 0;
     for (boolean[] row : player.playerBoard.wall) {
       int completesTiles = 0;
       for (boolean tile : row) {
@@ -311,16 +379,21 @@ public class GameModel {
         }
       }
       if (completesTiles == PlayerBoard.WALL_SIZE) {
-        counterCompletedRows++;
+        counterCompleteRows++;
       }
     }
-    System.out.println("Completed Rows: " + counterCompletedRows);
-    return counterCompletedRows;
+    return counterCompleteRows;
   }
 
-  private int countCompletedColors(Player player) {
+  /**
+   * Calculates the number of complete colors for the specified player.
+   *
+   * @param player the player who owns this player board
+   * @return the number of complete colors
+   */
+  private int countCompleteColors(Player player) {
     requireNonNull(player);
-    int counterCompletedColors = 0;
+    int counterCompleteColors = 0;
     for (Color color : Color.values()) {
       int tilesOfColor = 0;
       for (int row = 0; row < PlayerBoard.WALL_SIZE; row++) {
@@ -330,14 +403,63 @@ public class GameModel {
         }
       }
       if (tilesOfColor == PlayerBoard.WALL_SIZE) {
-        counterCompletedColors++;
+        counterCompleteColors++;
       }
     }
-    System.out.println("Completed Colors: " + counterCompletedColors);
-    return counterCompletedColors;
+    return counterCompleteColors;
   }
 
   public void test() {
+    ArrayList<ColorTile> redTile = new ArrayList<>();
+    redTile.add(new ColorTile(Color.RED));
+    redTile.add(new ColorTile(Color.RED));
+    redTile.add(new ColorTile(Color.RED));
+    redTile.add(new ColorTile(Color.RED));
+    redTile.add(new ColorTile(Color.RED));
+    ArrayList<ColorTile> yellowTiles = new ArrayList<>();
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    yellowTiles.add(new ColorTile(Color.YELLOW));
+    ArrayList<ColorTile> blueTiles = new ArrayList<>();
+    blueTiles.add(new ColorTile(Color.BLUE));
+    blueTiles.add(new ColorTile(Color.BLUE));
+    blueTiles.add(new ColorTile(Color.BLUE));
+    blueTiles.add(new ColorTile(Color.BLUE));
+    blueTiles.add(new ColorTile(Color.BLUE));
+
+    getPlayers().get(0).playerBoard.wall[1][0] = true;
+    getPlayers().get(0).playerBoard.wall[1][4] = true;
+    getPlayers().get(0).playerBoard.wall[1][2] = true;
+    getPlayers().get(0).playerBoard.wall[1][1] = true;
+    getPlayers().get(0).playerBoard.wall[0][1] = true;
+    getPlayers().get(0).playerBoard.wall[2][1] = true;
+    getPlayers().get(0).playerBoard.wall[3][1] = true;
+    getPlayers().get(0).playerBoard.wall[4][1] = true;
+    getPlayers().get(0).playerBoard.addColorTilesToLine(redTile, 1);
+    getPlayers().get(0).playerBoard.addColorTilesToLine(blueTiles, 4);
+    getPlayers().get(0).playerBoard.addColorTilesToLine(blueTiles, 0);
+    getPlayers().get(0).playerBoard.addColorTilesToLine(redTile, 2);
+    getPlayers().get(0).playerBoard.addColorTilesToLine(redTile, 3);
+
+    System.out.println("pL: " + Arrays.deepToString(getPlayers().get(0).playerBoard.patternLines));
+    System.out.println("floorLine: " + getPlayers().get(0).playerBoard.floorLine);
+    System.out.println("box: " + box);
+
+    calculateRoundScore();
+    calculateEndScore();
+
+    System.out.println(Arrays.deepToString(getPlayers().get(0).playerBoard.wall));
+
+    for (Player player : players) {
+      System.out.println(player.getNickname() + " has " + player.score);
+    }
+
+    getPlayers().get(0).playerBoard.addTileToFloorLine(new PenaltyTile());
+
+    System.out.println("floorLine: " + getPlayers().get(0).playerBoard.floorLine);
+    System.out.println("box: " + box);
 
   }
 }

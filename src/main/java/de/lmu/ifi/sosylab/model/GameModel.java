@@ -46,9 +46,6 @@ public class GameModel {
    * Creates a new table with game components.
    */
   public GameModel() {
-    if (players.size() < 2 || players.size() > 4) {
-      throw new IllegalArgumentException("Invalid number of players, needs to be from 2 to 4");
-    }
     tableCenter = new TableCenter();
     shuffleBag(); //shuffle Bag on Game Construction
   }

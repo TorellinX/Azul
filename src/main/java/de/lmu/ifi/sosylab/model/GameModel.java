@@ -88,11 +88,6 @@ public class GameModel {
    * Remove first TILES_PER_PLATE tiles from bag (which should already be shuffled).
    */
   private List<ColorTile> getAndRemoveTilesFromBagForPlate() {
-    // TODO: check if enough tiles in Bag
-    // can we change this lambda-expression to something else? Because is-bag-empty-check should be
-    // made after each tile added to plate. If we have 3 tiles in the bag, these tiles belongs to
-    // plate. If we simple add box to bag, when bag still has 3 tiles, it changes the probability of
-    // remaining 3 tiles to be active in the game.
     int numberOfRemainingTiles = bag.size();
     if (numberOfRemainingTiles < TILES_PER_PLATE) {
       List<ColorTile> tilesToAdd = new ArrayList<>();
@@ -124,12 +119,10 @@ public class GameModel {
    */
   public void pickTilesFromPlate(Plate plate, Color color) {
     //TODO: Tiles present check
-    // TODO: separate pick and set actions
     if (selectedTiles.size() != 0) {
       return;
     }
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
-    //player.playerBoard.addColorTilesToLine(tiles.selected(), row);
     selectedTiles.addAll(tiles.selected());
     if (tiles.remaining().isPresent()) {
       tableCenter.addColorTiles(tiles.remaining().get());
@@ -146,7 +139,6 @@ public class GameModel {
    */
   public void pickTilesFromTableCenter(Color color, Player player) {
     //TODO: Tiles present check
-    // TODO: separate pick and set actions
     if (selectedTiles.size() != 0) {
       return;
     }
@@ -156,7 +148,6 @@ public class GameModel {
       startingPlayerIndex = players.indexOf(player);
     }
     selectedTiles.addAll(tiles.colorTiles());
-    //player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
   }
 
   /**
@@ -297,10 +288,7 @@ public class GameModel {
     // TODO
     playerToMoveIndex = getNextPlayerIndex();
     playerToMove = players.get(playerToMoveIndex);
-    // no, the round ends when the tiles on the tableCenter and on the plates run out
-    // if (playerToMoveIndex == startingPlayerIndex) {
-    // endRound();
-    // }
+    // the round ends when tiles on the tableCenter and on the plates run out
   }
 
   private void endRound() {

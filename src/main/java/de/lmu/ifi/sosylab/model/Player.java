@@ -20,7 +20,7 @@ public class Player {
    * Builds a player with state defined by argument.
    *
    * @param nickname string of player nickname
-   * @param state state the player is initiated with
+   * @param state    state the player is initiated with
    */
   public Player(String nickname, PlayerState state) {
     this.nickname = nickname;
@@ -59,6 +59,10 @@ public class Player {
 
   public PlayerState getState() {
     return state;
+  }
+
+  public int getScore() {
+    return score;
   }
 
   @Override

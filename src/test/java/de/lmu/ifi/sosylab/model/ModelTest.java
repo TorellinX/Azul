@@ -10,10 +10,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -237,7 +235,7 @@ public class ModelTest {
     testTiles.add(new ColorTile(Color.BLACK));
     testTiles.add(new ColorTile(Color.BLACK));
     GameModel model = newModel(testPlayers);
-    model.selectedTiles = testTiles;
+    model.selectedTiles = new ArrayList<>(testTiles);
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = -1;
 

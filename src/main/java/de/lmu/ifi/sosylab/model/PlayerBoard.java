@@ -65,7 +65,7 @@ public class PlayerBoard {
    * @return the next free index in pattern line or -1
    */
   public int getNextFreePatternLineIndex(int row) {
-    for (int i = 0; i < patternLines[row].length; i++) {
+    for (int i = patternLines[row].length - 1; i >= 0; i--) {
       if (patternLines[row][i] == null) {
         return i;
       }
@@ -208,6 +208,10 @@ public class PlayerBoard {
       throw new RuntimeException("Maximum floorLine size exceeded.");
     }
     if (tile instanceof PenaltyTile) {
+      if (floorLine.size() == 0) {
+        floorLine.add(tile);
+        return;
+      }
       shiftTilesOfFloorLine();
       floorLine.set(0, tile);
       return;
@@ -224,6 +228,9 @@ public class PlayerBoard {
    * of the beginning of the floor line becomes empty (null).
    */
   private void shiftTilesOfFloorLine() {
+    if (floorLine.size() == 0) {
+      return;
+    }
     if (floorLine.size() == FLOORLINE_SIZE) {
       addTileToBox((ColorTile) floorLine.get(floorLine.size() - 1));
       floorLine.set(floorLine.size() - 1, null);

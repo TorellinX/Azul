@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,8 @@ public class GameModel {
   private static final int POINTS_PRO_COLUMN = 7;
   private static final int POINTS_PRO_COLOR = 10;
   private static final int[] PENALTY_POINTS = new int[]{0, -1, -2, -4, -6, -8, -11, -14};
+
+  String STATE_CHANGED = "State changed";
 
 
   private List<Player> players;
@@ -59,10 +62,29 @@ public class GameModel {
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
     linkBoxToPlayerBoard();
+    notifyListeners();
   }
 
   public void setState(State state) {
     this.state = state;
+  }
+
+  public void addPropertyChangeListener(PropertyChangeListener pcl) {
+    requireNonNull(pcl);
+    support.addPropertyChangeListener(pcl);
+  }
+
+  public void removePropertyChangeListener(PropertyChangeListener pcl) {
+    requireNonNull(pcl);
+    support.removePropertyChangeListener(pcl);
+  }
+
+  /**
+   * Invokes the model to fire a new event, such that any attached observer (i.e.,
+   * {@link PropertyChangeListener}) gets notified about a change in this model.
+   */
+  private void notifyListeners() {
+    support.firePropertyChange(STATE_CHANGED, null, this);
   }
 
   private void linkBoxToPlayerBoard() {
@@ -108,6 +130,7 @@ public class GameModel {
     if (tiles.remaining().isPresent()) {
       tableCenter.addColorTiles(tiles.remaining().get());
     }
+    notifyListeners();
   }
 
   public void pickTilesFromTableCenter(Color color, Player player, int row) {
@@ -117,6 +140,7 @@ public class GameModel {
       player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
     }
     player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
+    notifyListeners();
   }
 
   /**
@@ -238,6 +262,7 @@ public class GameModel {
     tiles.remove(tiles.size() - 1); // one tile remains on the wall
     box.addAll(tiles);
     Arrays.fill(playerBoard.patternLines[row], null);
+    notifyListeners();
   }
 
   /**
@@ -254,6 +279,7 @@ public class GameModel {
       box.add((ColorTile) tile);
     }
     playerBoard.floorLine.clear();
+    notifyListeners();
   }
 
   private void makeMove() {

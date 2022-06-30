@@ -20,6 +20,11 @@ public class GameController implements Controller {
     this.model = requireNonNull(model);
   }
 
+  @Override
+  public void start() {
+    //view.showLobby;
+  }
+
   public void startGame(List<String> playerNames) {
     model.createPlayers(playerNames);
     model.setState(State.RUNNING);
@@ -64,6 +69,11 @@ public class GameController implements Controller {
     } else {
       return false;
     }
+  }
+
+  @Override
+  public void dispose() {
+    //model.removePropertyChangeListener(view);
   }
 
 

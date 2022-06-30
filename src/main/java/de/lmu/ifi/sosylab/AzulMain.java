@@ -25,6 +25,8 @@ public class AzulMain {
 
     //View view = GameView(model, controller);
     //controller.setView(view);
+    //model.addPropertyChangeListener(view);
+    controller.start();
 
     // TODO: start view.
   }

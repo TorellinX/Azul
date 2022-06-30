@@ -1,7 +1,5 @@
 package de.lmu.ifi.sosylab;
 
-import de.lmu.ifi.sosylab.model.Color;
-import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerState;
@@ -27,30 +25,10 @@ public class AzulMain {
     String[] playerNames = {"Player1", "Player2", "Player3", "Player4"};
     //  </mock>
     GameModel model = new GameModel(createPlayerObjects(playerNames));
-    // notifyObservers() ????
-
-    // TODO: start view.
-
-    //... EVENT "pick tile" from view through controller with Color, Player  and place (Plate oder
-    // TableCenter)
-    // if (place instance of Plate) {
-    //   pickTilesFromPlate(plate, color);
-    // }
-    // if (place instance of TableCenter) {
-    //   pickTilesFromTableCenter(color, player);
-    // }
-    // <waiting for "set to row" event>
-
-    //... EVENT "set to row" from view through controller with Player and row (patternLines (0-4) or
-    // floorLine (-1))
-    // if (!setPickedTiles(player, row)) {
-    //    <waiting for "set to row" event>
-    // }
-    // notifyObservers() ????
-
-    // ...
 
     System.out.println(model.getPlayerNames());
+    // TODO: start view.
+
   }
 
   /**

@@ -100,13 +100,6 @@ public class GameModel {
       }
       return tilesToAdd;
     } else {
-      // TODO:
-      // ??? how does bag.remove(index) work?? If the bag has 4 tiles:
-      // bag.remove(0) while bag has 4 Tiles,
-      // bag.remove(1) while bag has 3 Tiles,
-      // bag.remove(2) while bag has 2 Tiles !!!!!!! There is no object with index 2 in the bag!!!!
-      // bag.remove(3) !!!!!!
-      // Should the intexes be applied in reverse order from 3 to 0?
       return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
     }
   }

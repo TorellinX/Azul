@@ -33,16 +33,17 @@ public class GameModel {
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
   private final List<Plate> plates;
+
   private final TableCenter tableCenter;
+
   private final List<ColorTile> bag = Arrays.stream(Color.values())
       .flatMap(color -> IntStream.range(0, TILES_PER_COLOR).mapToObj(i -> new ColorTile(color)))
       .collect(Collectors.toList());
   List<ColorTile> box = new ArrayList<>();
-
   private int startingPlayerIndex;
+
   private int playerToMoveIndex;
   private Player playerToMove;
-
   private int round = 1;
 
   private final Random random = new Random();
@@ -116,6 +117,10 @@ public class GameModel {
 
   public List<Plate> getPlates() {
     return plates;
+  }
+
+  public TableCenter getTableCenter() {
+    return tableCenter;
   }
 
   public List<Player> getPlayers() {

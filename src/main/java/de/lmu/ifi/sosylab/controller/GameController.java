@@ -36,15 +36,27 @@ public class GameController implements Controller{
   }
 
   public void pickTilesFromTableCenter(Color color) {
-
+      if (model.getTableCenter().getColorTiles().stream().anyMatch(colorTile -> colorTile.getColor() == color)) {
+        //TODO: Color not in TableCenter.
+      }
   }
 
-  public void placeTilesFromPlateEvent(Plate plate, Color color, Player player, int row) {
-    model.pickTilesFromPlate(plate,color,player, row);
+  public void placeTilesFromPlateEvent(Plate plate, Color color, Player player, int rowIndex) {
+    if (player.getPlayerBoard().countFreeFieldsInRow(rowIndex) > 0 && player.getPlayerBoard().getPatternLineColor(rowIndex) == color) {
+      model.pickTilesFromPlate(plate, color, player, rowIndex);
+    }
+    else {
+      //TODO: notify Player, not placeable
+    }
   }
 
-  public void placeTilesFromTableCenterEvent(Color color, Player player, int row) {
-    model.pickTilesFromTableCenter(color, player, row);
+  public void placeTilesFromTableCenterEvent(Color color, Player player, int rowIndex) {
+    if (player.getPlayerBoard().countFreeFieldsInRow(rowIndex) > 0 && player.getPlayerBoard().getPatternLineColor(rowIndex) == color) {
+      model.pickTilesFromTableCenter(color, player, rowIndex);
+    }
+    else {
+      //TODO: notify Player, not placeable
+    }
   }
 
 

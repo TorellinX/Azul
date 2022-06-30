@@ -4,12 +4,17 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * Player board representing the game Azul. It contains the pattern lines where tiles can be placed,
+ * the wall, which is to be tiled and the floor line, which collects penalties.
+ */
 public class PlayerBoard {
 
-  final static int WALL_SIZE = 5;
-  final static int FLOORLINE_SIZE = 7;
+  static final int WALL_SIZE = 5;
+  static final int FLOORLINE_SIZE = 7;
 
   private int score;
   ColorTile[][] patternLines;
@@ -31,6 +36,12 @@ public class PlayerBoard {
     return patternLines;
   }
 
+  /**
+   * Calculates the number of fields in a pattern line row, which are not occupied, yet.
+   *
+   * @param rowIndex pattern line index
+   * @return number of free fields
+   */
   public int countFreeFieldsInRow(int rowIndex) {
     if (rowIndex > WALL_SIZE) {
       throw new IllegalArgumentException("Row index must be within the wall size.");
@@ -48,8 +59,10 @@ public class PlayerBoard {
   }
 
   /**
-   * @param row
-   * @return the next free index or -1
+   * Returns the next index of a pattern line indicated by row. (?)
+   *
+   * @param row pattern line index
+   * @return the next free index in pattern line or -1
    */
   public int getNextFreePatternLineIndex(int row) {
     for (int i = 0; i < patternLines[row].length; i++) {
@@ -60,6 +73,12 @@ public class PlayerBoard {
     return -1;
   }
 
+  /**
+   * Getter for the color of some tile already placed in a pattern line.
+   *
+   * @param row row index of the addressed pattern line (>= 0)
+   * @return color of already placed tiles. 'null' if line is empty
+   */
   public Color getPatternLineColor(int row) {
     // TODO: validation (Line must be not empty, etc.)
     // TODO: tests
@@ -100,6 +119,11 @@ public class PlayerBoard {
     return scoreCopy;
   }
 
+  /**
+   * Getter for the full pattern array (2D).
+   *
+   * @return pattern line array of ColorTile type
+   */
   public ColorTile[][] getPatternLines() {
     ColorTile[][] patternLinesCopy = new ColorTile[patternLines.length][];
     for (int i = 0; i < patternLines.length; i++) {
@@ -109,17 +133,23 @@ public class PlayerBoard {
     return patternLinesCopy;
   }
 
+  /**
+   * Getter for the wall to be filled with with tiles. Indicates if an array field carries a tile.
+   *
+   * @return boolean array
+   */
   public boolean[][] getWall() {
     boolean[][] wallCopy = new boolean[wall.length][];
     for (int i = 0; i < wall.length; i++) {
       wallCopy[i] = Arrays.copyOf(wall[i], wall[0].length);
     }
-    return wall;
+    return wallCopy;
   }
 
 
   public List<Tile> getFloorLine() {
-    return floorLine;
+    List<Tile> unmodifiableTilesList = Collections.unmodifiableList(floorLine);
+    return unmodifiableTilesList;
   }
 
 
@@ -136,6 +166,7 @@ public class PlayerBoard {
     if (tiles.size() == 0) {
       throw new IllegalArgumentException(
           "Trying to add an empty list of tiles to the patternLine.");
+      // TODO: If row is full, aren't tiles transferred to the floor line instead of exception?
     }
     if (freeFields == 0) {
       throw new IllegalArgumentException("Row is full");
@@ -150,6 +181,7 @@ public class PlayerBoard {
     }
     if (tiles.get(0).getColor() == getPatternLineColor(rowIndex)
         || getNextFreePatternLineIndex(rowIndex) == 0) {
+      //TODO: shouldn't color mismatch be an illegal argument exception?
       ColorTile[] row = patternLines[rowIndex];
       for (int i = 0; i < tiles.size(); i++) {
         if (freeFields > 0) {

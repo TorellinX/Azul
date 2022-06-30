@@ -12,6 +12,11 @@ import java.util.List;
  */
 public class AzulMain {
 
+  /**
+   * Main method of the Azul game app.
+   *
+   * @param args unused
+   */
   public static void main(String[] args) {
     List<Player> players = List.of(
         new Player("player1", PlayerState.READY),

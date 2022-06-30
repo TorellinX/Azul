@@ -1,9 +1,5 @@
 package main.java.de.lmu.ifi.sosylab.view;
 
-
-import de.lmu.ifi.sosylab.view.GraphicAzul;
-import de.lmu.ifi.sosylab.view.PlayingView;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -43,7 +39,6 @@ public class MainMenuView extends JFrame {
   private JButton openplayingfield;
 
 
-
   public MainMenuView() {
     super("Azul");
 
@@ -62,8 +57,6 @@ public class MainMenuView extends JFrame {
     showMainMenu();
 
   }
-
-  PlayingView playingviewframe = new PlayingView();
 
 
   private void initialize() {
@@ -208,10 +201,9 @@ public class MainMenuView extends JFrame {
   }
 
   private void showGame() {
-    //create Playing View Panel
-    PlayingView playingView = new PlayingView();
-    playingView.setSize(1200,700);
-    playingView.setVisible(true);
+    setVisible(false);
+
+    PlayingView playingviewframe = new PlayingView();
   }
 
   private void addActionListener() {
@@ -252,7 +244,8 @@ public class MainMenuView extends JFrame {
 
     startGame.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e) { showGame();
+      public void actionPerformed(ActionEvent e) {
+        showGame();
       }
     });
 
@@ -289,35 +282,33 @@ public class MainMenuView extends JFrame {
     });
   }
 
-  private void addPlayerToLocalGame(String nickname){
+  private void addPlayerToLocalGame(String nickname) {
     DefaultTableModel modelOfLoaclPlayer = (DefaultTableModel) localPlayer.getModel();
     Boolean isUserNameTaken = false;
 
-    for(int i = 0; i < anzahlAnSpielern; i++){
-      if(nickname.equals((String) modelOfLoaclPlayer.getValueAt(i, 0))){
+    for (int i = 0; i < anzahlAnSpielern; i++) {
+      if (nickname.equals((String) modelOfLoaclPlayer.getValueAt(i, 0))) {
         JOptionPane.showMessageDialog(null, "UserName ist bereits in Benützung");
         isUserNameTaken = true;
       }
     }
-    if(anzahlAnSpielern >= 4){
+    if (anzahlAnSpielern >= 4) {
       JOptionPane.showMessageDialog(null, "Maximal 4 Spieler erlaubt");
       isUserNameTaken = true;
 
     }
 
-    if(!isUserNameTaken){
+    if (!isUserNameTaken) {
       modelOfLoaclPlayer.addRow(new Object[]{nickname});
       anzahlAnSpielern++;
     }
   }
 
-  private void removePlayerLocalGame(){
-    int row =  localPlayer.getSelectedRow();
+  private void removePlayerLocalGame() {
+    int row = localPlayer.getSelectedRow();
 
     DefaultTableModel model = (DefaultTableModel) localPlayer.getModel();
 
     model.removeRow(row);
   }
-
-
 }

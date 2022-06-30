@@ -1,8 +1,10 @@
 package main.java.de.lmu.ifi.sosylab;
 
+import main.java.de.lmu.ifi.sosylab.view.MainMenuView;
+
 public class Main {
 
   public static void main(String[] args){
-    main.java.de.lmu.ifi.sosylab.view.MainMenuView myView = new main.java.de.lmu.ifi.sosylab.view.MainMenuView();
+    MainMenuView myView = new MainMenuView();
   }
 }

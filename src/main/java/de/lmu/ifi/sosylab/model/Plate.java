@@ -19,6 +19,13 @@ public class Plate {
    */
   public record SelectedAndRemainingTiles(List<ColorTile> selected,
                                           Optional<List<ColorTile>> remaining) {
+    public SelectedAndRemainingTiles {
+      selected = List.copyOf(selected);
+    }
+    public List<ColorTile> selected() {
+      List<ColorTile> immutableColorTileList = Collections.unmodifiableList(selected);
+      return immutableColorTileList;
+    }
 
   }
 

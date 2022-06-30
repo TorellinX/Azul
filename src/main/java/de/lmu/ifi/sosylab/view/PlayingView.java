@@ -1,9 +1,6 @@
-package main.java.de.lmu.ifi.sosylab.view;
+package de.lmu.ifi.sosylab.view;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +34,6 @@ public class PlayingView extends JFrame {
     DrawboardPlayerBoardLeft drawboardplayerboardleft = new DrawboardPlayerBoardLeft();
     DrawboardPlayerBoardRight drawboardplayerboardright = new DrawboardPlayerBoardRight();
     DrawboardTableCenter drawboardtablecenter = new DrawboardTableCenter();
-
 
     //Oberes Panel wird mit Combobox gefüllt.
     JPanel panelUp = new JPanel();

@@ -1,7 +1,7 @@
-package main.java.de.lmu.ifi.sosylab.view;
+package de.lmu.ifi.sosylab.view;
 
 /**
- * Die Klasse speichert zwei Int als Paar, damit die Koorinaten für die Felder
+ * Die Klasse speichert zwei Int als Paar, damit die Koordinaten für die Felder übergeben werden.
  */
 
 public class IntPair {

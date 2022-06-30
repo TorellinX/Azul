@@ -1,10 +1,12 @@
-package main.java.de.lmu.ifi.sosylab.view;
+package de.lmu.ifi.sosylab.view;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class MainMenuView extends JFrame {
 
@@ -19,24 +21,25 @@ public class MainMenuView extends JFrame {
   private static final String PLAYING_VIEW = "playingview";
 
   private JPanel panel;
-  //Button  Main Menu
+  //Buttons für  Main Menu
   private JButton hotseat;
   private JButton multiplayer;
-  //Buttons Creat Local Play modus
+  //Elemente für Local Players
   private JButton addPlayer;
   private JButton removePlayer;
   private JButton backToMenu;
   private JButton startGame;
   private JTextField nicknameLocal;
-  //Buttons creat Multiplayer
+  //Elemente für Multiplayers
   private JButton connect;
   private JButton createRoom;
   private JButton leaveOnlineMode;
   private JTextField nicknameOnline;
-  private JTable localPlayer;
+  private JTable localPlayers;
   private String userNameOnline;
-  private int anzahlAnSpielern = 0;
+  private int numberOfPlayers = 0;
   private JButton openplayingfield;
+
 
 
   public MainMenuView() {
@@ -48,11 +51,11 @@ public class MainMenuView extends JFrame {
 
     initialize();
     creatMainMenuPanel();
-    createlocalplayerAddView();
+    createLocalPlayerAddView();
     createMulitplayerView();
     openPlayingView();
 
-    addActionListener();
+    addListeners();
 
     showMainMenu();
 
@@ -74,10 +77,11 @@ public class MainMenuView extends JFrame {
     JPanel buttons = new JPanel();
     GraphicAzul graphicAzul = new GraphicAzul();
 
-    //Logo anzeige
+    //Logo anzeigen
     graphic.add(graphicAzul.azulPanel);
     graphic.setBackground(new Color(135, 206, 250));
-    // Mittleres Panel mit Buttons
+
+    // Mittleres Panel wird mit Buttons gefüllt.
     buttons.setLayout(new FlowLayout());
     hotseat = new JButton("Hotseat");
     multiplayer = new JButton("Multiplayer");
@@ -89,7 +93,7 @@ public class MainMenuView extends JFrame {
     mainMenu.add(buttons, BorderLayout.CENTER);
   }
 
-  private void createlocalplayerAddView() {
+  private void createLocalPlayerAddView() {
     //Panel LocalGameOverview
     JPanel localgame = new JPanel(new BorderLayout());
     add(localgame, LOCAL_GAME);
@@ -109,9 +113,9 @@ public class MainMenuView extends JFrame {
 
     DefaultTableModel model = new DefaultTableModel();
     model.addColumn("Player Nick");
-    localPlayer = new JTable(model);
+    localPlayers = new JTable(model);
 
-    JScrollPane nickNames = new JScrollPane(localPlayer);
+    JScrollPane nickNames = new JScrollPane(localPlayers);
     panelCenter.add(nicknameLocal);
     panelCenter.add(nickNames);
     panelCenter.setBackground(new Color(135, 206, 250));
@@ -167,7 +171,7 @@ public class MainMenuView extends JFrame {
     JPanel panelBottomMultiplayer = new JPanel(new GridLayout(1, 3));
     connect = new JButton("Enter Room");
     leaveOnlineMode = new JButton("Leave");
-    createRoom = new JButton("Creat new Room");
+    createRoom = new JButton("Create New Room");
 
     panelBottomMultiplayer.add(connect);
     panelBottomMultiplayer.add(leaveOnlineMode);
@@ -178,13 +182,12 @@ public class MainMenuView extends JFrame {
     multiplayerPanel.add(panelBottomMultiplayer, BorderLayout.SOUTH);
   }
 
-
   private void openPlayingView() {
-
-
   }
 
 
+
+  //Im folgenden werden die Methoden geschrieben, die in die Listeners gefüllt werden.
   private void showMainMenu() {
     layout.show(getContentPane(), MAIN_MENU);
     setVisible(true);
@@ -195,6 +198,10 @@ public class MainMenuView extends JFrame {
     setVisible(true);
   }
 
+  private void clearTextInTextfield(){
+    nicknameLocal.setText("");
+  }
+
   private void showMultiplayer() {
     layout.show(getContentPane(), MULTIPLAYER);
     setVisible(true);
@@ -202,11 +209,13 @@ public class MainMenuView extends JFrame {
 
   private void showGame() {
     setVisible(false);
-
     PlayingView playingviewframe = new PlayingView();
   }
 
-  private void addActionListener() {
+
+
+  //In der folgenden Methode werden die Listeners gesetzt.
+  private void addListeners() {
     hotseat.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -218,6 +227,16 @@ public class MainMenuView extends JFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
         showMultiplayer();
+      }
+    });
+
+    //nicknameLocal.addFocusListener(FocusEvent evt) {
+      //@Override;
+      //public void actionPerformed(FocusEvent evt) {clearTextInTextfield();}
+
+    nicknameLocal.addFocusListener(new FocusAdapter() {
+      @Override
+      public void focusGained(FocusEvent e) { clearTextInTextfield();
       }
     });
 
@@ -283,16 +302,16 @@ public class MainMenuView extends JFrame {
   }
 
   private void addPlayerToLocalGame(String nickname) {
-    DefaultTableModel modelOfLoaclPlayer = (DefaultTableModel) localPlayer.getModel();
+    DefaultTableModel modelOfLoaclPlayer = (DefaultTableModel) localPlayers.getModel();
     Boolean isUserNameTaken = false;
 
-    for (int i = 0; i < anzahlAnSpielern; i++) {
+    for (int i = 0; i < numberOfPlayers; i++) {
       if (nickname.equals((String) modelOfLoaclPlayer.getValueAt(i, 0))) {
         JOptionPane.showMessageDialog(null, "UserName ist bereits in Benützung");
         isUserNameTaken = true;
       }
     }
-    if (anzahlAnSpielern >= 4) {
+    if (numberOfPlayers >= 4) {
       JOptionPane.showMessageDialog(null, "Maximal 4 Spieler erlaubt");
       isUserNameTaken = true;
 
@@ -300,14 +319,14 @@ public class MainMenuView extends JFrame {
 
     if (!isUserNameTaken) {
       modelOfLoaclPlayer.addRow(new Object[]{nickname});
-      anzahlAnSpielern++;
+      numberOfPlayers++;
     }
   }
 
   private void removePlayerLocalGame() {
-    int row = localPlayer.getSelectedRow();
+    int row = localPlayers.getSelectedRow();
 
-    DefaultTableModel model = (DefaultTableModel) localPlayer.getModel();
+    DefaultTableModel model = (DefaultTableModel) localPlayers.getModel();
 
     model.removeRow(row);
   }

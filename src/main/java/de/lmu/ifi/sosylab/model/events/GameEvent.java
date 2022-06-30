@@ -1,8 +1,5 @@
 package de.lmu.ifi.sosylab.model.events;
 
-/**
- * Class for sub classing events in the game.
- */
 public abstract class GameEvent {
 
   /**

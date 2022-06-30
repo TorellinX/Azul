@@ -166,7 +166,6 @@ public class PlayerBoard {
     if (tiles.size() == 0) {
       throw new IllegalArgumentException(
           "Trying to add an empty list of tiles to the patternLine.");
-      // TODO: If row is full, aren't tiles transferred to the floor line instead of exception?
     }
     if (freeFields == 0) {
       throw new IllegalArgumentException("Row is full");
@@ -179,17 +178,18 @@ public class PlayerBoard {
         addTileToFloorLine(tile);
       }
     }
-    if (tiles.get(0).getColor() == getPatternLineColor(rowIndex)
-        || getNextFreePatternLineIndex(rowIndex) == 0) {
-      //TODO: shouldn't color mismatch be an illegal argument exception?
-      ColorTile[] row = patternLines[rowIndex];
-      for (int i = 0; i < tiles.size(); i++) {
-        if (freeFields > 0) {
-          row[freeFields - 1] = tiles.get(i);
-          freeFields--;
-        } else {
-          addTileToFloorLine(tiles.get(i));
-        }
+    if (getNextFreePatternLineIndex(rowIndex) != patternLines[rowIndex].length - 1
+        && tiles.get(0).getColor() != getPatternLineColor(rowIndex)) {
+      throw new IllegalArgumentException("Color mismatch.");
+    }
+
+    ColorTile[] row = patternLines[rowIndex];
+    for (int i = 0; i < tiles.size(); i++) {
+      if (freeFields > 0) {
+        row[freeFields - 1] = tiles.get(i);
+        freeFields--;
+      } else {
+        addTileToFloorLine(tiles.get(i));
       }
     }
   }

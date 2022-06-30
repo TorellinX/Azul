@@ -121,6 +121,7 @@ public class GameModel {
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
     if (tiles.penaltyTile().isPresent()) {
       player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
+      // TODO: set next first player
     }
     player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
   }
@@ -192,12 +193,13 @@ public class GameModel {
 
   private void makeMove() {
     // move logic
-
+    // TODO
     playerToMoveIndex = getNextPlayerIndex();
     playerToMove = players.get(playerToMoveIndex);
-    if (playerToMoveIndex == startingPlayerIndex) {
-      endRound();
-    }
+    // no, the round ends when the tiles on the tableCenter and on the plates run out
+//    if (playerToMoveIndex == startingPlayerIndex) {
+//      endRound();
+//    }
   }
 
   private void endRound() {

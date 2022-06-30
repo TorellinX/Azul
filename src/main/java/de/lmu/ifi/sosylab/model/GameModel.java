@@ -40,7 +40,7 @@ public class GameModel {
   private int playerToMoveIndex;
   private Player playerToMove;
   private int round = 1;
-  public List<ColorTile> selectedTiles = new ArrayList<>(); // TODO: remove public
+  List<ColorTile> selectedTiles = new ArrayList<>();
 
   /**
    * Creates a new table with game components.

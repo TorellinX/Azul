@@ -232,11 +232,11 @@ public class ModelTest {
   @Test
   public void setPickedTiles_floorLineWhenToFloorLine() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
     List<ColorTile> testTiles = new ArrayList<>();
     testTiles.add(new ColorTile(Color.BLACK));
     testTiles.add(new ColorTile(Color.BLACK));
     testTiles.add(new ColorTile(Color.BLACK));
+    GameModel model = newModel(testPlayers);
     model.selectedTiles = testTiles;
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = -1;

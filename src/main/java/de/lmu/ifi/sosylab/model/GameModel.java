@@ -36,6 +36,7 @@ public class GameModel {
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
   private State state = State.RUNNING;
+  private RoundState roundState = RoundState.WAIT;
   private int startingPlayerIndex;
   private int playerToMoveIndex;
   private Player playerToMove;
@@ -84,6 +85,140 @@ public class GameModel {
         .toList();
   }
 
+
+  //Object is Plate or TableCenter
+  public synchronized void pickTile(Color color, Player player, Object place) {
+    System.out.println("PICK TILE: " + color + " " + player.getNickname() + " " + place.toString());
+    if (roundState != RoundState.WAIT) {
+      return; // TODO: or Exception?
+    }
+    if (player != playerToMove) {
+      throw new IllegalArgumentException("\"pick tile\" event from non-active player");
+    }
+    if (place instanceof Plate) {
+      pickTilesFromPlate((Plate) place, color);
+    }
+    if (place instanceof TableCenter) {
+      pickTilesFromTableCenter(color, player);
+    }
+    roundState = RoundState.PICKED;
+    System.out.println("roundState: " + roundState + ": " + selectedTiles + " tiles");
+  }
+
+  // (patternLines (0-4) or floorLine (-1)
+  public synchronized void setToRow(Player player, int row) {
+    System.out.println("SET TO ROW: " + row);
+    if (roundState != RoundState.PICKED) {
+      return; // TODO: or Exception?
+    }
+    if (player != playerToMove) {
+      throw new IllegalArgumentException("\"set to row\" event from non-active player");
+    }
+    System.out.println("Setting tiles...");
+    if (!setPickedTiles(player, row)) {
+      System.out.println("Setting unsuccessful!");
+      return;
+    }
+
+    //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+    System.out.println("Pattern Lines: ");
+    for (ColorTile[] rowP : player.playerBoard.patternLines) {
+      System.out.println(Arrays.toString(rowP));
+    }
+    System.out.println("Floor Line: " + player.playerBoard.floorLine);
+    System.out.println("Wall: ");
+    for (boolean[] rowW : player.playerBoard.wall) {
+      System.out.println(Arrays.toString(rowW));
+    }
+    //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
+    playerToMoveIndex = getNextPlayerIndex();
+    playerToMove = players.get(playerToMoveIndex);
+    if (!areThereMoreTiles()) {
+      endRound();
+      return;
+    }
+    System.out.println("Active Player: " + getPlayerToMoveIndex());
+    roundState = RoundState.WAIT;
+    System.out.println("roundState: " + roundState);
+  }
+
+  private boolean areThereMoreTiles() {
+    return tableCenter.getTiles().size() != 0 && areThereMoreTilesOnPlates();
+  }
+
+  private boolean areThereMoreTilesOnPlates() {
+    for (Plate plate : plates) {
+      if (plate.getState() == PlateState.FULL) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void endRound() {
+    // TODO: checks.
+    // the tiles from the patternLines and the floorLine are being moved during the scoring.
+    calculateRoundScore();
+    if (!hasCompletedWallRow()) {
+      endGame();
+    }
+    round++;
+    playerToMoveIndex = startingPlayerIndex;
+    playerToMove = players.get(playerToMoveIndex);
+  }
+
+  private void endGame() {
+    calculateEndScore();
+    roundState = RoundState.FINISHED;
+    state = State.FINISHED;
+  }
+
+  /**
+   * Checks if any of the players have the completed wall row.
+   *
+   * @return true if the specified player has a complete wall row
+   */
+  private boolean hasCompletedWallRow() {
+    for (Player player : getPlayers()) {
+      if (hasCompletedWallRow(player)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Checks if the specified player has a complete wall row.
+   *
+   * @param player the specified player
+   * @return true if the specified player has a complete wall row
+   */
+  private boolean hasCompletedWallRow(Player player) {
+    requireNonNull(player);
+    for (boolean[] row : player.playerBoard.wall) {
+      int completeTiles = 0;
+      for (boolean tile : row) {
+        if (tile) {
+          completeTiles++;
+        }
+      }
+      if (completeTiles == PlayerBoard.WALL_SIZE) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public int getPlayerToMoveIndex() {
+    return playerToMoveIndex;
+  }
+
+  private int getNextPlayerIndex() {
+    int nextPlayerIndex = playerToMoveIndex + 1;
+    return nextPlayerIndex == players.size() ? 0 : nextPlayerIndex;
+  }
+
   /**
    * Remove first TILES_PER_PLATE tiles from bag (which should already be shuffled).
    */
@@ -100,6 +235,13 @@ public class GameModel {
       }
       return tilesToAdd;
     } else {
+      // TODO:
+      // ??? how does bag.remove(index) work?? If the bag has 4 tiles:
+      // bag.remove(0) while bag has 4 Tiles,
+      // bag.remove(1) while bag has 3 Tiles,
+      // bag.remove(2) while bag has 2 Tiles !!!!!!! There is no object with index 2 in the bag!!!!
+      // bag.remove(3) !!!!!!
+      // Should the indexes be applied in reverse order from 3 to 0?
       return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
     }
   }
@@ -132,7 +274,7 @@ public class GameModel {
    */
   public void pickTilesFromTableCenter(Color color, Player player) {
     //TODO: Tiles present check
-    if (selectedTiles.size() != 0) {
+    if (selectedTiles.size() != 0) { // if selectedTiles already has tiles
       return;
     }
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
@@ -166,7 +308,7 @@ public class GameModel {
       throw new IllegalArgumentException("Selected tiles have different color");
     }
     if (row == -1) {
-      System.out.println("4: addTileToFloorLine");
+      System.out.println("addTileToFloorLine");
       for (ColorTile tile : selectedTiles) {
         player.playerBoard.addTileToFloorLine(tile);
       }
@@ -190,7 +332,7 @@ public class GameModel {
       System.out.println("3: the line already has tiles with another color");
       return false;
     }
-    System.out.println("5: addColorTilesToLine");
+    System.out.println("addColorTilesToLine");
     player.playerBoard.addColorTilesToLine(selectedTiles, row);
     return true;
   }
@@ -274,28 +416,6 @@ public class GameModel {
       box.add((ColorTile) tile);
     }
     playerBoard.floorLine.clear();
-  }
-
-  private void makeMove() {
-    // move logic
-    // TODO
-    playerToMoveIndex = getNextPlayerIndex();
-    playerToMove = players.get(playerToMoveIndex);
-    // the round ends when tiles on the tableCenter and on the plates run out
-  }
-
-  private void endRound() {
-    // TODO: checks and table cleanup (move tiles to box, ...).
-    // the tiles from the patternLines and the floorLine are being moved during the scoring.
-    round++;
-    if (bag.isEmpty()) {
-      moveBoxTilesToBagAndShuffle();
-    }
-  }
-
-  private int getNextPlayerIndex() {
-    int nextPlayerIndex = playerToMoveIndex + 1;
-    return nextPlayerIndex == players.size() ? 0 : nextPlayerIndex;
   }
 
   private void moveBoxTilesToBagAndShuffle() {
@@ -457,13 +577,13 @@ public class GameModel {
     requireNonNull(player);
     int counterCompleteColumns = 0;
     for (int col = 0; col < PlayerBoard.WALL_SIZE; col++) {
-      int completesTiles = 0;
+      int completeTiles = 0;
       for (int row = 0; row < PlayerBoard.WALL_SIZE; row++) {
         if (player.playerBoard.wall[row][col]) {
-          completesTiles++;
+          completeTiles++;
         }
       }
-      if (completesTiles == PlayerBoard.WALL_SIZE) {
+      if (completeTiles == PlayerBoard.WALL_SIZE) {
         counterCompleteColumns++;
       }
     }
@@ -481,13 +601,13 @@ public class GameModel {
     requireNonNull(player);
     int counterCompleteRows = 0;
     for (boolean[] row : player.playerBoard.wall) {
-      int completesTiles = 0;
+      int completeTiles = 0;
       for (boolean tile : row) {
         if (tile) {
-          completesTiles++;
+          completeTiles++;
         }
       }
-      if (completesTiles == PlayerBoard.WALL_SIZE) {
+      if (completeTiles == PlayerBoard.WALL_SIZE) {
         counterCompleteRows++;
       }
     }
@@ -516,5 +636,10 @@ public class GameModel {
       }
     }
     return counterCompleteColors;
+  }
+
+  public TableCenter getTableCenter() {
+    // TODO: make unmutable
+    return tableCenter;
   }
 }

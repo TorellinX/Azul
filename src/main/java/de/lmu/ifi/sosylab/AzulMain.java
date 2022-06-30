@@ -22,35 +22,30 @@ public class AzulMain {
    * @param args unused
    */
   public static void main(String[] args) {
-    //... view sends through controller "String[] playerNames"
-    // <mock>
-    String[] playerNames = {"Player1", "Player2", "Player3", "Player4"};
-    //  </mock>
-    GameModel model = new GameModel(createPlayerObjects(playerNames));
-    // notifyObservers() ????
-
     // TODO: start view.
 
-    //... EVENT "pick tile" from view through controller with Color, Player  and place (Plate oder
-    // TableCenter)
-    // if (place instance of Plate) {
-    //   pickTilesFromPlate(plate, color);
-    // }
-    // if (place instance of TableCenter) {
-    //   pickTilesFromTableCenter(color, player);
-    // }
-    // <waiting for "set to row" event>
-
-    //... EVENT "set to row" from view through controller with Player and row (patternLines (0-4) or
-    // floorLine (-1))
-    // if (!setPickedTiles(player, row)) {
-    //    <waiting for "set to row" event>
-    // }
+    //controller.startGame(String[] playerNames) ===> model.createPlayerObjects(String[] playerNames)
+    // <mock>
+    String[] playerNames = {"Player0", "Player1", "Player2", "Player3"};
+    //  </mock>
+    startGame(playerNames);
     // notifyObservers() ????
+  }
 
-    // ...
+  public static void startGame(String[] playerNames) {
+    GameModel model = new GameModel(createPlayerObjects(playerNames));
 
     System.out.println(model.getPlayerNames());
+    System.out.println("Active Player: " + model.getPlayerToMoveIndex());
+    // controller.pickTile(Color color, Player player, Object place) ===> model.pickTile(Color color, Player player, Object place)
+    model.pickTile(model.getPlates().get(0).getTiles().get(0).getColor(),
+        model.getPlayers().get(model.getPlayerToMoveIndex()), model.getPlates().get(0));
+    // controller.setToRow(Player player, int row)  ===> model.setToRow(Player player, int row)
+    model.setToRow(model.getPlayers().get(model.getPlayerToMoveIndex()), 0);
+    model.pickTile(((ColorTile) model.getTableCenter().getTiles().get(1)).getColor(),
+        model.getPlayers().get(model.getPlayerToMoveIndex()), model.getTableCenter());
+    model.setToRow(model.getPlayers().get(model.getPlayerToMoveIndex()), 3);
+
   }
 
   /**

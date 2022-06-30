@@ -7,9 +7,7 @@ import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.PlateState;
 import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.model.PlayerState;
-import java.util.ArrayList;
-import java.util.Arrays;
+import de.lmu.ifi.sosylab.model.State;
 import java.util.List;
 
 public class GameController implements Controller{
@@ -22,29 +20,49 @@ public class GameController implements Controller{
     this.model = requireNonNull(model);
   }
 
-  public void pickTilesFromPlateCheck(Plate plate, Color color) {
+  public void startGame(List<String> playerNames) {
+    model.createPlayers(playerNames);
+    model.setState(State.RUNNING);
+  }
+
+  public boolean pickTilesFromPlate(Plate plate, Color color) {
     if(!model.getPlates().stream().anyMatch(p -> p == plate)){
-      //TODO: This Plate does not exist.
+      return false;
     }
     if(plate.getState() == PlateState.EMPTY){
-      //TODO This Plate is empty.
+      return false;
     }
     if(!plate.containsColor(color)){
-      //TODO: This Color does not exist on this Plate.
+      return false;
     }
-    //TODO: Notify valid MOVE
+    return true;
   }
 
-  public void pickTilesFromTableCenter(Color color) {
-
+  public boolean pickTilesFromTableCenter(Color color) {
+    if (model.getTableCenter().getColorTiles().stream().anyMatch(colorTile -> colorTile.getColor() == color)) {
+      return false;
+    }
+    return true;
   }
 
-  public void placeTilesFromPlateEvent(Plate plate, Color color, Player player, int row) {
-    model.pickTilesFromPlate(plate,color,player, row);
+  public boolean placePlateTiles(Plate plate, Color color, Player player, int rowIndex) {
+    if (player.getPlayerBoard().countFreeFieldsInRow(rowIndex) > 0 && player.getPlayerBoard().getPatternLineColor(rowIndex) == color) {
+      model.pickTilesFromPlate(plate, color, player, rowIndex);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
-  public void placeTilesFromTableCenterEvent(Color color, Player player, int row) {
-    model.pickTilesFromTableCenter(color, player, row);
+  public boolean placeTableCenterTiles(Color color, Player player, int rowIndex) {
+    if (player.getPlayerBoard().countFreeFieldsInRow(rowIndex) > 0 && player.getPlayerBoard().getPatternLineColor(rowIndex) == color) {
+      model.pickTilesFromTableCenter(color, player, rowIndex);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
 

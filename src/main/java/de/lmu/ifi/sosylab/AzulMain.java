@@ -31,7 +31,8 @@ public class AzulMain {
 
     // TODO: start view.
 
-    //... EVENT "pick tile" from view through controller with Color, Player  and place (Plate oder TableCenter)
+    //... EVENT "pick tile" from view through controller with Color, Player  and place (Plate oder
+    // TableCenter)
     // if (place instance of Plate) {
     //   pickTilesFromPlate(plate, color);
     // }
@@ -40,7 +41,8 @@ public class AzulMain {
     // }
     // <waiting for "set to row" event>
 
-    //... EVENT "set to row" from view through controller with Player and row (patternLines (0-4) or floorLine (-1))
+    //... EVENT "set to row" from view through controller with Player and row (patternLines (0-4) or
+    // floorLine (-1))
     // if (!setPickedTiles(player, row)) {
     //    <waiting for "set to row" event>
     // }

@@ -2,13 +2,18 @@ package de.lmu.ifi.sosylab.model;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -26,6 +31,14 @@ public class ModelTest {
       testPlayers.add(new Player("Player" + i));
     }
   }
+
+  @AfterEach
+  void clearPlayerBoards() {
+    for (Player player : testPlayers) {
+      player.playerBoard = new PlayerBoard();
+    }
+  }
+
 
   GameModel newModel(List<Player> testPlayers) {
     return new GameModel(testPlayers);
@@ -192,6 +205,7 @@ public class ModelTest {
     assertEquals(expectedBox, model.box);
   }
 
+
   @Test
   public void moveFullPatternLineToBox_whenPatternLineIncomplete() {
     //Arrange test
@@ -213,6 +227,189 @@ public class ModelTest {
       //Assert test
       assertEquals("The patten line must be complete", e.getMessage());
     }
+  }
+
+  @Test
+  public void setPickedTiles_floorLineWhenToFloorLine() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    List<ColorTile> testTiles = new ArrayList<>();
+    testTiles.add(new ColorTile(Color.BLACK));
+    testTiles.add(new ColorTile(Color.BLACK));
+    testTiles.add(new ColorTile(Color.BLACK));
+    model.selectedTiles = testTiles;
+    Player testingPlayer = model.getPlayers().get(0);
+    int rowIndex = -1;
+
+    //Act test
+    model.setPickedTiles(testingPlayer, rowIndex);
+
+    //Assert test
+    assertEquals(testTiles, testingPlayer.playerBoard.floorLine);
+  }
+
+  @Test
+  public void setPickedTiles_floorLineWhenToPatternLineNotEnough() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    int rowIndex = 1;
+    int overage = 2;
+    List<ColorTile> testTiles = new ArrayList<>();
+    for (int i = 0; i < rowIndex + overage; i++) {
+      testTiles.add(new ColorTile(Color.BLACK));
+    }
+    model.selectedTiles = testTiles;
+    ColorTile[] testingPatternLine = new ColorTile[rowIndex + 1];
+    for (int i = testingPatternLine.length - 1; i >= 1; i--) { //patternLine with just one free slot
+      testingPatternLine[i] = new ColorTile(Color.BLACK);
+    }
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.patternLines[rowIndex] = testingPatternLine;
+    List<ColorTile> expectedFloorLine = new ArrayList<>();
+    for (int i = 0; i < overage; i++) {
+      expectedFloorLine.add(new ColorTile(Color.BLACK));
+    }
+
+    //Act test
+    model.setPickedTiles(testingPlayer, rowIndex);
+
+    //Assert test
+    assertEquals(expectedFloorLine, testingPlayer.playerBoard.floorLine);
+  }
+
+  @Test
+  public void setPickedTiles_patternLineWhenToPatternLineNotEnough() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    int rowIndex = 1;
+    int overage = 2;
+    List<ColorTile> testTiles = new ArrayList<>();
+    for (int i = 0; i < rowIndex + overage; i++) {
+      testTiles.add(new ColorTile(Color.BLACK));
+    }
+    model.selectedTiles = testTiles;
+    ColorTile[] testingPatternLine = new ColorTile[rowIndex + 1];
+    for (int i = testingPatternLine.length - 1; i >= 1; i--) { //patternLine with just one free slot
+      testingPatternLine[i] = new ColorTile(Color.BLACK);
+    }
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.patternLines[rowIndex] = testingPatternLine;
+    ColorTile[] expectedPatternLine = new ColorTile[rowIndex + 1];
+    for (int i = expectedPatternLine.length - 1; i >= 0; i--) {
+      expectedPatternLine[i] = new ColorTile(Color.BLACK);
+    }
+
+    //Act test
+    model.setPickedTiles(testingPlayer, rowIndex);
+
+    //Assert test
+    assertArrayEquals(expectedPatternLine, testingPlayer.playerBoard.patternLines[rowIndex]);
+  }
+
+  @Test
+  public void setPickedTiles_whenToPatternLineColorMismatch() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    int rowIndex = 1;
+    int overage = 2;
+    List<ColorTile> testTiles = new ArrayList<>();
+    for (int i = 0; i < rowIndex + overage; i++) {
+      testTiles.add(new ColorTile(Color.BLACK));
+    }
+    model.selectedTiles = testTiles;
+    ColorTile[] testingPatternLine = new ColorTile[rowIndex + 1];
+    for (int i = testingPatternLine.length - 1; i >= 1; i--) { // patternLine with other color
+      testingPatternLine[i] = new ColorTile(Color.YELLOW);
+    }
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.patternLines[rowIndex] = testingPatternLine;
+    ColorTile[] expectedPatternLine = Arrays.copyOf(testingPatternLine, testingPatternLine.length);
+
+    //Act test
+    model.setPickedTiles(testingPlayer, rowIndex);
+
+    //Assert test
+    assertArrayEquals(expectedPatternLine, testingPlayer.playerBoard.patternLines[rowIndex]);
+  }
+
+  @Test
+  public void setPickedTiles_whenToFullPatternLine() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    int rowIndex = 1;
+    int overage = 2;
+    List<ColorTile> testTiles = new ArrayList<>();
+    for (int i = 0; i < rowIndex + overage; i++) {
+      testTiles.add(new ColorTile(Color.BLACK));
+    }
+    model.selectedTiles = testTiles;
+    ColorTile[] testingPatternLine = new ColorTile[rowIndex + 1];
+    for (int i = testingPatternLine.length - 1; i >= 0; i--) { // full patternLine
+      testingPatternLine[i] = new ColorTile(Color.BLACK);
+    }
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.patternLines[rowIndex] = testingPatternLine;
+    ColorTile[] expectedPatternLine = Arrays.copyOf(testingPatternLine, testingPatternLine.length);
+
+    //Act test
+    model.setPickedTiles(testingPlayer, rowIndex);
+
+    //Assert test
+    assertArrayEquals(expectedPatternLine, testingPlayer.playerBoard.patternLines[rowIndex]);
+  }
+
+  @Test
+  public void setPickedTiles_whenColorAlreadyOnWall() {
+    //Arrange test
+    GameModel model = newModel(testPlayers);
+    Player testingPlayer = model.getPlayers().get(0);
+    int rowIndex = 1;
+    int overage = 2;
+    List<ColorTile> testTiles = new ArrayList<>();
+    for (int i = 0; i < rowIndex + overage; i++) {
+      testTiles.add(new ColorTile(Color.BLACK));
+    }
+    model.selectedTiles = testTiles;
+    testingPlayer.playerBoard.wall[rowIndex][testingPlayer.playerBoard.getColumnOnWall(Color.BLACK,
+        rowIndex)] = true;
+    ColorTile[] expectedPatternLine = Arrays.copyOf(
+        testingPlayer.playerBoard.patternLines[rowIndex], rowIndex + 1);
+
+    //Act test
+    model.setPickedTiles(testingPlayer, rowIndex);
+
+    //Assert test
+    assertArrayEquals(expectedPatternLine, testingPlayer.playerBoard.patternLines[rowIndex]);
+  }
+
+  @Test
+  public void hasSameColor_whenColorIsSame() {
+    //Arrange test
+    List<ColorTile> testTiles = new ArrayList<>();
+    testTiles.add(new ColorTile(Color.BLACK));
+    testTiles.add(new ColorTile(Color.BLACK));
+    testTiles.add(new ColorTile(Color.BLACK));
+
+    //Act test
+    boolean result = GameModel.hasSameColor(testTiles);
+
+    //Assert test
+    assertTrue(result);
+  }
+
+  @Test
+  public void hasSameColor_whenColorIsNotSame() {
+    //Arrange test
+    List<ColorTile> testTiles = new ArrayList<>();
+    testTiles.add(new ColorTile(Color.BLACK));
+    testTiles.add(new ColorTile(Color.RED));
+    testTiles.add(new ColorTile(Color.BLACK));
+
+    //Act test
+    boolean result = GameModel.hasSameColor(testTiles);
+
+    //Assert test
+    assertFalse(result);
   }
 
 }

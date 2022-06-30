@@ -87,11 +87,17 @@ public class GameModel {
         .toList();
   }
 
+  private void fillPlates() {
+    for (Plate plate : plates) {
+      plate.addTiles(getAndRemoveTilesFromBagForPlate());
+    }
+  }
+
 
   //Object is Plate or TableCenter
   public synchronized void pickTile(Color color, Player player, Object place) {
-    System.out.println("PICK TILE: " + color + " " + player.getNickname() + " " + place.toString());
     if (roundState != RoundState.WAIT) {
+      System.out.println("pickTile not allowed. State: " + roundState);
       return; // TODO: or Exception?
     }
     if (player != playerToMove) {
@@ -105,6 +111,7 @@ public class GameModel {
     }
     roundState = RoundState.PICKED;
     notifyListeners();
+    System.out.println("PICK TILE: " + color + " " + player.getNickname() + " " + place.toString());
     System.out.println("roundState: " + roundState + ": " + selectedTiles + " tiles");
   }
 
@@ -122,7 +129,6 @@ public class GameModel {
       System.out.println("Setting unsuccessful!");
       return;
     }
-
     //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
     System.out.println("Pattern Lines: ");
     for (ColorTile[] rowP : player.playerBoard.patternLines) {
@@ -134,10 +140,17 @@ public class GameModel {
       System.out.println(Arrays.toString(rowW));
     }
     //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-
     playerToMoveIndex = getNextPlayerIndex();
     playerToMove = players.get(playerToMoveIndex);
     if (!areThereMoreTiles()) {
+      //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+      System.out.println("NO MORE TILES");
+      System.out.println("TableCenter: " + getTableCenter().getTiles());
+      System.out.println("Plates: ");
+      for (Plate plate : getPlates()) {
+        System.out.print(plate.getTiles() + ", ");
+      }
+      //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
       endRound();
       return;
     }
@@ -148,7 +161,7 @@ public class GameModel {
   }
 
   private boolean areThereMoreTiles() {
-    return tableCenter.getTiles().size() != 0 && areThereMoreTilesOnPlates();
+    return tableCenter.getTiles().size() != 0 || areThereMoreTilesOnPlates();
   }
 
   private boolean areThereMoreTilesOnPlates() {
@@ -164,12 +177,16 @@ public class GameModel {
     // TODO: checks.
     // the tiles from the patternLines and the floorLine are being moved during the scoring.
     calculateRoundScore();
-    if (!hasCompletedWallRow()) {
+    if (hasCompleteWallRow()) {
       endGame();
+      return;
     }
     round++;
     playerToMoveIndex = startingPlayerIndex;
     playerToMove = players.get(playerToMoveIndex);
+    fillPlates();
+    tableCenter.addPenaltyTile(new PenaltyTile());
+    roundState = RoundState.WAIT;
     notifyListeners();
   }
 
@@ -185,9 +202,10 @@ public class GameModel {
    *
    * @return true if the specified player has a complete wall row
    */
-  private boolean hasCompletedWallRow() {
+  private boolean hasCompleteWallRow() {
     for (Player player : getPlayers()) {
-      if (hasCompletedWallRow(player)) {
+      if (hasCompleteWallRow(player)) {
+        System.out.println("WALL ROW COMPLETED");
         return true;
       }
     }
@@ -200,7 +218,7 @@ public class GameModel {
    * @param player the specified player
    * @return true if the specified player has a complete wall row
    */
-  private boolean hasCompletedWallRow(Player player) {
+  private boolean hasCompleteWallRow(Player player) {
     requireNonNull(player);
     for (boolean[] row : player.playerBoard.wall) {
       int completeTiles = 0;
@@ -318,28 +336,37 @@ public class GameModel {
       for (ColorTile tile : selectedTiles) {
         player.playerBoard.addTileToFloorLine(tile);
       }
+      selectedTiles.clear();
       return true;
     }
     int freeFields = player.playerBoard.countFreeFieldsInRow(row);
     if (freeFields == 0) {
       // the pattern line is full
-      System.out.println("1: the pattern line is full");
+      System.out.println("the pattern line is full");
       return false;
     }
     if (player.playerBoard.isColorAlreadyOnWall(selectedTiles.get(0).getColor(), row)) {
       // the color is already on the wall
-      System.out.println("2: the color is already on the wall");
+      System.out.println("the color is already on the wall");
       return false;
     }
     if (player.playerBoard.getNextFreePatternLineIndex(row)
         != player.playerBoard.patternLines[row].length - 1
         && selectedTiles.get(0).getColor() != player.playerBoard.getPatternLineColor(row)) {
       // the line already has tiles with another color
-      System.out.println("3: the line already has tiles with another color");
+      System.out.println("the line already has tiles with another color");
+      System.out.println("selectedTiles.get(0).getColor() " + selectedTiles.get(0).getColor());
+      System.out.println(
+          "player.playerBoard.getPatternLineColor(row) " + player.playerBoard.getPatternLineColor(
+              row));
+      System.out.println(
+          "getNextFreePatternLineIndex(row) " + player.playerBoard.getNextFreePatternLineIndex(
+              row));
       return false;
     }
     System.out.println("addColorTilesToLine");
     player.playerBoard.addColorTilesToLine(selectedTiles, row);
+    selectedTiles.clear();
     return true;
   }
 
@@ -416,7 +443,6 @@ public class GameModel {
   private void moveFloorLineToBox(PlayerBoard playerBoard) {
     for (Tile tile : playerBoard.floorLine) {
       if (tile instanceof PenaltyTile) {
-        tableCenter.addPenaltyTile((PenaltyTile) tile);
         continue;
       }
       box.add((ColorTile) tile);
@@ -593,7 +619,6 @@ public class GameModel {
         counterCompleteColumns++;
       }
     }
-    System.out.println("Completed Columns: " + counterCompleteColumns);
     return counterCompleteColumns;
   }
 

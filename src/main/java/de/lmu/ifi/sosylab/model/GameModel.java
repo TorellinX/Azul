@@ -92,9 +92,13 @@ public class GameModel {
    * Remove first TILES_PER_PLATE tiles from bag (which should already be shuffled).
    */
   private List<ColorTile> getAndRemoveTilesFromBagForPlate() {
-    // TODO: check if enough tiles in Bag
+    if (!bag.contains(TILES_PER_PLATE)) {
+      throw new IllegalArgumentException("There are no tiles in the bag!");
+    } else {
     return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
+   }
   }
+
 
   public void pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);

@@ -71,12 +71,11 @@ public class PlayerBoard {
   }
 
   void addTileToWall(Color color, int row) {
-    //TODO: add validation
-    // TODO: tests
-    int column = (row + color.ordinal()) % WALL_SIZE;
-    wall[row][column] = true;
+    if (!this.isColorAlreadyOnWall(color, row)) {
+      int column = (row + color.ordinal()) % WALL_SIZE;
+      wall[row][column] = true;
+    }
   }
-
 
   public boolean isColorAlreadyOnWall(Color color, int row) {
     //TODO: add validation

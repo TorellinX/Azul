@@ -11,6 +11,7 @@ public interface Controller {
 
   /**
    * Start the Game with a List of player names.
+   *
    * @param playerNames Lst of player names.
    */
   void startGame(List<String> playerNames);
@@ -18,6 +19,7 @@ public interface Controller {
 
   /**
    * Pick tiles from a Plate.
+   *
    * @param plate Plate from where the tiles where selected.
    * @param color Color of the selected tiles.
    * @return can the tiles be picked
@@ -26,6 +28,7 @@ public interface Controller {
 
   /**
    * Pick tiles from the table in the center.
+   *
    * @param color Color of the selected tiles.
    * @return can the tiles be picked.
    */

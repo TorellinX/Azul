@@ -90,8 +90,8 @@ public class GameModel {
   private List<ColorTile> getAndRemoveTilesFromBagForPlate() {
     // TODO: check if enough tiles in Bag
     // can we change this lambda-expression to something else? Because is-bag-empty-check should be
-    // made after each tile added to plate. If we have 3 tiles in the bag, these tiles belongs to plate.
-    // If we simple add box to bag, when bag still has 3 tiles, it changes the probability of
+    // made after each tile added to plate. If we have 3 tiles in the bag, these tiles belongs to
+    // plate. If we simple add box to bag, when bag still has 3 tiles, it changes the probability of
     // remaining 3 tiles to be active in the game.
     int numberOfRemainingTiles = bag.size();
     if (numberOfRemainingTiles < TILES_PER_PLATE) {
@@ -298,9 +298,9 @@ public class GameModel {
     playerToMoveIndex = getNextPlayerIndex();
     playerToMove = players.get(playerToMoveIndex);
     // no, the round ends when the tiles on the tableCenter and on the plates run out
-//    if (playerToMoveIndex == startingPlayerIndex) {
-//      endRound();
-//    }
+    // if (playerToMoveIndex == startingPlayerIndex) {
+    // endRound();
+    // }
   }
 
   private void endRound() {

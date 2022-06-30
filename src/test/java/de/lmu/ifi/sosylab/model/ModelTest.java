@@ -2,9 +2,9 @@ package de.lmu.ifi.sosylab.model;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
@@ -233,13 +233,13 @@ public class ModelTest {
   public void setPickedTiles_floorLineWhenToFloorLine() {
     //Arrange test
     GameModel model = newModel(testPlayers);
-    Player testingPlayer = model.getPlayers().get(0);
-    int rowIndex = -1;
     List<ColorTile> testTiles = new ArrayList<>();
     testTiles.add(new ColorTile(Color.BLACK));
     testTiles.add(new ColorTile(Color.BLACK));
     testTiles.add(new ColorTile(Color.BLACK));
     model.selectedTiles = testTiles;
+    Player testingPlayer = model.getPlayers().get(0);
+    int rowIndex = -1;
 
     //Act test
     model.setPickedTiles(testingPlayer, rowIndex);
@@ -252,7 +252,6 @@ public class ModelTest {
   public void setPickedTiles_floorLineWhenToPatternLineNotEnough() {
     //Arrange test
     GameModel model = newModel(testPlayers);
-    Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 1;
     int overage = 2;
     List<ColorTile> testTiles = new ArrayList<>();
@@ -264,6 +263,7 @@ public class ModelTest {
     for (int i = testingPatternLine.length - 1; i >= 1; i--) { //patternLine with just one free slot
       testingPatternLine[i] = new ColorTile(Color.BLACK);
     }
+    Player testingPlayer = model.getPlayers().get(0);
     testingPlayer.playerBoard.patternLines[rowIndex] = testingPatternLine;
     List<ColorTile> expectedFloorLine = new ArrayList<>();
     for (int i = 0; i < overage; i++) {
@@ -281,7 +281,6 @@ public class ModelTest {
   public void setPickedTiles_patternLineWhenToPatternLineNotEnough() {
     //Arrange test
     GameModel model = newModel(testPlayers);
-    Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 1;
     int overage = 2;
     List<ColorTile> testTiles = new ArrayList<>();
@@ -293,6 +292,7 @@ public class ModelTest {
     for (int i = testingPatternLine.length - 1; i >= 1; i--) { //patternLine with just one free slot
       testingPatternLine[i] = new ColorTile(Color.BLACK);
     }
+    Player testingPlayer = model.getPlayers().get(0);
     testingPlayer.playerBoard.patternLines[rowIndex] = testingPatternLine;
     ColorTile[] expectedPatternLine = new ColorTile[rowIndex + 1];
     for (int i = expectedPatternLine.length - 1; i >= 0; i--) {
@@ -310,7 +310,6 @@ public class ModelTest {
   public void setPickedTiles_whenToPatternLineColorMismatch() {
     //Arrange test
     GameModel model = newModel(testPlayers);
-    Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 1;
     int overage = 2;
     List<ColorTile> testTiles = new ArrayList<>();
@@ -322,6 +321,7 @@ public class ModelTest {
     for (int i = testingPatternLine.length - 1; i >= 1; i--) { // patternLine with other color
       testingPatternLine[i] = new ColorTile(Color.YELLOW);
     }
+    Player testingPlayer = model.getPlayers().get(0);
     testingPlayer.playerBoard.patternLines[rowIndex] = testingPatternLine;
     ColorTile[] expectedPatternLine = Arrays.copyOf(testingPatternLine, testingPatternLine.length);
 
@@ -336,7 +336,6 @@ public class ModelTest {
   public void setPickedTiles_whenToFullPatternLine() {
     //Arrange test
     GameModel model = newModel(testPlayers);
-    Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 1;
     int overage = 2;
     List<ColorTile> testTiles = new ArrayList<>();
@@ -348,6 +347,7 @@ public class ModelTest {
     for (int i = testingPatternLine.length - 1; i >= 0; i--) { // full patternLine
       testingPatternLine[i] = new ColorTile(Color.BLACK);
     }
+    Player testingPlayer = model.getPlayers().get(0);
     testingPlayer.playerBoard.patternLines[rowIndex] = testingPatternLine;
     ColorTile[] expectedPatternLine = Arrays.copyOf(testingPatternLine, testingPatternLine.length);
 

@@ -26,16 +26,16 @@ public class GameModel {
   private static final int[] PENALTY_POINTS = new int[]{0, -1, -2, -4, -6, -8, -11, -14};
 
 
-  private final List<Player> players;
+  private List<Player> players;
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-  private final List<Plate> plates;
+  private List<Plate> plates;
   private final TableCenter tableCenter;
   private final List<ColorTile> bag = Arrays.stream(Color.values())
       .flatMap(color -> IntStream.range(0, TILES_PER_COLOR).mapToObj(i -> new ColorTile(color)))
       .collect(Collectors.toList());
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
-  private State state = State.RUNNING;
+  private State state;
   private int startingPlayerIndex;
   private int playerToMoveIndex;
   private Player playerToMove;
@@ -45,17 +45,24 @@ public class GameModel {
   /**
    * Creates a new table with game components.
    */
-  public GameModel(List<Player> players) {
-    if (players.size() < 2 || players.size() > 4) {
-      throw new IllegalArgumentException("Invalid number of players, needs to be from 2 to 4");
-    }
+  public GameModel() {
     tableCenter = new TableCenter();
     shuffleBag(); //shuffle Bag on Game Construction
-    List<Player> immutablePlayerList = Collections.unmodifiableList(players);
-    this.players = immutablePlayerList;
+  }
+
+  public void createPlayers(List<String> playerNames) {
+    if (playerNames.size() < 2 || playerNames.size() > 4) {
+      throw new IllegalArgumentException("Invalid number of players, needs to be from 2 to 4");
+    }
+    this.players = playerNames.stream().map(p -> new Player(p, PlayerState.READY))
+        .collect(Collectors.toUnmodifiableList());
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
     linkBoxToPlayerBoard();
+  }
+
+  public void setState(State state) {
+    this.state = state;
   }
 
   private void linkBoxToPlayerBoard() {
@@ -88,66 +95,28 @@ public class GameModel {
    * Remove first TILES_PER_PLATE tiles from bag (which should already be shuffled).
    */
   private List<ColorTile> getAndRemoveTilesFromBagForPlate() {
-    int numberOfRemainingTiles = bag.size();
-    if (numberOfRemainingTiles < TILES_PER_PLATE) {
-      List<ColorTile> tilesToAdd = new ArrayList<>();
-      for (int i = numberOfRemainingTiles - 1; i >= 0; i--) {
-        tilesToAdd.add(bag.remove(i));
-      }
+    if (bag.size() < TILES_PER_PLATE) {
       moveBoxTilesToBagAndShuffle();
-      for (int i = TILES_PER_PLATE - numberOfRemainingTiles - 1; i >= 0; i--) {
-        tilesToAdd.add(bag.remove(i));
-      }
-      return tilesToAdd;
-    } else {
-      // TODO:
-      // ??? how does bag.remove(index) work?? If the bag has 4 tiles:
-      // bag.remove(0) while bag has 4 Tiles,
-      // bag.remove(1) while bag has 3 Tiles,
-      // bag.remove(2) while bag has 2 Tiles !!!!!!! There is no object with index 2 in the bag!!!!
-      // bag.remove(3) !!!!!!
-      // Should the intexes be applied in reverse order from 3 to 0?
-      return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
     }
+    return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
   }
 
-  /**
-   * Takes a selected color tile from a plate and saves it as selected tiles.
-   *
-   * @param plate plate the tile was picked from
-   * @param color color of the tile
-   */
-  public void pickTilesFromPlate(Plate plate, Color color) {
+  public void pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
     //TODO: Tiles present check
-    if (selectedTiles.size() != 0) {
-      return;
-    }
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
-    selectedTiles.addAll(tiles.selected());
+    player.playerBoard.addColorTilesToLine(tiles.selected(), row);
     if (tiles.remaining().isPresent()) {
       tableCenter.addColorTiles(tiles.remaining().get());
     }
   }
 
-  /**
-   * Takes a selected color tile from table center and saves it as selected tiles. Awards the player
-   * with the penalty tile and sets the next starting player if the penalty tile is still on the
-   * table (first pick).
-   *
-   * @param color  color of the tile
-   * @param player player to move
-   */
-  public void pickTilesFromTableCenter(Color color, Player player) {
+  public void pickTilesFromTableCenter(Color color, Player player, int row) {
     //TODO: Tiles present check
-    if (selectedTiles.size() != 0) {
-      return;
-    }
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
     if (tiles.penaltyTile().isPresent()) {
       player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
-      startingPlayerIndex = players.indexOf(player);
     }
-    selectedTiles.addAll(tiles.colorTiles());
+    player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
   }
 
   /**
@@ -226,6 +195,10 @@ public class GameModel {
   public List<Player> getPlayers() {
     List<Player> unmodifiablePlayersList = Collections.unmodifiableList(players);
     return unmodifiablePlayersList;
+  }
+
+  public TableCenter getTableCenter() {
+    return tableCenter;
   }
 
   /**

@@ -1,12 +1,10 @@
 package de.lmu.ifi.sosylab;
 
-import de.lmu.ifi.sosylab.model.Color;
-import de.lmu.ifi.sosylab.model.ColorTile;
+import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.model.PlayerState;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 // TODO: refine JavaDoc
@@ -22,35 +20,13 @@ public class AzulMain {
    * @param args unused
    */
   public static void main(String[] args) {
-    //... view sends through controller "String[] playerNames"
-    // <mock>
-    String[] playerNames = {"Player1", "Player2", "Player3", "Player4"};
-    //  </mock>
-    GameModel model = new GameModel(createPlayerObjects(playerNames));
-    // notifyObservers() ????
+    GameModel model = new GameModel();
+    Controller controller = new GameController(model);
+
+    //View view = GameView(model, controller);
+    //controller.setView(view);
 
     // TODO: start view.
-
-    //... EVENT "pick tile" from view through controller with Color, Player  and place (Plate oder
-    // TableCenter)
-    // if (place instance of Plate) {
-    //   pickTilesFromPlate(plate, color);
-    // }
-    // if (place instance of TableCenter) {
-    //   pickTilesFromTableCenter(color, player);
-    // }
-    // <waiting for "set to row" event>
-
-    //... EVENT "set to row" from view through controller with Player and row (patternLines (0-4) or
-    // floorLine (-1))
-    // if (!setPickedTiles(player, row)) {
-    //    <waiting for "set to row" event>
-    // }
-    // notifyObservers() ????
-
-    // ...
-
-    System.out.println(model.getPlayerNames());
   }
 
   /**

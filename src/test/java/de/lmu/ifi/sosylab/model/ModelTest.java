@@ -22,37 +22,40 @@ import org.junit.jupiter.api.Test;
 public class ModelTest {
 
   private static final int NUMBER_OF_PLAYERS = 4;
-  private static List<Player> testPlayers = new ArrayList<>();
+  private static List<String> testPlayers = new ArrayList<>();
 
   @BeforeAll
   static void setUp() {
 
     for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-      testPlayers.add(new Player("Player" + i));
+      testPlayers.add("Player" + i);
     }
   }
 
   @AfterEach
   void clearPlayerBoards() {
-    for (Player player : testPlayers) {
+    /*for (Player player : testPlayers) {
       player.playerBoard = new PlayerBoard();
     }
+     */
   }
 
 
-  GameModel newModel(List<Player> testPlayers) {
-    return new GameModel(testPlayers);
+  GameModel newModelAndCreatePlayers() {
+    GameModel gameModel = new GameModel();
+    gameModel.createPlayers(testPlayers);
+    return gameModel;
   }
 
   @Test
   public void getPlayers_whenPlayersExist() {
-    GameModel model = newModel(testPlayers);
-    assertIterableEquals(testPlayers, model.getPlayers());
+    GameModel model = newModelAndCreatePlayers();
+    assertIterableEquals(testPlayers, model.getPlayerNames());
   }
 
   @Test
   public void getAmountOfPlates_accordingToPlayers() {
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     int expectedAmount = testPlayers.size() * 2 + 1;
     assertEquals(expectedAmount, model.getPlates().size());
   }
@@ -60,7 +63,7 @@ public class ModelTest {
   @Test
   public void addColorTilesToPatternLine_whenFits() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     model.getPlayers().get(0).playerBoard.patternLines[4] = new ColorTile[]{null, null, null, null,
         new ColorTile(Color.RED)};
     ArrayList<ColorTile> addedRedTiles = new ArrayList<>();
@@ -83,7 +86,7 @@ public class ModelTest {
   @Test
   public void addTileToFloorLine_floorLineWhenPenaltyTileIsBeingAddedToFullFloorLine() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     testingPlayer.playerBoard.floorLine = new ArrayList<>();
     for (int i = 0; i < PlayerBoard.FLOORLINE_SIZE; i++) {
@@ -104,7 +107,7 @@ public class ModelTest {
   @Test
   public void addTileToFloorLine_boxWhenPenaltyTileIsBeingAddedToFullFloorLine() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     testingPlayer.playerBoard.floorLine = new ArrayList<>();
     for (int i = 0; i < PlayerBoard.FLOORLINE_SIZE; i++) {
@@ -125,7 +128,7 @@ public class ModelTest {
   @Test
   public void addTileToFloorLine_floorLineWhenColorTileIsBeingAddedToFullFloorLine() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     testingPlayer.playerBoard.floorLine = new ArrayList<>();
     for (int i = 0; i < PlayerBoard.FLOORLINE_SIZE; i++) {
@@ -144,7 +147,7 @@ public class ModelTest {
   @Test
   public void addTileToFloorLine_boxWhenColorTileIsBeingAddedToFullFloorLine() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     testingPlayer.playerBoard.floorLine = new ArrayList<>();
     for (int i = 0; i < PlayerBoard.FLOORLINE_SIZE; i++) {
@@ -165,7 +168,7 @@ public class ModelTest {
   @Test
   public void moveFullPatternLineToBox_floorLineWhenPatternLineComplete() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 4;
     ColorTile[] completeRow = new ColorTile[rowIndex + 1];
@@ -185,7 +188,7 @@ public class ModelTest {
   @Test
   public void moveFullPatternLineToBox_boxWhenPatternLineComplete() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 4;
     ColorTile[] completeRow = new ColorTile[rowIndex + 1];
@@ -209,7 +212,7 @@ public class ModelTest {
   @Test
   public void moveFullPatternLineToBox_whenPatternLineIncomplete() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 4;
     ColorTile[] incompleteRow = new ColorTile[rowIndex + 1];
@@ -232,7 +235,7 @@ public class ModelTest {
   @Test
   public void setPickedTiles_floorLineWhenToFloorLine() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     List<ColorTile> testTiles = new ArrayList<>();
     testTiles.add(new ColorTile(Color.BLACK));
     testTiles.add(new ColorTile(Color.BLACK));
@@ -251,7 +254,7 @@ public class ModelTest {
   @Test
   public void setPickedTiles_floorLineWhenToPatternLineNotEnough() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     int rowIndex = 1;
     int overage = 2;
     List<ColorTile> testTiles = new ArrayList<>();
@@ -280,7 +283,7 @@ public class ModelTest {
   @Test
   public void setPickedTiles_patternLineWhenToPatternLineNotEnough() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     int rowIndex = 1;
     int overage = 2;
     List<ColorTile> testTiles = new ArrayList<>();
@@ -309,7 +312,7 @@ public class ModelTest {
   @Test
   public void setPickedTiles_whenToPatternLineColorMismatch() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     int rowIndex = 1;
     int overage = 2;
     List<ColorTile> testTiles = new ArrayList<>();
@@ -335,7 +338,7 @@ public class ModelTest {
   @Test
   public void setPickedTiles_whenToFullPatternLine() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     int rowIndex = 1;
     int overage = 2;
     List<ColorTile> testTiles = new ArrayList<>();
@@ -361,7 +364,7 @@ public class ModelTest {
   @Test
   public void setPickedTiles_whenColorAlreadyOnWall() {
     //Arrange test
-    GameModel model = newModel(testPlayers);
+    GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 1;
     int overage = 2;

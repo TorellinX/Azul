@@ -2,13 +2,9 @@ package de.lmu.ifi.sosylab;
 
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
-import de.lmu.ifi.sosylab.model.Color;
-import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.model.PlayerState;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 // TODO: refine JavaDoc

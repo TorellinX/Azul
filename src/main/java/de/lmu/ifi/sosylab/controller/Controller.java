@@ -15,20 +15,22 @@ public interface Controller {
 
   /**
    * place Tiles selected from Plate on PlayerBoard
-   * @param plate Plate from where the Tiles are coming.
-   * @param color Color of the selected Tiles.
+   *
+   * @param plate  Plate from where the Tiles are coming.
+   * @param color  Color of the selected Tiles.
    * @param player current Player.
-   * @param row selected Row.
+   * @param row    selected Row.
    */
   boolean placePlateTiles(Plate plate, Color color, Player player, int row);
 
   /**
    * place Tiles selected from TableCenter on PlayerBoard.
-   * @param color Color of the selected Tiles.
+   *
+   * @param color  Color of the selected Tiles.
    * @param player current Player.
-   * @param row selected Row.
+   * @param row    selected Row.
    */
   boolean placeTableCenterTiles(Color color, Player player, int row);
 
 
-  }
+}

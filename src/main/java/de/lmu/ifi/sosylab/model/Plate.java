@@ -14,14 +14,16 @@ public class Plate {
    * Record holding the picked color tiles after a pick as well as the remaining tiles to be
    * transferred to the table center.
    *
-   * @param selected list of tiles of the selected color from this plate (factory)
+   * @param selected  list of tiles of the selected color from this plate (factory)
    * @param remaining list of tiles of the other colors from this plate
    */
   public record SelectedAndRemainingTiles(List<ColorTile> selected,
                                           Optional<List<ColorTile>> remaining) {
+
     public SelectedAndRemainingTiles {
       selected = List.copyOf(selected);
     }
+
     public List<ColorTile> selected() {
       List<ColorTile> immutableColorTileList = Collections.unmodifiableList(selected);
       return immutableColorTileList;
@@ -79,7 +81,7 @@ public class Plate {
 
   public List<ColorTile> getTiles() {
     List<ColorTile> unmodifiableTilesList = Collections.unmodifiableList(tiles);
-    return  unmodifiableTilesList;
+    return unmodifiableTilesList;
   }
 
   public boolean containsColor(Color color) {

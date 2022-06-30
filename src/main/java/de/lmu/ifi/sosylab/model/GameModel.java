@@ -54,7 +54,8 @@ public class GameModel {
     if (playerNames.size() < 2 || playerNames.size() > 4) {
       throw new IllegalArgumentException("Invalid number of players, needs to be from 2 to 4");
     }
-    this.players = playerNames.stream().map(p -> new Player(p, PlayerState.READY)).collect(Collectors.toUnmodifiableList());
+    this.players = playerNames.stream().map(p -> new Player(p, PlayerState.READY))
+        .collect(Collectors.toUnmodifiableList());
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
     linkBoxToPlayerBoard();

@@ -240,7 +240,7 @@ public class ModelTest {
     testTiles.add(new ColorTile(Color.BLACK));
     testTiles.add(new ColorTile(Color.BLACK));
     testTiles.add(new ColorTile(Color.BLACK));
-    model.selectedTiles = testTiles;
+    model.selectedTiles = new ArrayList<>(testTiles);
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = -1;
 

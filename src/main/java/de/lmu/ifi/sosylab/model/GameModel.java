@@ -35,7 +35,8 @@ public class GameModel {
       .collect(Collectors.toList());
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
-  private State state;
+  private State state = State.RUNNING;
+  private RoundState roundState = RoundState.WAIT;
   private int startingPlayerIndex;
   private int playerToMoveIndex;
   private Player playerToMove;
@@ -92,31 +93,197 @@ public class GameModel {
   }
 
   /**
+   * Fills plates with color tiles from bag.
+   */
+  private void fillPlates() {
+    for (Plate plate : plates) {
+      plate.addTiles(getAndRemoveTilesFromBagForPlate());
+    }
+  }
+
+
+  //Object is Plate or TableCenter
+  public synchronized void pickTile(Color color, Player player, Object place) {
+    if (roundState != RoundState.WAIT) {
+      System.out.println("pickTile not allowed. State: " + roundState);
+      return; // TODO: or Exception?
+    }
+    if (player != playerToMove) {
+      throw new IllegalArgumentException("\"pick tile\" event from non-active player");
+    }
+    if (place instanceof Plate) {
+      pickTilesFromPlate((Plate) place, color);
+    }
+    if (place instanceof TableCenter) {
+      pickTilesFromTableCenter(color, player);
+    }
+    roundState = RoundState.PICKED;
+    System.out.println("PICK TILE: color: " + color + " who: " + player.getNickname() + " from: " + place.toString());
+    System.out.println("    roundState: " + roundState + " " + selectedTiles + " tiles");
+  }
+
+  // (patternLines (0-4) or floorLine (-1)
+  public synchronized void setToRow(Player player, int row) {
+    if (roundState != RoundState.PICKED) {
+      return; // TODO: or Exception?
+    }
+    if (player != playerToMove) {
+      throw new IllegalArgumentException("\"set to row\" event from non-active player");
+    }
+    System.out.println("    Setting tiles to row " + row + "...");
+    if (!setPickedTiles(player, row)) {
+      System.out.println("SETTING UNSUCCESSFUL!");
+      return;
+    }
+    playerToMoveIndex = getNextPlayerIndex();
+    playerToMove = players.get(playerToMoveIndex);
+    if (!areThereMoreTiles()) {
+      endRound();
+      return;
+    }
+    System.out.println("Active Player: " + getPlayerToMoveIndex());
+    roundState = RoundState.WAIT;
+    System.out.println("    roundState: " + roundState);
+  }
+
+  private boolean areThereMoreTiles() {
+    return tableCenter.getTiles().size() != 0 || areThereMoreTilesOnPlates();
+  }
+
+  private boolean areThereMoreTilesOnPlates() {
+    for (Plate plate : plates) {
+      if (plate.getState() == PlateState.FULL) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void endRound() {
+    // TODO: checks.
+    // the tiles from the patternLines and the floorLine are being moved during the scoring.
+    calculateRoundScore();
+    if (hasCompleteWallRow()) {
+      endGame();
+      return;
+    }
+    round++;
+    playerToMoveIndex = startingPlayerIndex;
+    playerToMove = players.get(playerToMoveIndex);
+    fillPlates();
+    tableCenter.addPenaltyTile(new PenaltyTile());
+    roundState = RoundState.WAIT;
+  }
+
+  private void endGame() {
+    calculateEndScore();
+    roundState = RoundState.FINISHED;
+    state = State.FINISHED;
+  }
+
+  /**
+   * Checks if any of the players have the completed wall row.
+   *
+   * @return true if the specified player has a complete wall row
+   */
+  private boolean hasCompleteWallRow() {
+    for (Player player : getPlayers()) {
+      if (hasCompleteWallRow(player)) {
+        System.out.println("WALL ROW COMPLETED");
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Checks if the specified player has a complete wall row.
+   *
+   * @param player the specified player
+   * @return true if the specified player has a complete wall row
+   */
+  private boolean hasCompleteWallRow(Player player) {
+    requireNonNull(player);
+    for (boolean[] row : player.playerBoard.wall) {
+      int completeTiles = 0;
+      for (boolean tile : row) {
+        if (tile) {
+          completeTiles++;
+        }
+      }
+      if (completeTiles == PlayerBoard.WALL_SIZE) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public int getPlayerToMoveIndex() {
+    return playerToMoveIndex;
+  }
+
+  private int getNextPlayerIndex() {
+    int nextPlayerIndex = playerToMoveIndex + 1;
+    return nextPlayerIndex == players.size() ? 0 : nextPlayerIndex;
+  }
+
+  /**
    * Remove first TILES_PER_PLATE tiles from bag (which should already be shuffled).
    */
   private List<ColorTile> getAndRemoveTilesFromBagForPlate() {
-    if (bag.size() < TILES_PER_PLATE) {
+    int numberOfRemainingTiles = bag.size();
+    if (numberOfRemainingTiles < TILES_PER_PLATE) {
+      List<ColorTile> tilesToAdd = new ArrayList<>();
+      for (int i = numberOfRemainingTiles - 1; i >= 0; i--) {
+        tilesToAdd.add(bag.remove(i));
+      }
       moveBoxTilesToBagAndShuffle();
+      for (int i = TILES_PER_PLATE - numberOfRemainingTiles - 1; i >= 0; i--) {
+        tilesToAdd.add(bag.remove(i));
+      }
+      return tilesToAdd;
+    } else {
+      return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
     }
-    return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
   }
 
-  public void pickTilesFromPlate(Plate plate, Color color, Player player, int row) {
+  /**
+   * Takes a selected color tile from a plate and saves it as selected tiles.
+   *
+   * @param plate plate the tile was picked from
+   * @param color color of the tile
+   */
+  public void pickTilesFromPlate(Plate plate, Color color) {
     //TODO: Tiles present check
+    if (selectedTiles.size() != 0) {
+      return;
+    }
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
-    player.playerBoard.addColorTilesToLine(tiles.selected(), row);
+    selectedTiles.addAll(tiles.selected());
     if (tiles.remaining().isPresent()) {
       tableCenter.addColorTiles(tiles.remaining().get());
     }
   }
 
-  public void pickTilesFromTableCenter(Color color, Player player, int row) {
+  /**
+   * Takes a selected color tile from table center and saves it as selected tiles. Awards the player
+   * with the penalty tile and sets the next starting player if the penalty tile is still on the
+   * table (first pick).
+   *
+   * @param color  color of the tile
+   * @param player player to move
+   */
+  public void pickTilesFromTableCenter(Color color, Player player) {
     //TODO: Tiles present check
+    if (selectedTiles.size() != 0) { // if selectedTiles already has tiles
+      return;
+    }
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
     if (tiles.penaltyTile().isPresent()) {
       player.playerBoard.addTileToFloorLine(tiles.penaltyTile().get());
+      startingPlayerIndex = players.indexOf(player);
     }
-    player.playerBoard.addColorTilesToLine(tiles.colorTiles(), row);
+    selectedTiles.addAll(tiles.colorTiles());
   }
 
   /**
@@ -131,43 +298,46 @@ public class GameModel {
     requireNonNull(player);
     if (row < -1 || row > PlayerBoard.WALL_SIZE - 1) {
       throw new IllegalArgumentException(
-          "Invalid row number, needs to be from -1 to " + (PlayerBoard.WALL_SIZE - 1));
+          "    Invalid row number, needs to be from -1 to " + (PlayerBoard.WALL_SIZE - 1));
     }
     if (selectedTiles.size() == 0) {
       throw new IllegalArgumentException(
-          "Trying to add an empty list of tiles to the patternLine.");
+          "    Trying to add an empty list of tiles to the patternLine.");
     }
     if (!hasSameColor(selectedTiles)) {
       System.out.println(selectedTiles);
-      throw new IllegalArgumentException("Selected tiles have different color");
+      throw new IllegalArgumentException("    Selected tiles have different color");
     }
     if (row == -1) {
-      System.out.println("4: addTileToFloorLine");
+      System.out.println("    addTileToFloorLine");
       for (ColorTile tile : selectedTiles) {
         player.playerBoard.addTileToFloorLine(tile);
       }
+      selectedTiles.clear();
       return true;
     }
     int freeFields = player.playerBoard.countFreeFieldsInRow(row);
     if (freeFields == 0) {
       // the pattern line is full
-      System.out.println("1: the pattern line is full");
+      System.out.println("    the pattern line is full");
       return false;
     }
     if (player.playerBoard.isColorAlreadyOnWall(selectedTiles.get(0).getColor(), row)) {
       // the color is already on the wall
-      System.out.println("2: the color is already on the wall");
+      System.out.println("    the color is already on the wall");
       return false;
     }
     if (player.playerBoard.getNextFreePatternLineIndex(row)
         != player.playerBoard.patternLines[row].length - 1
         && selectedTiles.get(0).getColor() != player.playerBoard.getPatternLineColor(row)) {
       // the line already has tiles with another color
-      System.out.println("3: the line already has tiles with another color");
+      System.out.println("    the line already has tiles with another color " + player.playerBoard.getPatternLineColor(
+          row));
       return false;
     }
-    System.out.println("5: addColorTilesToLine");
+    System.out.println("    addColorTilesToLine");
     player.playerBoard.addColorTilesToLine(selectedTiles, row);
+    selectedTiles.clear();
     return true;
   }
 
@@ -195,10 +365,6 @@ public class GameModel {
   public List<Player> getPlayers() {
     List<Player> unmodifiablePlayersList = Collections.unmodifiableList(players);
     return unmodifiablePlayersList;
-  }
-
-  public TableCenter getTableCenter() {
-    return tableCenter;
   }
 
   /**
@@ -248,34 +414,11 @@ public class GameModel {
   private void moveFloorLineToBox(PlayerBoard playerBoard) {
     for (Tile tile : playerBoard.floorLine) {
       if (tile instanceof PenaltyTile) {
-        tableCenter.addPenaltyTile((PenaltyTile) tile);
         continue;
       }
       box.add((ColorTile) tile);
     }
     playerBoard.floorLine.clear();
-  }
-
-  private void makeMove() {
-    // move logic
-    // TODO
-    playerToMoveIndex = getNextPlayerIndex();
-    playerToMove = players.get(playerToMoveIndex);
-    // the round ends when tiles on the tableCenter and on the plates run out
-  }
-
-  private void endRound() {
-    // TODO: checks and table cleanup (move tiles to box, ...).
-    // the tiles from the patternLines and the floorLine are being moved during the scoring.
-    round++;
-    if (bag.isEmpty()) {
-      moveBoxTilesToBagAndShuffle();
-    }
-  }
-
-  private int getNextPlayerIndex() {
-    int nextPlayerIndex = playerToMoveIndex + 1;
-    return nextPlayerIndex == players.size() ? 0 : nextPlayerIndex;
   }
 
   private void moveBoxTilesToBagAndShuffle() {
@@ -496,5 +639,10 @@ public class GameModel {
       }
     }
     return counterCompleteColors;
+  }
+
+  public TableCenter getTableCenter() {
+    // TODO: make unmutable
+    return tableCenter;
   }
 }

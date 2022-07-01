@@ -61,6 +61,10 @@ public class Player {
     return state;
   }
 
+  public int getScore() {
+    return score;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

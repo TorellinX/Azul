@@ -25,24 +25,45 @@ public class AzulMain {
    */
   public static void main(String[] args) {
     // TODO: start view.
-
-    //controller.startGame(String[] playerNames) ===> model.createPlayerObjects(String[] playerNames)
-    // <mock>
+    // <mock> TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
     String[] playerNames = {"Player0", "Player1", "Player2", "Player3"};
-    //  </mock>
+    //  </mock> TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
     startGame(playerNames);
-    // notifyObservers() ????
   }
 
   public static void startGame(String[] playerNames) {
     GameModel model = new GameModel(createPlayerObjects(playerNames));
 
     // <test> TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+    test(model);
+    // </test> TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
+  }
+
+  /**
+   * Creates player objects from the list of player names.
+   *
+   * @param playerNames the list of player names
+   * @return a list of player objects
+   */
+  private static List<Player> createPlayerObjects(String[] playerNames) {
+    if (playerNames.length < 2 || playerNames.length > 4) {
+      throw new IllegalArgumentException("Invalid number of player names, needs to be from 2 to 4");
+    }
+    List<Player> playerObjects = new ArrayList<>();
+    for (String name : playerNames) {
+      playerObjects.add(new Player(name));
+    }
+    return playerObjects;
+  }
+
+  private static void test(GameModel model) {
     System.out.println(model.getPlayerNames());
-    System.out.println("Plates: ");
+    System.out.print("Plates: ");
     for (Plate plate : model.getPlates()) {
       System.out.print(plate.getTiles() + ", ");
     }
+    System.out.println();
     System.out.println("Active Player: " + model.getPlayerToMoveIndex());
     for (int i = 0; i < 9; i++) {
       // controller.pickTile(Color color, Player player, Object place) ===> model.pickTile(Color color, Player player, Object place)
@@ -94,24 +115,5 @@ public class AzulMain {
       model.setToRow(model.getPlayers().get(model.getPlayerToMoveIndex()), i % 4);
       model.setToRow(model.getPlayers().get(model.getPlayerToMoveIndex()), (i + 1) % 4);
     }
-    // </test> TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-
-  }
-
-  /**
-   * Creates player objects from the list of player names.
-   *
-   * @param playerNames the list of player names
-   * @return a list of player objects
-   */
-  private static List<Player> createPlayerObjects(String[] playerNames) {
-    if (playerNames.length < 2 || playerNames.length > 4) {
-      throw new IllegalArgumentException("Invalid number of player names, needs to be from 2 to 4");
-    }
-    List<Player> playerObjects = new ArrayList<>();
-    for (String name : playerNames) {
-      playerObjects.add(new Player(name));
-    }
-    return playerObjects;
   }
 }

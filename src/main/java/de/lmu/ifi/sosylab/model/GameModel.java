@@ -97,7 +97,6 @@ public class GameModel {
 
   //Object is Plate or TableCenter
   public synchronized void pickTile(Color color, Player player, Object place) {
-    System.out.println("PICK TILE: " + color + " " + player.getNickname() + " " + place.toString());
     if (roundState != RoundState.WAIT) {
       System.out.println("pickTile not allowed. State: " + roundState);
       return; // TODO: or Exception?
@@ -574,16 +573,17 @@ public class GameModel {
     requireNonNull(player);
     int counterCompleteColumns = 0;
     for (int col = 0; col < PlayerBoard.WALL_SIZE; col++) {
-      int completeTiles = 0;
+      int completesTiles = 0;
       for (int row = 0; row < PlayerBoard.WALL_SIZE; row++) {
         if (player.playerBoard.wall[row][col]) {
-          completeTiles++;
+          completesTiles++;
         }
       }
-      if (completeTiles == PlayerBoard.WALL_SIZE) {
+      if (completesTiles == PlayerBoard.WALL_SIZE) {
         counterCompleteColumns++;
       }
     }
+    System.out.println("Completed Columns: " + counterCompleteColumns);
     return counterCompleteColumns;
   }
 
@@ -597,13 +597,13 @@ public class GameModel {
     requireNonNull(player);
     int counterCompleteRows = 0;
     for (boolean[] row : player.playerBoard.wall) {
-      int completeTiles = 0;
+      int completesTiles = 0;
       for (boolean tile : row) {
         if (tile) {
-          completeTiles++;
+          completesTiles++;
         }
       }
-      if (completeTiles == PlayerBoard.WALL_SIZE) {
+      if (completesTiles == PlayerBoard.WALL_SIZE) {
         counterCompleteRows++;
       }
     }

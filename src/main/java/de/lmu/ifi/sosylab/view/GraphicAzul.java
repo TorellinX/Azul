@@ -1,4 +1,4 @@
-package de.lmu.ifi.sosylab.view;
+package main.java.de.lmu.ifi.sosylab.view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

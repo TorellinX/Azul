@@ -31,13 +31,6 @@ public class GraphicAzul extends JPanel {
     return new ImageIcon(img);
   }
 
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(() -> new GraphicAzul());
-  }
-
-  public void setAzulPanel(boolean x) {
-    azulPanel.setVisible(x);
-  }
 }
 
 

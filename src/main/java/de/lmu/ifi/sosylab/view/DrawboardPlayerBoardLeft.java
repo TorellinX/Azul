@@ -189,24 +189,6 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //alt
     //super.paintComponent(g);
     //g = (Graphics2D) g;

@@ -12,7 +12,7 @@ public class DrawboardTableCenter extends JPanel {
   private int hightOfFactory = 100;
   private int widthOfFactory = 100;
 
-  private ArrayList<IntPair> positionBlockTableCenter;
+  private ArrayList<IntPair> positionTilesTableCenter;
 
   private IntPair[] positionOfFactory;
 
@@ -33,8 +33,6 @@ public class DrawboardTableCenter extends JPanel {
   }
 
   private void initialize() {
-
-
     firstFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17), new IntPair(17, 58), new IntPair(58, 58)};
     secondFactory = new IntPair[]{new IntPair(167, 17), new IntPair(208, 17), new IntPair(167, 58), new IntPair(208, 58)};
     thirdFactory = new IntPair[]{new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58), new IntPair(358, 58)};
@@ -45,19 +43,18 @@ public class DrawboardTableCenter extends JPanel {
     eighthFactory = new IntPair[]{new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408), new IntPair(133, 408)};
     ninthFactory = new IntPair[]{new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408), new IntPair(283, 408)};
 
-
     positionOfFactory = new IntPair[]{new IntPair(5, 5), new IntPair(155, 5),
         new IntPair(305, 5), new IntPair(80, 105), new IntPair(230, 105),
         new IntPair(80, 230), new IntPair(230, 230), new IntPair(80, 355), new IntPair(230, 355)};
 
     //Table Center Steine werden hinzugefügt
-    positionBlockTableCenter = new ArrayList<>();
+    positionTilesTableCenter = new ArrayList<>();
 
-    positionBlockTableCenter.add(new IntPair(25, 505));
+    positionTilesTableCenter.add(new IntPair(25, 505));
 
     for (int i = 505; i <= 625; i += 40) {
       for (int j = 105; j <= 345; j += 40) {
-        positionBlockTableCenter.add(new IntPair(j, i));
+        positionTilesTableCenter.add(new IntPair(j, i));
       }
     }
 

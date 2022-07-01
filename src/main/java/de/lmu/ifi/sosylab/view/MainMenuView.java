@@ -59,7 +59,7 @@ public class MainMenuView extends JFrame {
    * @param controller Controller
    * @param model Model
    */
-  public MainMenuView(Controller controller, GameModel model ) {
+  public MainMenuView(Controller controller, GameModel model) {
     super("Azul");
 
     this.model = requireNonNull(model);
@@ -252,7 +252,7 @@ public class MainMenuView extends JFrame {
 
   private void showGame() {
     setVisible(false);
-    PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames());
+    PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(), model.getPlayers());
   }
 
 

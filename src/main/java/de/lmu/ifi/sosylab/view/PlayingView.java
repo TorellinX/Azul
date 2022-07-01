@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.model.Player;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,11 +34,13 @@ public class PlayingView extends JFrame {
 
   private int playerCount;
   private List<String> nicknames;
+  private List<Player> player;
 
 
-  public PlayingView(int playerCount, List<String> nicknames) {
+  public PlayingView(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
     this.nicknames = nicknames;
+    this.player = player;
 
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -65,12 +69,11 @@ public class PlayingView extends JFrame {
     panelUp.setBackground(backroundColor);
 
     //Zeichenelemente werden übergeben.
-    drawboardPlayerBoardLeft = new DrawboardPlayerBoardLeft(playerCount, nicknames);
-    drawboardPlayerBoardRight = new DrawboardPlayerBoardRight(playerCount, nicknames);
+    drawboardPlayerBoardLeft = new DrawboardPlayerBoardLeft(playerCount, nicknames, player);
+    drawboardPlayerBoardRight = new DrawboardPlayerBoardRight(playerCount, nicknames, player);
     drawboardTableCenter = new DrawboardTableCenter();
 
     drawboardPlayerBoardLeft.setLayout(null);
-
     drawboardPlayerBoardRight.setLayout(null);
 
     //Mittleres Panel wird mit Buttons gefüllt:
@@ -88,6 +91,16 @@ public class PlayingView extends JFrame {
     c.add(drawboardPlayerBoardRight, BorderLayout.EAST);
     c.add(drawboardPlayerBoardLeft, BorderLayout.WEST);
     c.add(drawboardTableCenter, BorderLayout.CENTER);
+
+    addButtonsPlayerOne();
+    addButtonPlayerTwo();
+    if(player.size()==3){
+      addButtonPlayerThree();
+    }
+    if(player.size() == 4){
+      addButtonPlayerFour();
+    }
+    addButtonPlayboard();
   }
 
   private void addButtonsPlayerOne(){

@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.model.Player;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
   private int playerCount;
   private List<String> nicknames;
 
-  public DrawboardPlayerBoardRight(int playerCount, List<String> nicknames) {
+  public DrawboardPlayerBoardRight(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
     this.nicknames = nicknames;
     initializePlayfieldRight();

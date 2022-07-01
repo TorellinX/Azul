@@ -12,7 +12,7 @@ public interface Controller {
    *
    * @param playerNames Lst of player names.
    */
-  void startGame(List<String> playerNames);
+  boolean startGame(List<String> playerNames);
 
 
   /**

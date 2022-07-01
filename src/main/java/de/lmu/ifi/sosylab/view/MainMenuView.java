@@ -291,7 +291,13 @@ public class MainMenuView extends JFrame {
     removePlayer.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        removePlayerLocalGame();
+        // checks if a list element is selected
+        if (localPlayers.getSelectedRow() == -1) {
+          JOptionPane.showMessageDialog(null, "Please select a user to delete");
+        }
+        else {
+          removePlayerLocalGame();
+        }
       }
     });
 
@@ -305,8 +311,12 @@ public class MainMenuView extends JFrame {
     startGame.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.startGame(getNicknames());
-        showGame();
+        if (controller.startGame(getNicknames())) {
+          showGame();
+        }
+        else {
+          JOptionPane.showMessageDialog(null, "It was not possible to create a Game, there can only be 2-4 players");
+        }
       }
     });
 

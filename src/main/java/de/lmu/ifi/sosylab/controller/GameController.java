@@ -20,9 +20,15 @@ public class GameController implements Controller {
     this.model = requireNonNull(model);
   }
 
-  public void startGame(List<String> playerNames) {
-    model.createPlayers(playerNames);
-    model.setState(State.RUNNING);
+  public boolean startGame(List<String> playerNames) {
+    if (playerNames.size() > 4 || playerNames.size() < 2){
+      return false;
+    }
+    else {
+      model.createPlayers(playerNames);
+      model.setState(State.RUNNING);
+      return true;
+    }
   }
 
   public boolean pickTilesFromPlate(Color color, Player player, Plate plate) {

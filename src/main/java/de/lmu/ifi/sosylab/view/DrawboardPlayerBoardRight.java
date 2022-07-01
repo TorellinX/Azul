@@ -3,6 +3,7 @@ package de.lmu.ifi.sosylab.view;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 
 public class DrawboardPlayerBoardRight extends JPanel {
 
@@ -25,8 +26,12 @@ public class DrawboardPlayerBoardRight extends JPanel {
   private HashMap<Integer, IntPair[]> coordinatePatternLinesPlayerFour = new HashMap<>();
   private HashMap<Integer, IntPair[]> coordinateWallPlayerFour = new HashMap<>();
   private IntPair[] coordinateMinusPlayerFour;
+  private int playerCount;
+  private List<String> nicknames;
 
-  public DrawboardPlayerBoardRight() {
+  public DrawboardPlayerBoardRight(int playerCount, List<String> nicknames) {
+    this.playerCount = playerCount;
+    this.nicknames = nicknames;
     initializePlayfieldRight();
     setPreferredSize(new Dimension(400, 700));
     repaint();
@@ -37,9 +42,11 @@ public class DrawboardPlayerBoardRight extends JPanel {
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     g = (Graphics2D) g;
+    drawPlayerTwo(g, nicknames.get(1));
 
-    drawPlayerTwo(g, "Mutter Theresa");
-    drawPlayerFour(g, "Angela Merkel");
+    if(playerCount == 4){
+      drawPlayerFour(g, nicknames.get(3));
+    }
   }
 
 

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class DrawboardPlayerBoardLeft extends JPanel {
 
@@ -27,9 +28,13 @@ public class DrawboardPlayerBoardLeft extends JPanel {
   private HashMap<Integer, IntPair[]> coordinatePatternLinesPlayerThree = new HashMap<>();
   private HashMap<Integer, IntPair[]> coordinateWallPlayerThree = new HashMap<>();
   private IntPair[] coordinateMinusPlayerThree;
+  private int playerCount;
+  private List<String> nicknames;
 
 
-  public DrawboardPlayerBoardLeft() {
+  public DrawboardPlayerBoardLeft(int playerCount, List<String> nicknames) {
+    this.playerCount = playerCount;
+    this.nicknames = nicknames;
     initializePlayfieldLeft();
     setPreferredSize(new Dimension(400, 700));
     repaint();
@@ -45,8 +50,11 @@ public class DrawboardPlayerBoardLeft extends JPanel {
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     g = (Graphics2D) g;
-    drawPlayerOnePlayfield(g, "Hubertus von Nepomuk");
-    drawPlayerThree(g, "Walter von der Vogelweide");
+    drawPlayerOnePlayfield(g, nicknames.get(0));
+
+    if(playerCount > 2){
+      drawPlayerThree(g, nicknames.get(2));
+    }
   }
 
   private void initializePlayfieldLeft() {
@@ -246,12 +254,5 @@ public class DrawboardPlayerBoardLeft extends JPanel {
     g.drawString("123", 50, 560);
   }
 
-  private void drawPlayerOne(Graphics g) {
-
-  }
-
-  private void updatePlayerOne() {
-
-  }
 
 }

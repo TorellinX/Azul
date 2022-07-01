@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PlayingView extends JFrame {
@@ -29,8 +30,15 @@ public class PlayingView extends JFrame {
   private int widthOfButtons = 35;
   private int hightOfButtons = 35;
 
+  private int playerCount;
+  private List<String> nicknames;
 
-  public PlayingView() {
+
+  public PlayingView(int playerCount, List<String> nicknames) {
+    this.playerCount = playerCount;
+    this.nicknames = nicknames;
+
+
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);
     setSize(1300, 800);
@@ -39,11 +47,14 @@ public class PlayingView extends JFrame {
 
     createPlayingView();
 
+    startGame();
+  }
+
+  private void startGame(){
     setVisible(true);
   }
 
   private void createPlayingView() {
-
     Color backroundColor = new Color(135, 206, 250);
     //Oberes Panel wird mit Combobox gefüllt.
     JPanel panelUp = new JPanel();
@@ -54,8 +65,8 @@ public class PlayingView extends JFrame {
     panelUp.setBackground(backroundColor);
 
     //Zeichenelemente werden übergeben.
-    drawboardPlayerBoardLeft = new DrawboardPlayerBoardLeft();
-    drawboardPlayerBoardRight = new DrawboardPlayerBoardRight();
+    drawboardPlayerBoardLeft = new DrawboardPlayerBoardLeft(playerCount, nicknames);
+    drawboardPlayerBoardRight = new DrawboardPlayerBoardRight(playerCount, nicknames);
     drawboardTableCenter = new DrawboardTableCenter();
 
     drawboardPlayerBoardLeft.setLayout(null);

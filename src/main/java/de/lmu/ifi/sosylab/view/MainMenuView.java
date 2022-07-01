@@ -2,6 +2,7 @@ package de.lmu.ifi.sosylab.view;
 
 import de.lmu.ifi.sosylab.controller.*;
 import de.lmu.ifi.sosylab.model.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
@@ -304,6 +305,7 @@ public class MainMenuView extends JFrame {
     startGame.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        controller.startGame(getNicknames());
         showGame();
       }
     });
@@ -344,26 +346,26 @@ public class MainMenuView extends JFrame {
 
   /**
    * Adds a Player to the Local Game.
-   * Displays a Error if more than 4 Player are connectet or Nickname is already in use.
+   * Displays a Error if more than 4 Player are in the list or Nickname is already in use.
    */
   private void addPlayerToLocalGame(String nickname) {
-    DefaultTableModel modelOfLoaclPlayer = (DefaultTableModel) localPlayers.getModel();
+    DefaultTableModel modelOfLocalPlayer = (DefaultTableModel) localPlayers.getModel();
     Boolean isUserNameTaken = false;
 
     for (int i = 0; i < numberOfPlayers; i++) {
-      if (nickname.equals((String) modelOfLoaclPlayer.getValueAt(i, 0))) {
-        JOptionPane.showMessageDialog(null, "UserName ist bereits in Benützung");
+      if (nickname.equals((String) modelOfLocalPlayer.getValueAt(i, 0))) {
+        JOptionPane.showMessageDialog(null, "User already in the list");
         isUserNameTaken = true;
       }
     }
     if (numberOfPlayers >= 4) {
-      JOptionPane.showMessageDialog(null, "Maximal 4 Spieler erlaubt");
+      JOptionPane.showMessageDialog(null, "There can't be more than 4 Players in the Game");
       isUserNameTaken = true;
 
     }
 
     if (!isUserNameTaken) {
-      modelOfLoaclPlayer.addRow(new Object[]{nickname});
+      modelOfLocalPlayer.addRow(new Object[]{nickname});
       numberOfPlayers++;
     }
   }
@@ -384,14 +386,14 @@ public class MainMenuView extends JFrame {
    * Returns the list of players' nicknames.
    * @return list of nicknames
    */
-  public ArrayList<String> getNicknames(){
+  public List<String> getNicknames(){
     ArrayList<String> listOfPlayer = new ArrayList<>();
     DefaultTableModel localPlayer = (DefaultTableModel) localPlayers.getModel();
 
     for(int i = 0; i < localPlayer.getRowCount(); i++){
       listOfPlayer.add((String) localPlayer.getValueAt(i, 0));
     }
-
+    System.out.println(listOfPlayer);
     return listOfPlayer;
   }
 }

@@ -7,6 +7,7 @@ import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.view.MainMenuView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -26,9 +27,9 @@ public class AzulMain {
 
     GameModel model = new GameModel();
     Controller controller = new GameController(model);
-    //View view = GameView(model, controller);
+    MainMenuView menuView = new MainMenuView(model, controller);
 
-    //controller.setView(view);
+    //controller.setView(menuView);
     // TODO: start view.
 
     // testModel(model);

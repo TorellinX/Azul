@@ -1,5 +1,8 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.controller.GameController;
+import de.lmu.ifi.sosylab.model.GameModel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -39,10 +42,12 @@ public class MainMenuView extends JFrame {
   private String userNameOnline;
   private int numberOfPlayers = 0;
   private JButton openplayingfield;
+  private GameModel model;
+  private Controller gameController;
 
 
 
-  public MainMenuView() {
+  public MainMenuView(GameModel model, Controller controller) {
     super("Azul");
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -56,7 +61,8 @@ public class MainMenuView extends JFrame {
     openPlayingView();
 
     addListeners();
-
+    this.model = model;
+    this.gameController = controller;
     showMainMenu();
 
   }

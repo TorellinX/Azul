@@ -51,7 +51,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
   private void initializePlayfieldLeft() {
     //Pattern Lines of Player One
-    IntPair[] firstPatternLinePlayerOne = {new IntPair(145, 6)};
+    IntPair[] firstPatternLinePlayerOne = {new IntPair(145, 5)};
     IntPair[] secondPatternLinePlayerOne = {new IntPair(145, 40), new IntPair(110, 40)};
     IntPair[] thirdPatternLinePlayerOne = {new IntPair(145, 75), new IntPair(110, 75), new IntPair(75, 75)};
     IntPair[] fourthPatternLinePlayerOne = {new IntPair(145, 110), new IntPair(110, 110), new IntPair(75, 110), new IntPair(40, 110)};

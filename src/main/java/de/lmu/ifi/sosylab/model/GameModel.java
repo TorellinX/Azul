@@ -85,6 +85,9 @@ public class GameModel {
         .toList();
   }
 
+  /**
+   * Fills plates with color tiles from bag.
+   */
   private void fillPlates() {
     for (Plate plate : plates) {
       plate.addTiles(getAndRemoveTilesFromBagForPlate());
@@ -109,52 +112,32 @@ public class GameModel {
       pickTilesFromTableCenter(color, player);
     }
     roundState = RoundState.PICKED;
-    System.out.println("PICK TILE: " + color + " " + player.getNickname() + " " + place.toString());
-    System.out.println("roundState: " + roundState + ": " + selectedTiles + " tiles");
+    System.out.println("PICK TILE: color: " + color + " who: " + player.getNickname() + " from: " + place.toString());
+    System.out.println("    roundState: " + roundState + " " + selectedTiles + " tiles");
   }
 
   // (patternLines (0-4) or floorLine (-1)
   public synchronized void setToRow(Player player, int row) {
-    System.out.println("SET TO ROW: " + row);
     if (roundState != RoundState.PICKED) {
       return; // TODO: or Exception?
     }
     if (player != playerToMove) {
       throw new IllegalArgumentException("\"set to row\" event from non-active player");
     }
-    System.out.println("Setting tiles...");
+    System.out.println("    Setting tiles to row " + row + "...");
     if (!setPickedTiles(player, row)) {
-      System.out.println("Setting unsuccessful!");
+      System.out.println("SETTING UNSUCCESSFUL!");
       return;
     }
-    //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-    System.out.println("Pattern Lines: ");
-    for (ColorTile[] rowP : player.playerBoard.patternLines) {
-      System.out.println(Arrays.toString(rowP));
-    }
-    System.out.println("Floor Line: " + player.playerBoard.floorLine);
-    System.out.println("Wall: ");
-    for (boolean[] rowW : player.playerBoard.wall) {
-      System.out.println(Arrays.toString(rowW));
-    }
-    //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
     playerToMoveIndex = getNextPlayerIndex();
     playerToMove = players.get(playerToMoveIndex);
     if (!areThereMoreTiles()) {
-      //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-      System.out.println("NO MORE TILES");
-      System.out.println("TableCenter: " + getTableCenter().getTiles());
-      System.out.println("Plates: ");
-      for (Plate plate : getPlates()) {
-        System.out.print(plate.getTiles() + ", ");
-      }
-      //TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
       endRound();
       return;
     }
     System.out.println("Active Player: " + getPlayerToMoveIndex());
     roundState = RoundState.WAIT;
-    System.out.println("roundState: " + roundState);
+    System.out.println("    roundState: " + roundState);
   }
 
   private boolean areThereMoreTiles() {
@@ -254,13 +237,6 @@ public class GameModel {
       }
       return tilesToAdd;
     } else {
-      // TODO:
-      // ??? how does bag.remove(index) work?? If the bag has 4 tiles:
-      // bag.remove(0) while bag has 4 Tiles,
-      // bag.remove(1) while bag has 3 Tiles,
-      // bag.remove(2) while bag has 2 Tiles !!!!!!! There is no object with index 2 in the bag!!!!
-      // bag.remove(3) !!!!!!
-      // Should the indexes be applied in reverse order from 3 to 0?
       return IntStream.range(0, TILES_PER_PLATE).mapToObj(i -> bag.remove(0)).toList();
     }
   }
@@ -316,18 +292,18 @@ public class GameModel {
     requireNonNull(player);
     if (row < -1 || row > PlayerBoard.WALL_SIZE - 1) {
       throw new IllegalArgumentException(
-          "Invalid row number, needs to be from -1 to " + (PlayerBoard.WALL_SIZE - 1));
+          "    Invalid row number, needs to be from -1 to " + (PlayerBoard.WALL_SIZE - 1));
     }
     if (selectedTiles.size() == 0) {
       throw new IllegalArgumentException(
-          "Trying to add an empty list of tiles to the patternLine.");
+          "    Trying to add an empty list of tiles to the patternLine.");
     }
     if (!hasSameColor(selectedTiles)) {
       System.out.println(selectedTiles);
-      throw new IllegalArgumentException("Selected tiles have different color");
+      throw new IllegalArgumentException("    Selected tiles have different color");
     }
     if (row == -1) {
-      System.out.println("addTileToFloorLine");
+      System.out.println("    addTileToFloorLine");
       for (ColorTile tile : selectedTiles) {
         player.playerBoard.addTileToFloorLine(tile);
       }
@@ -337,29 +313,23 @@ public class GameModel {
     int freeFields = player.playerBoard.countFreeFieldsInRow(row);
     if (freeFields == 0) {
       // the pattern line is full
-      System.out.println("the pattern line is full");
+      System.out.println("    the pattern line is full");
       return false;
     }
     if (player.playerBoard.isColorAlreadyOnWall(selectedTiles.get(0).getColor(), row)) {
       // the color is already on the wall
-      System.out.println("the color is already on the wall");
+      System.out.println("    the color is already on the wall");
       return false;
     }
     if (player.playerBoard.getNextFreePatternLineIndex(row)
         != player.playerBoard.patternLines[row].length - 1
         && selectedTiles.get(0).getColor() != player.playerBoard.getPatternLineColor(row)) {
       // the line already has tiles with another color
-      System.out.println("the line already has tiles with another color");
-      System.out.println("selectedTiles.get(0).getColor() " + selectedTiles.get(0).getColor());
-      System.out.println(
-          "player.playerBoard.getPatternLineColor(row) " + player.playerBoard.getPatternLineColor(
-              row));
-      System.out.println(
-          "getNextFreePatternLineIndex(row) " + player.playerBoard.getNextFreePatternLineIndex(
-              row));
+      System.out.println("    the line already has tiles with another color " + player.playerBoard.getPatternLineColor(
+          row));
       return false;
     }
-    System.out.println("addColorTilesToLine");
+    System.out.println("    addColorTilesToLine");
     player.playerBoard.addColorTilesToLine(selectedTiles, row);
     selectedTiles.clear();
     return true;

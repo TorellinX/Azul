@@ -1,4 +1,4 @@
-package main.java.de.lmu.ifi.sosylab.view;
+package de.lmu.ifi.sosylab.view;
 
 import javax.swing.*;
 import java.awt.*;

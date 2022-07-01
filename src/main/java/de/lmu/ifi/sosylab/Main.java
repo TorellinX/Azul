@@ -1,8 +1,8 @@
-package main.java.de.lmu.ifi.sosylab;
+package de.lmu.ifi.sosylab;
 
 
-import main.java.de.lmu.ifi.sosylab.view.MainMenuView;
-import main.java.de.lmu.ifi.sosylab.view.PlayingView;
+import de.lmu.ifi.sosylab.view.MainMenuView;
+import de.lmu.ifi.sosylab.view.PlayingView;
 
 public class Main {
 

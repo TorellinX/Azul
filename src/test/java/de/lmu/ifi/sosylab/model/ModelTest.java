@@ -10,10 +10,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -245,7 +243,7 @@ public class ModelTest {
     int rowIndex = -1;
 
     //Act test
-    model.setPickedTiles(testingPlayer, rowIndex);
+    model.setTilesToRow(testingPlayer, rowIndex);
 
     //Assert test
     assertEquals(testTiles, testingPlayer.playerBoard.floorLine);
@@ -274,7 +272,7 @@ public class ModelTest {
     }
 
     //Act test
-    model.setPickedTiles(testingPlayer, rowIndex);
+    model.setTilesToRow(testingPlayer, rowIndex);
 
     //Assert test
     assertEquals(expectedFloorLine, testingPlayer.playerBoard.floorLine);
@@ -303,7 +301,7 @@ public class ModelTest {
     }
 
     //Act test
-    model.setPickedTiles(testingPlayer, rowIndex);
+    model.setTilesToRow(testingPlayer, rowIndex);
 
     //Assert test
     assertArrayEquals(expectedPatternLine, testingPlayer.playerBoard.patternLines[rowIndex]);
@@ -329,7 +327,7 @@ public class ModelTest {
     ColorTile[] expectedPatternLine = Arrays.copyOf(testingPatternLine, testingPatternLine.length);
 
     //Act test
-    model.setPickedTiles(testingPlayer, rowIndex);
+    model.setTilesToRow(testingPlayer, rowIndex);
 
     //Assert test
     assertArrayEquals(expectedPatternLine, testingPlayer.playerBoard.patternLines[rowIndex]);
@@ -355,7 +353,7 @@ public class ModelTest {
     ColorTile[] expectedPatternLine = Arrays.copyOf(testingPatternLine, testingPatternLine.length);
 
     //Act test
-    model.setPickedTiles(testingPlayer, rowIndex);
+    model.setTilesToRow(testingPlayer, rowIndex);
 
     //Assert test
     assertArrayEquals(expectedPatternLine, testingPlayer.playerBoard.patternLines[rowIndex]);
@@ -379,7 +377,7 @@ public class ModelTest {
         testingPlayer.playerBoard.patternLines[rowIndex], rowIndex + 1);
 
     //Act test
-    model.setPickedTiles(testingPlayer, rowIndex);
+    model.setTilesToRow(testingPlayer, rowIndex);
 
     //Assert test
     assertArrayEquals(expectedPatternLine, testingPlayer.playerBoard.patternLines[rowIndex]);

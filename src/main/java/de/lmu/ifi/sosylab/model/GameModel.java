@@ -35,7 +35,7 @@ public class GameModel {
       .collect(Collectors.toList());
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
-  private State state = State.RUNNING;
+  private State state;
   private RoundState roundState = RoundState.WAIT;
   private int startingPlayerIndex;
   private int playerToMoveIndex;
@@ -101,49 +101,47 @@ public class GameModel {
     }
   }
 
-
   //Object is Plate or TableCenter
-  public synchronized void pickTile(Color color, Player player, Object place) {
+  /*public synchronized void pickTile(Color color, Player player, Object place) {
     if (roundState != RoundState.WAIT) {
       System.out.println("pickTile not allowed. State: " + roundState);
-      return; // TODO: or Exception?
+      return;
     }
-    if (player != playerToMove) {
-      throw new IllegalArgumentException("\"pick tile\" event from non-active player");
-    }
+
     if (place instanceof Plate) {
       pickTilesFromPlate((Plate) place, color);
     }
     if (place instanceof TableCenter) {
       pickTilesFromTableCenter(color, player);
     }
-    roundState = RoundState.PICKED;
-    System.out.println("PICK TILE: color: " + color + " who: " + player.getNickname() + " from: " + place.toString());
+
+    System.out.println("PICK TILE: color: " + color + " who: " + player.getNickname() + " from: "
+        + place.toString());
     System.out.println("    roundState: " + roundState + " " + selectedTiles + " tiles");
-  }
+  }*/
 
   // (patternLines (0-4) or floorLine (-1)
-  public synchronized void setToRow(Player player, int row) {
+  public synchronized boolean setTiles(Player player, int row) {
     if (roundState != RoundState.PICKED) {
-      return; // TODO: or Exception?
+      return false;
     }
     if (player != playerToMove) {
       throw new IllegalArgumentException("\"set to row\" event from non-active player");
     }
     System.out.println("    Setting tiles to row " + row + "...");
-    if (!setPickedTiles(player, row)) {
-      System.out.println("SETTING UNSUCCESSFUL!");
-      return;
+    if (!setTilesToRow(player, row)) {
+      return false;
     }
     playerToMoveIndex = getNextPlayerIndex();
     playerToMove = players.get(playerToMoveIndex);
     if (!areThereMoreTiles()) {
       endRound();
-      return;
+      return true;
     }
     System.out.println("Active Player: " + getPlayerToMoveIndex());
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
+    return true;
   }
 
   private boolean areThereMoreTiles() {
@@ -252,17 +250,20 @@ public class GameModel {
    *
    * @param plate plate the tile was picked from
    * @param color color of the tile
+   * @return true if tiles was successfully added to selected tiles
    */
-  public void pickTilesFromPlate(Plate plate, Color color) {
-    //TODO: Tiles present check
+  public boolean pickTilesFromPlate(Plate plate, Color color) {
     if (selectedTiles.size() != 0) {
-      return;
+      return false;
     }
     SelectedAndRemainingTiles tiles = plate.pickTiles(color);
     selectedTiles.addAll(tiles.selected());
     if (tiles.remaining().isPresent()) {
       tableCenter.addColorTiles(tiles.remaining().get());
     }
+    roundState = RoundState.PICKED;
+    System.out.println("    roundState: PICKED " + selectedTiles + " tiles");
+    return true;
   }
 
   /**
@@ -273,10 +274,10 @@ public class GameModel {
    * @param color  color of the tile
    * @param player player to move
    */
-  public void pickTilesFromTableCenter(Color color, Player player) {
+  public boolean pickTilesFromTableCenter(Color color, Player player) {
     //TODO: Tiles present check
     if (selectedTiles.size() != 0) { // if selectedTiles already has tiles
-      return;
+      return false;
     }
     SelectedTilesAndMaybePenaltyTile tiles = tableCenter.pickTiles(color);
     if (tiles.penaltyTile().isPresent()) {
@@ -284,6 +285,9 @@ public class GameModel {
       startingPlayerIndex = players.indexOf(player);
     }
     selectedTiles.addAll(tiles.colorTiles());
+    roundState = RoundState.PICKED;
+    System.out.println("    roundState: PICKED " + selectedTiles + " tiles");
+    return true;
   }
 
   /**
@@ -294,7 +298,7 @@ public class GameModel {
    * @param row    the row (-1 for floor line or 0 - 4 for pattern lines)
    * @return true if the validation was successful and tiles were set.
    */
-  public boolean setPickedTiles(Player player, int row) {
+  public boolean setTilesToRow(Player player, int row) {
     requireNonNull(player);
     if (row < -1 || row > PlayerBoard.WALL_SIZE - 1) {
       throw new IllegalArgumentException(
@@ -316,8 +320,7 @@ public class GameModel {
       selectedTiles.clear();
       return true;
     }
-    int freeFields = player.playerBoard.countFreeFieldsInRow(row);
-    if (freeFields == 0) {
+    if (player.playerBoard.countFreeFieldsInRow(row) == 0) {
       // the pattern line is full
       System.out.println("    the pattern line is full");
       return false;
@@ -327,15 +330,14 @@ public class GameModel {
       System.out.println("    the color is already on the wall");
       return false;
     }
-    if (player.playerBoard.getNextFreePatternLineIndex(row)
-        != player.playerBoard.patternLines[row].length - 1
+    if (player.getPlayerBoard().countFreeFieldsInRow(row) < player.getPlayerBoard()
+        .getPatternLines()[row].length
         && selectedTiles.get(0).getColor() != player.playerBoard.getPatternLineColor(row)) {
       // the line already has tiles with another color
-      System.out.println("    the line already has tiles with another color " + player.playerBoard.getPatternLineColor(
-          row));
+      System.out.println("    the line already has tiles with another color "
+          + player.playerBoard.getPatternLineColor(row));
       return false;
     }
-    System.out.println("    addColorTilesToLine");
     player.playerBoard.addColorTilesToLine(selectedTiles, row);
     selectedTiles.clear();
     return true;
@@ -645,4 +647,14 @@ public class GameModel {
     // TODO: make unmutable
     return tableCenter;
   }
+
+  public RoundState getRoundState() {
+    return roundState;
+  }
+
+  public int getRound() {
+    return round;
+  }
+
+
 }

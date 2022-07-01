@@ -85,6 +85,8 @@ public class DrawboardPlayerBoardLeft extends JPanel {
       x+=35;
     }
 
+
+
     //Pattern Lines of Player Three
     IntPair[] firstPatternLinePlayerThree = {new IntPair(145, 305)};
     IntPair[] secondPatternLinePlayerThree = {new IntPair(145, 340), new IntPair(110, 340)};
@@ -186,96 +188,57 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
 
   private void drawPlayerThree(Graphics g, String nickname) {
-
-
-
-    //alt
-    //super.paintComponent(g);
-    //g = (Graphics2D) g;
-
-    //Hier wird das untere Spielfeld gezeichnet, das nur bei 3 Spielern gebraucht wird.
-    //username links oben wird geschrieben
     g.setColor(Color.black);
     g.drawString(nickname, 5, 315);
 
     //Rechtecke der Patternlines werden gezeichnet.
-
     ((Graphics2D) g).setStroke(new BasicStroke(1));
-    g.drawRect(145, 305, widthOfPatternLineCell, heightOfPatternLineCell);
 
-    g.drawRect(110, 340, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(145, 340, widthOfPatternLineCell, heightOfPatternLineCell);
-
-    g.drawRect(75, 375, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(110, 375, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(145, 375, widthOfPatternLineCell, heightOfPatternLineCell);
-
-    g.drawRect(40, 410, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(75, 410, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(110, 410, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(145, 410, widthOfPatternLineCell, heightOfPatternLineCell);
-
-    g.drawRect(05, 445, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(40, 445, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(75, 445, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(110, 445, widthOfPatternLineCell, heightOfPatternLineCell);
-    g.drawRect(145, 445, widthOfPatternLineCell, heightOfPatternLineCell);
-
+    for (int count = 1; count <= 5; count++) {
+      IntPair[] speicher = coordinatePatternLinesPlayerThree.get(count);
+      for (int i = 0; i < speicher.length; i++) {
+        g.drawRect(speicher[i].getX(), speicher[i].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+      }
+    }
 
     g.setColor(playerboardcolor);
     g.fillRoundRect(200, 300, 185, 185, 20, 20);
-
-    //Ränder der Rechtecke der Wall werden gezeichnet.
     ((Graphics2D) g).setStroke(new BasicStroke(2));
     g.setColor(Color.blue);
-    g.drawRect(205, 307, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(240, 342, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(275, 377, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(310, 412, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(345, 447, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.setColor(Color.yellow);
-    g.drawRect(240, 307, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(275, 342, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(310, 377, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(345, 412, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(205, 447, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.setColor(Color.red);
-    g.drawRect(275, 307, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(310, 342, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(345, 377, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(205, 412, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(240, 447, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.setColor(Color.black);
-    g.drawRect(310, 307, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(345, 342, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(205, 377, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(240, 412, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(275, 447, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.setColor(Color.green);
-    g.drawRect(345, 307, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(205, 342, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(240, 377, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(275, 412, widthOfPlayFieldCell, heightOfPlayFieldCell);
-    g.drawRect(310, 447, widthOfPlayFieldCell, heightOfPlayFieldCell);
 
+    for (int count = 1; count <= 5; count++) {
+      IntPair[] zwischenspeicher = coordinateWallPlayerThree.get(count);
+      for (int i = 0; i < zwischenspeicher.length; i++) {
+        g.drawRect(zwischenspeicher[i].getX(), zwischenspeicher[i].getY(), widthOfPlayFieldCell, heightOfPlayFieldCell);
+      }
+      if (count == 1) {
+        g.setColor(Color.yellow);
+      }
+      if (count == 2) {
+        g.setColor(Color.red);
+      }
+      if (count == 3) {
+        g.setColor(Color.black);
+      }
+      if (count == 4) {
+        g.setColor(Color.green);
+      }
+    }
     g.setColor(Color.black);
-
-    //Minuspunkteleiste:
     g.setColor(floorlinecolor);
+
     g.drawString("-1", 15, 500);
-    g.drawRect(05, 505, widthOfMinusCell, heightOfMinusCell);
     g.drawString("-1", 50, 500);
-    g.drawRect(40, 505, widthOfMinusCell, heightOfMinusCell);
     g.drawString("-2", 85, 500);
-    g.drawRect(75, 505, widthOfMinusCell, heightOfMinusCell);
     g.drawString("-2", 120, 500);
-    g.drawRect(110, 505, widthOfMinusCell, heightOfMinusCell);
     g.drawString("-2", 155, 500);
-    g.drawRect(145, 505, widthOfMinusCell, heightOfMinusCell);
     g.drawString("-3", 190, 500);
-    g.drawRect(180, 505, widthOfMinusCell, heightOfMinusCell);
     g.drawString("-3", 225, 500);
-    g.drawRect(215, 505, widthOfMinusCell, heightOfMinusCell);
+    g.setColor(floorlinecolor);
+
+    for (int i = 0; i < coordinateMinusPlayerThree.length; i++) {
+      g.drawRect(coordinateMinusPlayerThree[i].getX(), coordinateMinusPlayerThree[i].getY(), widthOfMinusCell, heightOfMinusCell);
+    }
 
     //Score:
     g.setColor(scorecolor);

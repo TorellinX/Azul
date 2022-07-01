@@ -7,8 +7,8 @@ import de.lmu.ifi.sosylab.view.PlayingView;
 public class Main {
 
   public static void main(String[] args) {
-    MainMenuView myView = new MainMenuView();
-    PlayingView myPlayingView = new PlayingView();
+    //MainMenuView myView = new MainMenuView();
+    //PlayingView myPlayingView = new PlayingView();
 
   }
 }

@@ -10,12 +10,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class PlayingView extends JFrame {
+public class PlayingView extends JFrame  implements PropertyChangeListener {
   @Serial
   private static final long serialVersionUID = 1L;
   
@@ -379,7 +381,6 @@ public class PlayingView extends JFrame {
   }
 
   private void addActionListenerFactory(){
-    //controller.placeTiles(model.getPlayers().get(model.getPlayerToMoveIndex()), );
     for(int i = 0; i < buttonsFactory.size(); i++){
       coutnCach = i;
       buttonsFactory.get(i).addActionListener(new ActionListener() {
@@ -397,6 +398,23 @@ public class PlayingView extends JFrame {
   }
 
   private void addActionListenerTableCenter(){
+
+  }
+
+  public void propertyChange(PropertyChangeEvent event){
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        handleModelUpdate(event);
+      }
+    });
+  }
+
+  private void handleModelUpdate(PropertyChangeEvent event){
+
+    drawboardPlayerBoardLeft.repaintLeftBoard();
+    drawboardPlayerBoardRight.repaintRightBoard();
+    drawboardTableCenter.repaintCenterBoard();
 
   }
 }

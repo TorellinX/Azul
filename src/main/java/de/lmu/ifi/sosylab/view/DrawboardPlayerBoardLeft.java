@@ -66,6 +66,10 @@ public class DrawboardPlayerBoardLeft extends JPanel {
     }
   }
 
+  public void repaintLeftBoard(){
+    repaint();
+  }
+
   private void initializePlayfieldLeft() {
 
     //Pattern Lines of Player One

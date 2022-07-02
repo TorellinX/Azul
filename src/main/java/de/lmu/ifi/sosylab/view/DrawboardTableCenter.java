@@ -104,6 +104,10 @@ public class DrawboardTableCenter extends JPanel {
 
   }
 
+  public void repaintCenterBoard(){
+    repaint();
+  }
+
   private void drawFacotry(Graphics g){
     for(int i = 0; i < positionOfFactory.length; i++){
       Color backroundColor = new Color(135, 206, 250);

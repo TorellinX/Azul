@@ -2,6 +2,9 @@ package de.lmu.ifi.sosylab.view;
 
 import de.lmu.ifi.sosylab.controller.*;
 import de.lmu.ifi.sosylab.model.*;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -20,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * Starts a JFrame which displays the menu items of the game.
  */
 
-public class MainMenuView extends JFrame {
+public class MainMenuView extends JFrame{
 
   private int width = 1200;
   private int hight = 700;
@@ -88,6 +91,7 @@ public class MainMenuView extends JFrame {
     layout = new CardLayout();
     panel = new JPanel(layout);
     setContentPane(panel);
+
   }
 
   /**

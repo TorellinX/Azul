@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Left Panel of the Game.
+ * In which players one and two are drawn.
+ */
+
 public class DrawboardPlayerBoardLeft extends JPanel {
 
   private static final long serialVersionUID = 1L;
@@ -36,6 +41,12 @@ public class DrawboardPlayerBoardLeft extends JPanel {
   private List<String> nicknames;
   private List<Player> player;
 
+  /**
+   * Constructor of the panel.
+   * @param playerCount Number of Player
+   * @param nicknames Nickames of Player
+   * @param player Player
+   */
 
   public DrawboardPlayerBoardLeft(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
@@ -43,17 +54,15 @@ public class DrawboardPlayerBoardLeft extends JPanel {
     this.player = player;
     initializePlayfieldLeft();
     setPreferredSize(new Dimension(400, 700));
-    repaint();
+    // repaint();
 
   }
 
-  public JPanel getPanel() {
-    return drawboardplayerboard;
-  }
-
-
+  /**
+   * Calls the methods to draw the players.
+   * @param g the <code>Graphics</code> object to protect
+   */
   @Override
-
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     g = (Graphics2D) g;
@@ -66,9 +75,9 @@ public class DrawboardPlayerBoardLeft extends JPanel {
     }
   }
 
-  public void repaintLeftBoard(){
-    repaint();
-  }
+  /**
+   * Sets the coordinates for the individual objecte.
+   */
 
   private void initializePlayfieldLeft() {
 
@@ -144,11 +153,12 @@ public class DrawboardPlayerBoardLeft extends JPanel {
     }
   }
 
+  /**
+   * Playing field of the first player is drawn.
+   * @param g
+   */
+
   private void drawPlayerOnePlayfield(Graphics g) {
-    //Zuerst wird das obere Spielfeld gezeichnet, das immer gebraucht wird.
-    //username links oben wird geschrieben
-
-
 
     //Rechtecke der Patternlines werden gezeichnet.
     ((Graphics2D) g).setStroke(new BasicStroke(1));
@@ -183,6 +193,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
       if (count == 4) {
         g.setColor(Color.green);
       }
+
     }
     g.setColor(Color.black);
 
@@ -202,10 +213,14 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
   }
 
-
+  /**
+   * Playing field of the third player is drawn.
+   * @param g
+   */
   private void drawPlayerThreePlayfield(Graphics g) {
     //Rechtecke der Patternlines werden gezeichnet.
     ((Graphics2D) g).setStroke(new BasicStroke(1));
+    g.setColor(Color.black);
 
     for (int count = 1; count <= 5; count++) {
       IntPair[] speicher = coordinatePatternLinesPlayerThree.get(count);
@@ -267,6 +282,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     ColorTile[][] patternLines = playerBoardPlayer1.getPatternLines();
 
+
     if(player1.getState().equals(PlayerState.TO_MOVE)){
       g.setColor(Color.green);
       g.drawString(player1.getNickname(), 5, 15);
@@ -284,20 +300,20 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
           IntPair[] cache = coordinatePatternLinesPlayerOne.get(i);
 
-          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i][j].getColor();
-          if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
-            g.setColor(Color.black);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
-            g.setColor(Color.blue);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.RED)) {
-            g.setColor(Color.red);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
-            g.setColor(Color.yellow);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)){
-            //Keine Ahnung warum Model White, aber View macht grün draus
-            g.setColor(Color.green);
-          }
-          g.fillRect(cache[j].getX(), cache[j].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+            de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i-1][j].getColor();
+            if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
+              g.setColor(Color.black);
+            } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
+              g.setColor(Color.blue);
+            } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.RED)) {
+              g.setColor(Color.red);
+            } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
+              g.setColor(Color.yellow);
+            } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)){
+              //Keine Ahnung warum Model White, aber View macht grün draus
+              g.setColor(Color.green);
+            }
+            g.fillRect(cache[j].getX(), cache[j].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
         }
       }
     }
@@ -437,31 +453,35 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
   }
 
+  /**
+   *Draws player three according to the model.
+   * @param g Graphics Element
+   */
+
   private void drawPlayerThree(Graphics g) {
     Player player3 = player.get(2);
-
-    if(player3.getState().equals(PlayerState.TO_MOVE)){
-      g.setColor(Color.green);
-      g.drawString(player3.getNickname(), 5, 315);
-    }else {
-      g.setColor(Color.black);
-      g.drawString(player3.getNickname(), 5, 315);
-    }
 
     PlayerBoard playerBoardPlayer3 = player3.getPlayerBoard();
 
     ColorTile[][] patternLines = playerBoardPlayer3.getPatternLines();
 
+    if(player3.getState().equals(PlayerState.TO_MOVE)){
+      g.setColor(Color.green);
+      g.drawString(player3.getNickname(), 5, 315);
+    }else{
+      g.setColor(Color.black);
+      g.drawString(player3.getNickname(), 5, 315);
+    }
 
-    //Draw Pattern Line of Player One
 
+    //Draw Pattern Line of Player Three
     for (int i = 1; i < (patternLines.length+1); i++) {
       for (int j = 0; j < patternLines[(i-1)].length; j++) {
         if(patternLines[(i-1)][j] != null){
 
           IntPair[] cache = coordinatePatternLinesPlayerThree.get(i);
 
-          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i][j].getColor();
+          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i-1][j].getColor();
           if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
             g.setColor(Color.black);
           } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {

@@ -7,6 +7,10 @@ import java.awt.*;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
+/**
+ * Right Panel of the Game.
+ * In which players two and four are drawn.
+ */
 
 public class DrawboardPlayerBoardRight extends JPanel {
 
@@ -33,15 +37,28 @@ public class DrawboardPlayerBoardRight extends JPanel {
   private List<String> nicknames;
   private List<Player> player;
 
+
+  /**
+   * Constructor of the panel.
+   * @param playerCount Number of Player
+   * @param nicknames Nickames of Player
+   * @param player Player
+   */
+
   public DrawboardPlayerBoardRight(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
     this.nicknames = nicknames;
     this.player = player;
     initializePlayfieldRight();
     setPreferredSize(new Dimension(400, 700));
-    repaint();
+    //repaint();
   }
 
+
+  /**
+   * Calls the methods to draw the players.
+   * @param g the <code>Graphics</code> object to protect
+   */
 
   @Override
   protected void paintComponent(Graphics g) {
@@ -56,11 +73,9 @@ public class DrawboardPlayerBoardRight extends JPanel {
     }
   }
 
-  public void repaintRightBoard(){
-      repaint();
-  }
-
-
+  /**
+   * Sets the coordinates for the individual objecte.
+   */
   private void initializePlayfieldRight(){
     //Pattern Lines of Player Two
     IntPair[] firstPatternLinePlayerTwo = {new IntPair(145, 5)};
@@ -135,7 +150,10 @@ public class DrawboardPlayerBoardRight extends JPanel {
     }
   }
 
-
+  /**
+   * Playing field of the second player is drawn.
+   * @param g
+   */
 
   private void drawPlayerTwoPlayfield(Graphics g){
 
@@ -154,7 +172,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
     //Ränder der Rechtecke der Wall werden gezeichnet.
     ((Graphics2D) g).setStroke(new BasicStroke(2));
-
     g.setColor(Color.blue);
     for (int count = 1; count <= 5; count++) {
       IntPair[] zwischenspeicher = coordinateWallPlayerTwo.get(count);
@@ -191,6 +208,11 @@ public class DrawboardPlayerBoardRight extends JPanel {
     }
 
   }
+
+  /**
+   * Playing field of the fourth player is drawn.
+   * @param g
+   */
 
   private void drawPlayerFourPlayfield(Graphics g, String nickname){
     g.setColor(Color.black);
@@ -246,6 +268,10 @@ public class DrawboardPlayerBoardRight extends JPanel {
     }
 
   }
+  /**
+   *Draws player two according to the model.
+   * @param g Graphics Element
+   */
 
   private void drawPlayerTwo(Graphics g){
     Player player2 = player.get(1);
@@ -253,7 +279,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
     PlayerBoard playerBoardPlayer2 = player2.getPlayerBoard();
 
     ColorTile[][] patternLines = playerBoardPlayer2.getPatternLines();
-
 
     if(player2.getState().equals(PlayerState.TO_MOVE)){
       g.setColor(Color.black);
@@ -273,20 +298,21 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
           IntPair[] cache = coordinatePatternLinesPlayerTwo.get(i);
 
-          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i][j].getColor();
-          if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
-            g.setColor(Color.black);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
-            g.setColor(Color.blue);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.RED)) {
-            g.setColor(Color.red);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
-            g.setColor(Color.yellow);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)){
-            //Keine Ahnung warum Model White, aber View macht grün draus
-            g.setColor(Color.green);
-          }
-          g.fillRect(cache[j].getX(), cache[j].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+            de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i-1][j].getColor();
+            if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
+              g.setColor(Color.black);
+            } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
+              g.setColor(Color.blue);
+            } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.RED)) {
+              g.setColor(Color.red);
+            } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
+              g.setColor(Color.yellow);
+            } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)){
+              //Keine Ahnung warum Model White, aber View macht grün draus
+              g.setColor(Color.green);
+            }
+            g.fillRect(cache[j].getX(), cache[j].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+
         }
       }
     }
@@ -424,6 +450,11 @@ public class DrawboardPlayerBoardRight extends JPanel {
     g.drawString("Punkte:", 5, 260);
     g.drawString(Integer.toString(player2.getScore()), 50, 260);
   }
+
+  /**
+   *Draws player three according to the model.
+   * @param g Graphics Element
+   */
 
   private void drawPlayerFour(Graphics g){
     Player player4 = player.get(3);

@@ -117,7 +117,6 @@ public class DrawboardTableCenter extends JPanel {
     g.fillRoundRect(5, 490, 395, 185, 20, 20);
 
     drawFacotry(g);
-
     drawTilesFactory(g);
     drawTableCenter(g);
 
@@ -189,7 +188,6 @@ public class DrawboardTableCenter extends JPanel {
       g.fillRect(positionTilesTableCenter.get(0).getX(), positionTilesTableCenter.get(0).getY(), widthOfCell, hightOfCell);
       for(int i = 1; i < tileList.size(); i++){
         de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tileList.get(i)).getColor();
-
         if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)){
           g.setColor(Color.yellow);
         }

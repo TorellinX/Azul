@@ -116,6 +116,7 @@ public class DrawboardTableCenter extends JPanel {
     g.setColor(tableColor);
     g.fillRoundRect(5, 490, 395, 185, 20, 20);
 
+    updateTable();
     drawFacotry(g);
     drawTilesFactory(g);
     drawTableCenter(g);
@@ -186,27 +187,27 @@ public class DrawboardTableCenter extends JPanel {
     if(tileList.get(0) instanceof PenaltyTile){
       g.setColor(Color.gray);
       g.fillRect(positionTilesTableCenter.get(0).getX(), positionTilesTableCenter.get(0).getY(), widthOfCell, hightOfCell);
-      for(int i = 1; i < tileList.size(); i++){
-        de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tileList.get(i)).getColor();
-        if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)){
-          g.setColor(Color.yellow);
-        }
-        if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
-          g.setColor(Color.black);
-        }
-        if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)){
-          g.setColor(Color.green);
-        }
-        if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)){
-          g.setColor(Color.blue);
-        }
-        if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.RED)){
-          g.setColor(Color.red);
-        }
-        g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getX(), widthOfCell, hightOfCell);
-        System.out.println("Table Center Drawn");
-
+    }
+    for(int i = 1; i < tileList.size(); i++){
+      de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tileList.get(i)).getColor();
+      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)){
+        g.setColor(Color.yellow);
       }
+      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
+        g.setColor(Color.black);
+      }
+      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)){
+        g.setColor(Color.green);
+      }
+      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)){
+        g.setColor(Color.blue);
+      }
+      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.RED)){
+        g.setColor(Color.red);
+      }
+      g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getX(), widthOfCell, hightOfCell);
+      System.out.println("Table Center Drawn");
+
     }
 
   }
@@ -255,5 +256,9 @@ public class DrawboardTableCenter extends JPanel {
       }
     }
     return fac;
+  }
+
+  private void updateTable(){
+    this.tileList = tableCenter.getTiles();
   }
 }

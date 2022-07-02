@@ -188,9 +188,9 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     drawboardPlayerBoardLeft.add(floorlineu1button);
 
     for(int i = 0; i < buttonsFirstPlayer.size(); i++){
-      buttonsFirstPlayer.get(i).setOpaque(false);
-      buttonsFirstPlayer.get(i).setContentAreaFilled(false);
-      buttonsFirstPlayer.get(i).setBorderPainted(false);
+      buttonsFirstPlayer.get(i).setOpaque(true);
+      buttonsFirstPlayer.get(i).setContentAreaFilled(true);
+      buttonsFirstPlayer.get(i).setBorderPainted(true);
     }
   }
 
@@ -232,9 +232,9 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     drawboardPlayerBoardRight.add(floorlineu2button);
 
     for(int i = 0; i < buttonsSecondPlayer.size(); i++){
-      buttonsSecondPlayer.get(i).setOpaque(false);
-      buttonsSecondPlayer.get(i).setContentAreaFilled(false);
-      buttonsSecondPlayer.get(i).setBorderPainted(false);
+      buttonsSecondPlayer.get(i).setOpaque(true);
+      buttonsSecondPlayer.get(i).setContentAreaFilled(true);
+      buttonsSecondPlayer.get(i).setBorderPainted(true);
     }
   }
 
@@ -259,6 +259,8 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
 
     JButton floorlineu3button = new JButton();
     floorlineu3button.setBounds(5, 505, 245, 35);
+
+
 
     buttonsThridPlayer = new ArrayList<>();
     buttonsThridPlayer.add(firstrowu3button);
@@ -322,9 +324,9 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     drawboardPlayerBoardRight.add(floorlineu4button);
 
     for(int i = 0; i < buttonsFourthPlayer.size(); i++){
-      buttonsFourthPlayer.get(i).setOpaque(false);
-      buttonsFourthPlayer.get(i).setContentAreaFilled(false);
-      buttonsFourthPlayer.get(i).setBorderPainted(false);
+      buttonsFourthPlayer.get(i).setOpaque(true);
+      buttonsFourthPlayer.get(i).setContentAreaFilled(true);
+      buttonsFourthPlayer.get(i).setBorderPainted(true);
     }
   }
 
@@ -399,7 +401,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFirstPlayer.get(0).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(0);
+        System.out.println("P1" + 0);
         controller.placeTiles(player.get(0), 0);
       }
     });
@@ -407,7 +409,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFirstPlayer.get(1).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(1);
+        System.out.println("P1" + 1);
         controller.placeTiles(player.get(0), 1);
       }
     });
@@ -415,7 +417,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFirstPlayer.get(2).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(2);
+        System.out.println("P1" + 2);
         controller.placeTiles(player.get(0), 2);
       }
     });
@@ -423,7 +425,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFirstPlayer.get(3).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(3);
+        System.out.println("P1" + 3);
         controller.placeTiles(player.get(0), 3);
       }
     });
@@ -431,7 +433,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFirstPlayer.get(4).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(4);
+        System.out.println("P1" + 4);
         controller.placeTiles(player.get(0), 4);
       }
     });
@@ -456,7 +458,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsSecondPlayer.get(0).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(0);
+        System.out.println("P2" + 0);
         controller.placeTiles(player.get(1), 0);
       }
     });
@@ -464,7 +466,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsSecondPlayer.get(1).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(1);
+        System.out.println("P2" + 1);
         controller.placeTiles(player.get(1), 1);
       }
     });
@@ -472,7 +474,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsSecondPlayer.get(2).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(2);
+        System.out.println("P2" + 2);
         controller.placeTiles(player.get(1), 2);
       }
     });
@@ -480,7 +482,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsSecondPlayer.get(3).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(3);
+        System.out.println("P2" + 3);
         controller.placeTiles(player.get(1), 3);
       }
     });
@@ -488,7 +490,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsSecondPlayer.get(4).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(4);
+        System.out.println("P2" + 4);
         controller.placeTiles(player.get(1), 4);
       }
     });
@@ -513,7 +515,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsThridPlayer.get(0).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(0);
+        System.out.println("P3" + 0);
         controller.placeTiles(player.get(2), 0);
       }
     });
@@ -521,7 +523,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsThridPlayer.get(1).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(1);
+        System.out.println("P3" + 1);
         controller.placeTiles(player.get(2), 1);
       }
     });
@@ -529,7 +531,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsThridPlayer.get(2).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(2);
+        System.out.println("P3" + 2);
         controller.placeTiles(player.get(2), 2);
       }
     });
@@ -537,7 +539,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsThridPlayer.get(3).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(3);
+        System.out.println("P3" + 3);
         controller.placeTiles(player.get(2), 3);
       }
     });
@@ -545,7 +547,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsThridPlayer.get(4).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(4);
+        System.out.println("P3" + 4);
         controller.placeTiles(player.get(1), 4);
       }
     });
@@ -571,7 +573,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFourthPlayer.get(0).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(0);
+        System.out.println("P3" + 0);
         controller.placeTiles(player.get(3), 0);
       }
     });
@@ -579,7 +581,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFourthPlayer.get(1).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(1);
+        System.out.println("P3" + 1);
         controller.placeTiles(player.get(3), 1);
       }
     });
@@ -587,7 +589,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFourthPlayer.get(2).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(2);
+        System.out.println("P3" + 2);
         controller.placeTiles(player.get(3), 2);
       }
     });
@@ -595,7 +597,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFourthPlayer.get(3).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(3);
+        System.out.println("P3" + 3);
         controller.placeTiles(player.get(3), 3);
       }
     });
@@ -603,7 +605,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     buttonsFourthPlayer.get(4).addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println(4);
+        System.out.println("P3" + 4);
         controller.placeTiles(player.get(3), 4);
       }
     });

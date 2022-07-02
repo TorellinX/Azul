@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.Tile;
@@ -39,12 +41,18 @@ public class PlayingView extends JFrame {
   private List<Player> player;
   private List<Plate> listFactorys;
 
+  private Controller controller;
+  private GameModel model;
+  private int row;
+  private int coutnCach;
 
-  public PlayingView(int playerCount, List<String> nicknames, List<Player> player, List<Plate> tilesFactory) {
+  public PlayingView(int playerCount, List<String> nicknames, List<Player> player, List<Plate> tilesFactory, Controller controller, GameModel model) {
     this.playerCount = playerCount;
     this.nicknames = nicknames;
     this.player = player;
     this.listFactorys = tilesFactory;
+    this.controller = controller;
+    this.model = model;
 
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -96,15 +104,20 @@ public class PlayingView extends JFrame {
     c.add(drawboardPlayerBoardLeft, BorderLayout.WEST);
     c.add(drawboardTableCenter, BorderLayout.CENTER);
 
+    addButtonPlayboard();
     addButtonsPlayerOne();
+    addActionListenerFirstPlayer();
     addButtonPlayerTwo();
+    addActionListenerSecondPlayer();
+    addActionListenerFactory();
     if(player.size()==3){
       addButtonPlayerThree();
+      addActionListenerThridPlayer();
     }
     if(player.size() == 4){
       addButtonPlayerFour();
+      addActionListenerFourthPlayer();
     }
-    addButtonPlayboard();
   }
 
   private void addButtonsPlayerOne(){
@@ -143,8 +156,9 @@ public class PlayingView extends JFrame {
     drawboardPlayerBoardLeft.add(floorlineu1button);
 
     for(int i = 0; i < buttonsFirstPlayer.size(); i++){
-      buttonsFirstPlayer.get(i).setVisible(false);
-      buttonsFirstPlayer.get(i).setEnabled(true);
+      buttonsFirstPlayer.get(i).setOpaque(false);
+      buttonsFirstPlayer.get(i).setContentAreaFilled(false);
+      buttonsFirstPlayer.get(i).setBorderPainted(false);
     }
   }
 
@@ -183,8 +197,9 @@ public class PlayingView extends JFrame {
     drawboardPlayerBoardRight.add(floorlineu2button);
 
     for(int i = 0; i < buttonsSecondPlayer.size(); i++){
-      buttonsSecondPlayer.get(i).setVisible(false);
-      buttonsSecondPlayer.get(i).setEnabled(true);
+      buttonsSecondPlayer.get(i).setOpaque(false);
+      buttonsSecondPlayer.get(i).setContentAreaFilled(false);
+      buttonsSecondPlayer.get(i).setBorderPainted(false);
     }
   }
   private void addButtonPlayerThree(){
@@ -222,8 +237,9 @@ public class PlayingView extends JFrame {
     drawboardPlayerBoardRight.add(floorlineu3button);
 
     for(int i = 0; i < buttonsThridPlayer.size(); i++){
-      buttonsThridPlayer.get(i).setVisible(false);
-      buttonsThridPlayer.get(i).setEnabled(true);
+      buttonsThridPlayer.get(i).setOpaque(false);
+      buttonsThridPlayer.get(i).setContentAreaFilled(false);
+      buttonsThridPlayer.get(i).setBorderPainted(false);
     }
   }
 
@@ -263,8 +279,9 @@ public class PlayingView extends JFrame {
     drawboardPlayerBoardRight.add(floorlineu4button);
 
     for(int i = 0; i < buttonsFourthPlayer.size(); i++){
-      buttonsFourthPlayer.get(i).setVisible(false);
-      buttonsFourthPlayer.get(i).setEnabled(true);
+      buttonsFourthPlayer.get(i).setOpaque(false);
+      buttonsFourthPlayer.get(i).setContentAreaFilled(false);
+      buttonsFourthPlayer.get(i).setBorderPainted(false);
     }
   }
 
@@ -279,8 +296,9 @@ public class PlayingView extends JFrame {
     for(int i = 0; i < positionButtonsFactory.length; i++){
       buttonsFactory.add(new JButton());
       buttonsFactory.get(i).setBounds(positionButtonsFactory[i].getX(), positionButtonsFactory[i].getY(), widthOfButtons, hightOfButtons);
-      buttonsFactory.get(i).setVisible(false);
-      buttonsFactory.get(i).setEnabled(true);
+      buttonsFactory.get(i).setOpaque(false);
+      buttonsFactory.get(i).setContentAreaFilled(false);
+      buttonsFactory.get(i).setBorderPainted(false);
     }
 
     for(int j = 0; j < buttonsFactory.size(); j++){
@@ -301,8 +319,10 @@ public class PlayingView extends JFrame {
     for(int count = 0; count < positionButtonTable.size(); count++){
       buttonsTable.add(new JButton());
       buttonsTable.get(count).setBounds(positionButtonTable.get(count).getX(), positionButtonTable.get(count).getY(), widthOfButtons, hightOfButtons);
-      buttonsTable.get(count).setVisible(false);
-      buttonsTable.get(count).setEnabled(true);
+      buttonsTable.get(count).setOpaque(false);
+      buttonsTable.get(count).setContentAreaFilled(false);
+      buttonsTable.get(count).setBorderPainted(false);
+
     }
 
     for(int m = 0; m < buttonsTable.size(); m++){
@@ -310,9 +330,73 @@ public class PlayingView extends JFrame {
     }
   }
 
-  private void addActionListener(){
+  private void addActionListenerFirstPlayer() {
+    for(int i = 0; i < buttonsFirstPlayer.size(); i++){
+      row = i;
+      buttonsFirstPlayer.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          controller.placeTiles(player.get(0), row);
+        }
+      });
+    }
+  }
 
+  private void addActionListenerSecondPlayer() {
+    for(int i = 0; i < buttonsFirstPlayer.size(); i++){
+      row = i;
+      buttonsSecondPlayer.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          controller.placeTiles(player.get(1), row);
+        }
+      });
+    }
+  }
 
+  private void addActionListenerThridPlayer() {
+    for(int i = 0; i < buttonsThridPlayer.size(); i++){
+      row = i;
+      buttonsThridPlayer.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          controller.placeTiles(player.get(2), row);
+        }
+      });
+    }
+  }
+
+  private void addActionListenerFourthPlayer() {
+    for(int i = 0; i < buttonsFourthPlayer.size(); i++){
+      row = i;
+      buttonsFourthPlayer.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          controller.placeTiles(player.get(3), row);
+        }
+      });
+    }
+  }
+
+  private void addActionListenerFactory(){
+    //controller.placeTiles(model.getPlayers().get(model.getPlayerToMoveIndex()), );
+    for(int i = 0; i < buttonsFactory.size(); i++){
+      coutnCach = i;
+      buttonsFactory.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY());
+
+        controller.pickTilesFromPlate(color, model.getPlayers().get(model.getPlayerToMoveIndex()),
+            model.getPlates().get(drawboardTableCenter.getPlate(buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY())));
+        System.out.println("Test");
+        }
+      });
+    }
+
+  }
+
+  private void addActionListenerTableCenter(){
 
   }
 }

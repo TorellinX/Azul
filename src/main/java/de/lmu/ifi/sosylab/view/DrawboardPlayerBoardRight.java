@@ -1,12 +1,10 @@
 package de.lmu.ifi.sosylab.view;
 
-import de.lmu.ifi.sosylab.model.ColorTile;
-import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.model.PlayerBoard;
-import de.lmu.ifi.sosylab.model.Tile;
+import de.lmu.ifi.sosylab.model.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 
@@ -252,8 +250,15 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
     ColorTile[][] patternLines = playerBoardPlayer2.getPatternLines();
 
-    g.setColor(Color.black);
-    g.drawString(player2.getNickname(), 5, 15);
+
+    if(player2.getState().equals(PlayerState.TO_MOVE)){
+      g.setColor(Color.black);
+      g.drawString(player2.getNickname(), 5, 15);
+    }else {
+      g.setColor(Color.black);
+      g.drawString(player2.getNickname(), 5, 15);
+    }
+
 
 
     //Draw Pattern Line of Player One
@@ -285,6 +290,8 @@ public class DrawboardPlayerBoardRight extends JPanel {
     // Draw Wall of Player One
 
     boolean[][] wall = playerBoardPlayer2.getWall();
+
+
 
     //draw Blue
     IntPair[] blueWall = coordinateWallPlayerTwo.get(1);
@@ -421,8 +428,16 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
     ColorTile[][] patternLines = playerBoardPlayer4.getPatternLines();
 
-    g.setColor(Color.black);
-    g.drawString(player4.getNickname(), 5, 315);
+
+    if(player4.getState().equals(PlayerState.TO_MOVE)){
+      g.setColor(Color.green);
+      g.drawString(player4.getNickname(), 5, 315);
+    }
+    else{
+      g.setColor(Color.black);
+      g.drawString(player4.getNickname(), 5, 315);
+    }
+
 
     //Draw Pattern Line of Player One
 

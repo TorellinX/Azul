@@ -1,12 +1,10 @@
 package de.lmu.ifi.sosylab.view;
 
-import de.lmu.ifi.sosylab.model.ColorTile;
-import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.model.PlayerBoard;
-import de.lmu.ifi.sosylab.model.Tile;
+import de.lmu.ifi.sosylab.model.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Color;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -265,8 +263,14 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     ColorTile[][] patternLines = playerBoardPlayer1.getPatternLines();
 
-    g.setColor(Color.black);
-    g.drawString(player1.getNickname(), 5, 15);
+    if(player1.getState().equals(PlayerState.TO_MOVE)){
+      g.setColor(Color.green);
+      g.drawString(player1.getNickname(), 5, 15);
+    }else{
+      g.setColor(Color.black);
+      g.drawString(player1.getNickname(), 5, 15);
+    }
+
 
     //Draw Pattern Line of Player One
 
@@ -432,12 +436,18 @@ public class DrawboardPlayerBoardLeft extends JPanel {
   private void drawPlayerThree(Graphics g) {
     Player player3 = player.get(2);
 
+    if(player3.getState().equals(PlayerState.TO_MOVE)){
+      g.setColor(Color.green);
+      g.drawString(player3.getNickname(), 5, 315);
+    }else {
+      g.setColor(Color.black);
+      g.drawString(player3.getNickname(), 5, 315);
+    }
+
     PlayerBoard playerBoardPlayer3 = player3.getPlayerBoard();
 
     ColorTile[][] patternLines = playerBoardPlayer3.getPatternLines();
 
-    g.setColor(Color.black);
-    g.drawString(player3.getNickname(), 5, 315);
 
     //Draw Pattern Line of Player One
 

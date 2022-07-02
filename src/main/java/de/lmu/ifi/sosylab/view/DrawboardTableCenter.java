@@ -39,6 +39,7 @@ public class DrawboardTableCenter extends JPanel {
   private List<Tile> tileList;
   private TableCenter tableCenter;
   private List<Plate> listFactorys;
+  private List<ColorTile> tileListColor;
 
 
   /**
@@ -52,6 +53,7 @@ public class DrawboardTableCenter extends JPanel {
     tableCenter = new TableCenter();
     this.tileList = tableCenter.getTiles();
     this.listFactorys = listFactorys;
+    this.tileListColor = tableCenter.getColorTiles();
 
 
   }
@@ -188,7 +190,7 @@ public class DrawboardTableCenter extends JPanel {
       g.setColor(Color.gray);
       g.fillRect(positionTilesTableCenter.get(0).getX(), positionTilesTableCenter.get(0).getY(), widthOfCell, hightOfCell);
     }
-    for(int i = 1; i < tileList.size(); i++){
+    for(int i = 0; i < tileListColor.size(); i++){
       de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tileList.get(i)).getColor();
       if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)){
         g.setColor(Color.yellow);
@@ -259,6 +261,6 @@ public class DrawboardTableCenter extends JPanel {
   }
 
   private void updateTable(){
-    this.tileList = tableCenter.getTiles();
+    this.tileListColor = tableCenter.getColorTiles();
   }
 }

@@ -26,9 +26,6 @@ public class GameController implements Controller {
   }
 
   public boolean startGame(List<String> playerNames) {
-    model.createPlayers(playerNames);
-    model.setState(State.RUNNING);
-  public boolean startGame(List<String> playerNames) {
     if (playerNames.size() > 4 || playerNames.size() < 2){
       return false;
     }

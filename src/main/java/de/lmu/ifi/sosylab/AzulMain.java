@@ -33,7 +33,7 @@ public class AzulMain {
     // TODO: start view.
 
     // testModel(model);
-    testControllerModel(model, controller);
+    //testControllerModel(model, controller);
 
   }
 

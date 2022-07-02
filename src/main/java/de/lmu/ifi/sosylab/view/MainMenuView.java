@@ -5,13 +5,22 @@ import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Color;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
-public class MainMenuView extends JFrame {
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Starts a JFrame which displays the menu items of the game.
+ */
+
+public class MainMenuView extends JFrame{
 
   private int width = 1200;
   private int hight = 700;
@@ -22,7 +31,6 @@ public class MainMenuView extends JFrame {
   private static final String LOCAL_GAME = "localGame";
   private static final String MULTIPLAYER = "multiplayer";
   private static final String PLAYING_VIEW = "playingview";
-
   private JPanel panel;
   //Buttons für  Main Menu
   private JButton hotseat;
@@ -42,13 +50,21 @@ public class MainMenuView extends JFrame {
   private String userNameOnline;
   private int numberOfPlayers = 0;
   private JButton openplayingfield;
-  private GameModel model;
-  private Controller gameController;
+  private final GameModel model;
+  private final Controller controller;
 
 
-
-  public MainMenuView(GameModel model, Controller controller) {
+  /**
+   * Constructor of the class
+   * @param controller Controller
+   * @param model Model
+   */
+  public MainMenuView(Controller controller, GameModel model) {
     super("Azul");
+
+    this.model = requireNonNull(model);
+    this.controller = requireNonNull(controller);
+
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);
@@ -58,22 +74,26 @@ public class MainMenuView extends JFrame {
     creatMainMenuPanel();
     createLocalPlayerAddView();
     createMulitplayerView();
-    openPlayingView();
 
     addListeners();
-    this.model = model;
-    this.gameController = controller;
+
     showMainMenu();
 
   }
 
-
+  /**
+   * Sets the organization of the window.
+   */
   private void initialize() {
     layout = new CardLayout();
     panel = new JPanel(layout);
     setContentPane(panel);
+
   }
 
+  /**
+   * Creates the main menu window.
+   */
   private void creatMainMenuPanel() {
     //Panel mainMenu
     JPanel mainMenu = new JPanel(new BorderLayout());
@@ -98,6 +118,10 @@ public class MainMenuView extends JFrame {
     mainMenu.add(graphic, BorderLayout.NORTH);
     mainMenu.add(buttons, BorderLayout.CENTER);
   }
+
+  /**
+   * Creates the local player menu window.
+   */
 
   private void createLocalPlayerAddView() {
     //Panel LocalGameOverview
@@ -152,6 +176,9 @@ public class MainMenuView extends JFrame {
 
   }
 
+  /**
+   * Creates the Multiplayer menu window.
+   */
   private void createMulitplayerView() {
     //create Multiplayer View Panel
     JPanel multiplayerPanel = new JPanel(new BorderLayout());
@@ -188,39 +215,52 @@ public class MainMenuView extends JFrame {
     multiplayerPanel.add(panelBottomMultiplayer, BorderLayout.SOUTH);
   }
 
-  private void openPlayingView() {
-  }
+  /**
+   * The main menu is displayed.
+   */
 
-
-
-  //Im folgenden werden die Methoden geschrieben, die in die Listeners gefüllt werden.
   private void showMainMenu() {
     layout.show(getContentPane(), MAIN_MENU);
     setVisible(true);
   }
+  /**
+   * The local menu is displayed.
+   */
 
   private void showLocalMode() {
     layout.show(getContentPane(), LOCAL_GAME);
     setVisible(true);
   }
 
+  /**
+   * Clears the Input.
+   */
   private void clearTextInTextfield(){
     nicknameLocal.setText("");
   }
+  /**
+   * The Multiplayer menu is displayed.
+   */
 
   private void showMultiplayer() {
     layout.show(getContentPane(), MULTIPLAYER);
     setVisible(true);
   }
 
+  /**
+   * The Game View is displayed.
+   */
+
   private void showGame() {
     setVisible(false);
-    PlayingView playingviewframe = new PlayingView();
+    PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(), model.getPlayers(), model.getPlates(), controller, model);
   }
 
 
 
-  //In der folgenden Methode werden die Listeners gesetzt.
+  /**
+   * Adds Action Listener to the Buttons.
+   */
   private void addListeners() {
     hotseat.addActionListener(new ActionListener() {
       @Override
@@ -235,10 +275,6 @@ public class MainMenuView extends JFrame {
         showMultiplayer();
       }
     });
-
-    //nicknameLocal.addFocusListener(FocusEvent evt) {
-      //@Override;
-      //public void actionPerformed(FocusEvent evt) {clearTextInTextfield();}
 
     nicknameLocal.addFocusListener(new FocusAdapter() {
       @Override
@@ -256,7 +292,13 @@ public class MainMenuView extends JFrame {
     removePlayer.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        removePlayerLocalGame();
+        // checks if a list element is selected
+        if (localPlayers.getSelectedRow() == -1) {
+          JOptionPane.showMessageDialog(null, "Please select a user to delete");
+        }
+        else {
+          removePlayerLocalGame();
+        }
       }
     });
 
@@ -270,7 +312,12 @@ public class MainMenuView extends JFrame {
     startGame.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        showGame();
+        if (controller.startGame(getNicknames())) {
+          showGame();
+        }
+        else {
+          JOptionPane.showMessageDialog(null, "It was not possible to create a Game, there can only be 2-4 players");
+        }
       }
     });
 
@@ -307,27 +354,36 @@ public class MainMenuView extends JFrame {
     });
   }
 
+
+  /**
+   * Adds a Player to the Local Game.
+   * Displays a Error if more than 4 Player are in the list or Nickname is already in use.
+   */
   private void addPlayerToLocalGame(String nickname) {
-    DefaultTableModel modelOfLoaclPlayer = (DefaultTableModel) localPlayers.getModel();
+    DefaultTableModel modelOfLocalPlayer = (DefaultTableModel) localPlayers.getModel();
     Boolean isUserNameTaken = false;
 
     for (int i = 0; i < numberOfPlayers; i++) {
-      if (nickname.equals((String) modelOfLoaclPlayer.getValueAt(i, 0))) {
-        JOptionPane.showMessageDialog(null, "UserName ist bereits in Benützung");
+      if (nickname.equals((String) modelOfLocalPlayer.getValueAt(i, 0))) {
+        JOptionPane.showMessageDialog(null, "User already in the list");
         isUserNameTaken = true;
       }
     }
     if (numberOfPlayers >= 4) {
-      JOptionPane.showMessageDialog(null, "Maximal 4 Spieler erlaubt");
+      JOptionPane.showMessageDialog(null, "There can't be more than 4 Players in the Game");
       isUserNameTaken = true;
 
     }
 
     if (!isUserNameTaken) {
-      modelOfLoaclPlayer.addRow(new Object[]{nickname});
+      modelOfLocalPlayer.addRow(new Object[]{nickname});
       numberOfPlayers++;
     }
   }
+
+  /**
+   * Removes a player from the local Player Table.
+   */
 
   private void removePlayerLocalGame() {
     int row = localPlayers.getSelectedRow();
@@ -335,5 +391,20 @@ public class MainMenuView extends JFrame {
     DefaultTableModel model = (DefaultTableModel) localPlayers.getModel();
 
     model.removeRow(row);
+  }
+
+  /**
+   * Returns the list of players' nicknames.
+   * @return list of nicknames
+   */
+  public List<String> getNicknames(){
+    ArrayList<String> listOfPlayer = new ArrayList<>();
+    DefaultTableModel localPlayer = (DefaultTableModel) localPlayers.getModel();
+
+    for(int i = 0; i < localPlayer.getRowCount(); i++){
+      listOfPlayer.add((String) localPlayer.getValueAt(i, 0));
+    }
+    System.out.println(listOfPlayer);
+    return listOfPlayer;
   }
 }

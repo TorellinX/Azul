@@ -54,6 +54,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
     if(playerCount == 4){
       drawPlayerFourPlayfield(g, nicknames.get(3));
+      drawPlayerFour(g);
     }
   }
 
@@ -242,14 +243,10 @@ public class DrawboardPlayerBoardRight extends JPanel {
       g.drawRect(coordinateMinusPlayerFour[i].getX(), coordinateMinusPlayerFour[i].getY(), widthOfMinusCell, heightOfMinusCell);
     }
 
-    //Score:
-    g.setColor(scorecolor);
-    g.drawString("Punkte:", 5, 560);
-    g.drawString("123", 50, 560);
   }
 
   private void drawPlayerTwo(Graphics g){
-    Player player2 = player.get(0);
+    Player player2 = player.get(1);
 
     PlayerBoard playerBoardPlayer2 = player2.getPlayerBoard();
 
@@ -288,12 +285,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
     // Draw Wall of Player One
 
     boolean[][] wall = playerBoardPlayer2.getWall();
-
-    for(int i = 0; i < wall.length; i++){
-      for(int j = 0; j < wall[i].length; j++){
-        wall[i][j] = true;
-      }
-    }
 
     //draw Blue
     IntPair[] blueWall = coordinateWallPlayerTwo.get(1);
@@ -424,7 +415,169 @@ public class DrawboardPlayerBoardRight extends JPanel {
   }
 
   private void drawPlayerFour(Graphics g){
+    Player player4 = player.get(3);
 
+    PlayerBoard playerBoardPlayer4 = player4.getPlayerBoard();
+
+    ColorTile[][] patternLines = playerBoardPlayer4.getPatternLines();
+
+    g.setColor(Color.black);
+    g.drawString(player4.getNickname(), 5, 315);
+
+    //Draw Pattern Line of Player One
+
+    for (int i = 1; i < (patternLines.length+1); i++) {
+      for (int j = 0; j < patternLines[(i-1)].length; j++) {
+        if(patternLines[(i-1)][j] != null){
+
+          IntPair[] cache = coordinatePatternLinesPlayerFour.get(i);
+
+          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i][j].getColor();
+          if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
+            g.setColor(Color.black);
+          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
+            g.setColor(Color.blue);
+          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.RED)) {
+            g.setColor(Color.red);
+          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
+            g.setColor(Color.yellow);
+          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)){
+            //Keine Ahnung warum Model White, aber View macht grün draus
+            g.setColor(Color.green);
+          }
+          g.fillRect(cache[j].getX(), cache[j].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+        }
+      }
+    }
+
+    // Draw Wall of Player One
+
+    boolean[][] wall = playerBoardPlayer4.getWall();
+
+
+    //draw Blue
+    IntPair[] blueWall = coordinateWallPlayerFour.get(1);
+    for(int i = 0; i < 5; i++){
+      for(int j = 0; j < 5; j++){
+        if(wall[i][j] == true){
+          g.setColor(Color.blue);
+          g.fillRect(blueWall[i].getX(), blueWall[i].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+        }
+      }
+    }
+    //draw Yellow
+    IntPair[] yellowWall = coordinateWallPlayerFour.get(2);
+    g.setColor(Color.yellow);
+    if(wall[0][1] == true){
+      g.fillRect(yellowWall[0].getX(),yellowWall[0].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[1][2] == true){
+      g.fillRect(yellowWall[1].getX(),yellowWall[1].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[2][3] == true){
+      g.fillRect(yellowWall[2].getX(),yellowWall[2].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[3][4] == true){
+      g.fillRect(yellowWall[3].getX(),yellowWall[3].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[4][0] == true){
+      g.fillRect(yellowWall[4].getX(),yellowWall[4].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+
+
+    //draw Red
+
+    IntPair[] redWall = coordinateWallPlayerFour.get(3);
+    g.setColor(Color.red);
+    if(wall[0][2] == true){
+      g.fillRect(redWall[0].getX(),redWall[0].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[1][3] == true){
+      g.fillRect(redWall[1].getX(),redWall[1].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[2][4] == true){
+      g.fillRect(redWall[2].getX(),redWall[2].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[3][0] == true){
+      g.fillRect(redWall[3].getX(),redWall[3].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[4][1] == true){
+      g.fillRect(redWall[4].getX(),redWall[4].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+
+    //draw Black
+
+    IntPair[] blackWall = coordinateWallPlayerFour.get(4);
+    g.setColor(Color.black);
+    if(wall[0][3] == true){
+      g.fillRect(blackWall[0].getX(),blackWall[0].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[1][4] == true){
+      g.fillRect(blackWall[1].getX(),blackWall[1].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[2][0] == true){
+      g.fillRect(blackWall[2].getX(),blackWall[2].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[3][1] == true){
+      g.fillRect(blackWall[3].getX(),blackWall[3].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[4][2] == true){
+      g.fillRect(blackWall[4].getX(),blackWall[4].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+
+    //draw Green
+    IntPair[] greenWall = coordinateWallPlayerFour.get(5);
+    g.setColor(Color.green);
+    if(wall[0][4] == true){
+      g.fillRect(greenWall[0].getX(),greenWall[0].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[1][0] == true){
+      g.fillRect(greenWall[1].getX(),greenWall[1].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[2][1] == true){
+      g.fillRect(greenWall[2].getX(),greenWall[2].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[3][2] == true){
+      g.fillRect(greenWall[3].getX(),greenWall[3].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+    if(wall[4][3] == true){
+      g.fillRect(greenWall[4].getX(),greenWall[4].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
+    }
+
+    //drawMinuesTiles
+
+    List<Tile> floorLine = playerBoardPlayer4.getFloorLine();
+
+    if(floorLine.size() == 0){
+
+    }else {
+      for(int i = 0; i < floorLine.size(); i++){
+        if(floorLine.get(i).toString() == "(-1)"){
+          g.setColor(Color.gray);
+        }else {
+          if(floorLine.get(i).toString() == "BLUE"){
+            g.setColor(Color.blue);
+          }
+          if(floorLine.get(i).toString() == "YELLOW"){
+            g.setColor(Color.yellow);
+          }
+          if(floorLine.get(i).toString() == "RED"){
+            g.setColor(Color.red);
+          }
+          if(floorLine.get(i).toString() == "BLACK"){
+            g.setColor(Color.black);
+          }
+          if(floorLine.get(i).toString() == "WHITE"){
+            g.setColor(Color.green);
+          }
+        }
+        g.fillRect(coordinateMinusPlayerFour[i].getX(), coordinateMinusPlayerFour[i].getY(), widthOfMinusCell, heightOfMinusCell);
+      }
+    }
+
+    g.setColor(scorecolor);
+    g.drawString("Punkte:", 5, 560);
+    g.drawString(Integer.toString(player4.getScore()), 50, 560);
   }
 
 }

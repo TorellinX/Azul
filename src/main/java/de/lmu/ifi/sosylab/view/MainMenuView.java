@@ -59,7 +59,7 @@ public class MainMenuView extends JFrame{
    * @param controller Controller
    * @param model Model
    */
-  public MainMenuView(Controller controller, GameModel model) {
+  public MainMenuView(GameModel model, Controller controller) {
     super("Azul");
 
     this.model = requireNonNull(model);
@@ -397,7 +397,7 @@ public class MainMenuView extends JFrame{
    * Returns the list of players' nicknames.
    * @return list of nicknames
    */
-  public List<String> getNicknames(){
+  public ArrayList<String> getNicknames(){
     ArrayList<String> listOfPlayer = new ArrayList<>();
     DefaultTableModel localPlayer = (DefaultTableModel) localPlayers.getModel();
 

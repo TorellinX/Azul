@@ -30,6 +30,11 @@ public class AzulMain {
     MainMenuView menuView = new MainMenuView(model, controller);
 
     //controller.setView(menuView);
+    //View view = GameView(model, controller);
+    //controller.setView(view);
+    //model.addPropertyChangeListener(view);
+    controller.start();
+
     // TODO: start view.
 
     // testModel(model);

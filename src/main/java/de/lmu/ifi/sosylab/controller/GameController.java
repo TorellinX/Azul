@@ -20,6 +20,14 @@ public class GameController implements Controller {
     this.model = requireNonNull(model);
   }
 
+  @Override
+  public void start() {
+    //view.showLobby;
+  }
+
+  public boolean startGame(List<String> playerNames) {
+    model.createPlayers(playerNames);
+    model.setState(State.RUNNING);
   public boolean startGame(List<String> playerNames) {
     if (playerNames.size() > 4 || playerNames.size() < 2){
       return false;
@@ -88,6 +96,12 @@ public class GameController implements Controller {
       return false;
     }
   }*/
+
+  @Override
+  public void dispose() {
+    //model.removePropertyChangeListener(view);
+  }
+
 
   public boolean placeTiles(Player player, int row) {
     return model.setTiles(player, row);

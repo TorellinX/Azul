@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface Controller {
 
+  void start();
+
   /**
    * Start the Game with a List of player names.
    *
@@ -40,5 +42,7 @@ public interface Controller {
    */
   boolean placeTiles(Player player, int row);
 
+
+  public void dispose();
 
 }

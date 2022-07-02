@@ -252,7 +252,7 @@ public class MainMenuView extends JFrame {
 
   private void showGame() {
     setVisible(false);
-    PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(), model.getPlayers());
+    PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(), model.getPlayers(), model.getPlates());
   }
 
 

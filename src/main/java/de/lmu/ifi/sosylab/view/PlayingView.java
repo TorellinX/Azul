@@ -1,6 +1,8 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.model.Tile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,12 +37,14 @@ public class PlayingView extends JFrame {
   private int playerCount;
   private List<String> nicknames;
   private List<Player> player;
+  private List<Plate> listFactorys;
 
 
-  public PlayingView(int playerCount, List<String> nicknames, List<Player> player) {
+  public PlayingView(int playerCount, List<String> nicknames, List<Player> player, List<Plate> tilesFactory) {
     this.playerCount = playerCount;
     this.nicknames = nicknames;
     this.player = player;
+    this.listFactorys = tilesFactory;
 
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -71,7 +75,7 @@ public class PlayingView extends JFrame {
     //Zeichenelemente werden übergeben.
     drawboardPlayerBoardLeft = new DrawboardPlayerBoardLeft(playerCount, nicknames, player);
     drawboardPlayerBoardRight = new DrawboardPlayerBoardRight(playerCount, nicknames, player);
-    drawboardTableCenter = new DrawboardTableCenter();
+    drawboardTableCenter = new DrawboardTableCenter(listFactorys);
 
     drawboardPlayerBoardLeft.setLayout(null);
     drawboardPlayerBoardRight.setLayout(null);

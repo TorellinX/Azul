@@ -119,7 +119,7 @@ public class GameModel {
       endRound();
       return true;
     }
-    System.out.println("Active Player: " + getPlayerToMoveIndex());
+    System.out.println("Active Player: " + getPlayerToMoveIndex() + " State: " + playerToMove.getState());
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
     return true;
@@ -127,9 +127,9 @@ public class GameModel {
 
   private void setPlayerToMove(int newPlayerToMoveIndex) {
     playerToMove.setState(PlayerState.READY);
-    playerToMoveIndex = getNextPlayerIndex();
+    playerToMoveIndex = newPlayerToMoveIndex;
     playerToMove = players.get(playerToMoveIndex);
-    playerToMove.setState(PlayerState.READY);
+    playerToMove.setState(PlayerState.TO_MOVE);
   }
 
   private boolean areThereMoreTiles() {

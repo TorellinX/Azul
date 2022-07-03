@@ -37,7 +37,7 @@ public class TableCenter {
    */
   public List<Tile> getTiles() {
     List<Tile> list = new ArrayList<>(colorTiles);
-    penaltyTileOptional.ifPresent(list::add);
+    penaltyTileOptional.ifPresent(penaltyTile -> list.add(0, penaltyTile));
     return list;
   }
 

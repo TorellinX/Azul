@@ -123,25 +123,6 @@ public class GameModel {
     }
   }
 
-  //Object is Plate or TableCenter
-  /*public synchronized void pickTile(Color color, Player player, Object place) {
-    if (roundState != RoundState.WAIT) {
-      System.out.println("pickTile not allowed. State: " + roundState);
-      return;
-    }
-
-    if (place instanceof Plate) {
-      pickTilesFromPlate((Plate) place, color);
-    }
-    if (place instanceof TableCenter) {
-      pickTilesFromTableCenter(color, player);
-    }
-
-    System.out.println("PICK TILE: color: " + color + " who: " + player.getNickname() + " from: "
-        + place.toString());
-    System.out.println("    roundState: " + roundState + " " + selectedTiles + " tiles");
-  }*/
-
   // (patternLines (0-4) or floorLine (-1)
   public synchronized boolean setTiles(Player player, int row) {
     if (roundState != RoundState.PICKED) {

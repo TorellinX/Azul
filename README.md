@@ -28,7 +28,7 @@ maven -> Plugings -> jar -> jar:jar
 
 ## Run the Application 
 
-``java -jar target/DeepThought-1.0.jar``
+``java -jar releases/DeepThought-1.0.jar``
 
 ## Release
 

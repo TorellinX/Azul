@@ -22,18 +22,25 @@ public class GraphicAzul extends JPanel {
   }
 
   private void init() {
-    JLabel label = new JLabel(showImg());
-    azulPanel.add(label);
+    try {
+      JLabel label = new JLabel(showImg());
+      azulPanel.add(label);
+    } catch (NullPointerException e) {
+      JLabel label = new JLabel("Error! Splash picture not found.");
+      azulPanel.add(label);
+    }
   }
 
   private ImageIcon showImg() {
-    BufferedImage img = null;
+    // BufferedImage img = null;
     try {
-      img = ImageIO.read(getClass().getResourceAsStream("/Azul.PNG"));
+      BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/Azul.PNG"));
+      return new ImageIcon(img);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return new ImageIcon(img);
+    // return new ImageIcon(img);
+    return null;
   }
 
 }

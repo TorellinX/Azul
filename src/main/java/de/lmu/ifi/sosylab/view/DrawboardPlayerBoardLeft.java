@@ -15,6 +15,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JPanel;
@@ -57,18 +58,26 @@ public class DrawboardPlayerBoardLeft extends JPanel {
    */
   public DrawboardPlayerBoardLeft(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
-    this.nicknames = nicknames;
-    this.player = player;
+    List<String> immutableNamesList = Collections.unmodifiableList(nicknames);
+    this.nicknames = immutableNamesList;
+    List<Player> immutablePlayerList = Collections.unmodifiableList(player);
+    this.player = immutablePlayerList;
     initializePlayfieldLeft();
     setPreferredSize(new Dimension(400, 700));
     repaint();
 
   }
 
+  // Ungenutzte Methode, wirft Spotbugs Warnung/Fehler. Ggf. nutzbar, schon "immutablized".
+  /*
   public JPanel getPanel() {
-    return drawboardplayerboard;
-  }
 
+    List<JPanel> dummy = new ArrayList<>();
+    dummy.add(drawboardplayerboard);
+    List<JPanel> immutableDummy = Collections.unmodifiableList(dummy);
+    return immutableDummy.get(0);
+  }
+  */
 
   @Override
 
@@ -469,22 +478,22 @@ public class DrawboardPlayerBoardLeft extends JPanel {
       ;
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
-        if (floorLine.get(i).toString() == "(-1)") {
+        if (floorLine.get(i).toString().equals("(-1)")) {
           g.setColor(Color.gray);
         } else {
-          if (floorLine.get(i).toString() == "BLUE") {
+          if (floorLine.get(i).toString().equals("BLUE")) {
             g.setColor(Color.blue);
           }
-          if (floorLine.get(i).toString() == "YELLOW") {
+          if (floorLine.get(i).toString().equals("YELLOW")) {
             g.setColor(Color.yellow);
           }
-          if (floorLine.get(i).toString() == "RED") {
+          if (floorLine.get(i).toString().equals("RED")) {
             g.setColor(Color.red);
           }
-          if (floorLine.get(i).toString() == "BLACK") {
+          if (floorLine.get(i).toString().equals("BLACK")) {
             g.setColor(Color.black);
           }
-          if (floorLine.get(i).toString() == "WHITE") {
+          if (floorLine.get(i).toString().equals("WHITE")) {
             g.setColor(Color.green);
           }
         }
@@ -669,22 +678,22 @@ public class DrawboardPlayerBoardLeft extends JPanel {
       ;
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
-        if (floorLine.get(i).toString() == "(-1)") {
+        if (floorLine.get(i).toString().equals("(-1)")) {
           g.setColor(Color.gray);
         } else {
-          if (floorLine.get(i).toString() == "BLUE") {
+          if (floorLine.get(i).toString().equals("BLUE")) {
             g.setColor(Color.blue);
           }
-          if (floorLine.get(i).toString() == "YELLOW") {
+          if (floorLine.get(i).toString().equals("YELLOW")) {
             g.setColor(Color.yellow);
           }
-          if (floorLine.get(i).toString() == "RED") {
+          if (floorLine.get(i).toString().equals("RED")) {
             g.setColor(Color.red);
           }
-          if (floorLine.get(i).toString() == "BLACK") {
+          if (floorLine.get(i).toString().equals("BLACK")) {
             g.setColor(Color.black);
           }
-          if (floorLine.get(i).toString() == "WHITE") {
+          if (floorLine.get(i).toString().equals("WHITE")) {
             g.setColor(Color.green);
           }
         }

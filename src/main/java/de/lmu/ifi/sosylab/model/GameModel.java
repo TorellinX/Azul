@@ -36,6 +36,7 @@ public class GameModel {
   private final List<ColorTile> bag = Arrays.stream(Color.values())
       .flatMap(color -> IntStream.range(0, TILES_PER_COLOR).mapToObj(i -> new ColorTile(color)))
       .collect(Collectors.toList());
+
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
   private State state;
@@ -665,12 +666,17 @@ public class GameModel {
   }
 
   public TableCenter getTableCenter() {
-    // TODO: make unmutable
-    return tableCenter;
+    ArrayList <TableCenter> list = new ArrayList<TableCenter>();
+    list.add(tableCenter);
+    List<TableCenter> immutableList = Collections.unmodifiableList(list);
+    return immutableList.get(0);
   }
 
   public RoundState getRoundState() {
-    return roundState;
+    ArrayList <RoundState> list = new ArrayList<RoundState>();
+    list.add(roundState);
+    List<RoundState> immutableList = Collections.unmodifiableList(list);
+    return immutableList.get(0);
   }
 
   public int getRound() {

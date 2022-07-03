@@ -355,14 +355,26 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     //draw Blue
     IntPair[] blueWall = coordinateWallPlayerOne.get(1);
-    for (int i = 0; i < 5; i++) {
-      for (int j = 0; j < 5; j++) {
-        if (wall[i][j] == true) {
-          g.setColor(Color.blue);
-          g.fillRect(blueWall[i].getX(), blueWall[i].getY(), widthOfPatternLineCell,
-              heightOfPatternLineCell);
-        }
-      }
+    g.setColor(Color.yellow);
+    if (wall[0][1]) {
+      g.fillRect(blueWall[0].getX(), blueWall[0].getY(), widthOfPatternLineCell,
+          heightOfPatternLineCell);
+    }
+    if (wall[1][2]) {
+      g.fillRect(blueWall[1].getX(), blueWall[1].getY(), widthOfPatternLineCell,
+          heightOfPatternLineCell);
+    }
+    if (wall[2][3]) {
+      g.fillRect(blueWall[2].getX(), blueWall[2].getY(), widthOfPatternLineCell,
+          heightOfPatternLineCell);
+    }
+    if (wall[3][4]) {
+      g.fillRect(blueWall[3].getX(), blueWall[3].getY(), widthOfPatternLineCell,
+          heightOfPatternLineCell);
+    }
+    if (wall[4][0]) {
+      g.fillRect(blueWall[4].getX(), blueWall[4].getY(), widthOfPatternLineCell,
+          heightOfPatternLineCell);
     }
     //draw Yellow
     IntPair[] yellowWall = coordinateWallPlayerOne.get(2);

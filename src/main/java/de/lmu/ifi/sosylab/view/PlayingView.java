@@ -713,7 +713,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
         }
       });
     }
-
   }
 
   /**

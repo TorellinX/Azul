@@ -188,6 +188,7 @@ public class DrawboardTableCenter extends JPanel {
           g.setColor(Color.red);
         }
         g.fillRect(cach[j].getX(), cach[j].getY(), widthOfCell, hightOfCell);
+
       }
 
     }

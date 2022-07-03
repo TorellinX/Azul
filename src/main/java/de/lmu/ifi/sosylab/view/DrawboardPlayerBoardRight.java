@@ -298,7 +298,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
 
     if (player2.getState().equals(PlayerState.TO_MOVE)) {
-      g.setColor(Color.black);
+      g.setColor(Color.green);
       g.drawString(player2.getNickname(), 5, 15);
     } else {
       g.setColor(Color.black);
@@ -460,22 +460,22 @@ public class DrawboardPlayerBoardRight extends JPanel {
       ;
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
-        if (floorLine.get(i).toString() == "(-1)") {
+        if (floorLine.get(i).toString().equals("(-1)")) {
           g.setColor(Color.gray);
         } else {
-          if (floorLine.get(i).toString() == "BLUE") {
+          if (floorLine.get(i).toString().equals("BLUE")) {
             g.setColor(Color.blue);
           }
-          if (floorLine.get(i).toString() == "YELLOW") {
+          if (floorLine.get(i).toString().equals("YELLOW")) {
             g.setColor(Color.yellow);
           }
-          if (floorLine.get(i).toString() == "RED") {
+          if (floorLine.get(i).toString().equals("RED")) {
             g.setColor(Color.red);
           }
-          if (floorLine.get(i).toString() == "BLACK") {
+          if (floorLine.get(i).toString().equals("BLACK")) {
             g.setColor(Color.black);
           }
-          if (floorLine.get(i).toString() == "WHITE") {
+          if (floorLine.get(i).toString().equals("WHITE")) {
             g.setColor(Color.green);
           }
         }
@@ -657,22 +657,22 @@ public class DrawboardPlayerBoardRight extends JPanel {
       ;
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
-        if (floorLine.get(i).toString() == "(-1)") {
+        if (floorLine.get(i).toString().equals("(-1)")) {
           g.setColor(Color.gray);
         } else {
-          if (floorLine.get(i).toString() == "BLUE") {
+          if (floorLine.get(i).toString().equals("BLUE")) {
             g.setColor(Color.blue);
           }
-          if (floorLine.get(i).toString() == "YELLOW") {
+          if (floorLine.get(i).toString().equals("YELLOW")) {
             g.setColor(Color.yellow);
           }
-          if (floorLine.get(i).toString() == "RED") {
+          if (floorLine.get(i).toString().equals("RED")) {
             g.setColor(Color.red);
           }
-          if (floorLine.get(i).toString() == "BLACK") {
+          if (floorLine.get(i).toString().equals("BLACK")) {
             g.setColor(Color.black);
           }
-          if (floorLine.get(i).toString() == "WHITE") {
+          if (floorLine.get(i).toString().equals("WHITE")) {
             g.setColor(Color.green);
           }
         }

@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.Collections;
 import java.io.Serial;
 import java.util.HashMap;
 import java.util.List;
@@ -36,25 +37,18 @@ public class DrawboardPlayerBoardLeft extends JPanel {
   private final int heightOfMinusCell = 35;
   private final int widthOfMinusCell = 35;
 
-  private final HashMap<Integer, IntPair[]> coordinatePatternLinesPlayerOne = new HashMap<>();
-  private final HashMap<Integer, IntPair[]> coordinateWallPlayerOne = new HashMap<>();
+  private HashMap<Integer, IntPair[]> coordinatePatternLinesPlayerOne = new HashMap<>();
+  private HashMap<Integer, IntPair[]> coordinateWallPlayerOne = new HashMap<>();
   private IntPair[] coordinateMinusPlayerOne;
 
-  private final HashMap<Integer, IntPair[]> coordinatePatternLinesPlayerThree = new HashMap<>();
-  private final HashMap<Integer, IntPair[]> coordinateWallPlayerThree = new HashMap<>();
+  private HashMap<Integer, IntPair[]> coordinatePatternLinesPlayerThree = new HashMap<>();
+  private HashMap<Integer, IntPair[]> coordinateWallPlayerThree = new HashMap<>();
   private IntPair[] coordinateMinusPlayerThree;
-  private final int playerCount;
+  private int playerCount;
   private List<String> nicknames;
   private List<Player> player;
   private final String TEXT_POINTS = "Points: ";
 
-  /**
-   * Constructor of the panel.
-   *
-   * @param playerCount Number of Player
-   * @param nicknames   Nickames of Player
-   * @param player      Player
-   */
 
   public DrawboardPlayerBoardLeft(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
@@ -219,7 +213,6 @@ public class DrawboardPlayerBoardLeft extends JPanel {
       if (count == 4) {
         g.setColor(Color.green);
       }
-
     }
     g.setColor(Color.black);
 
@@ -248,13 +241,11 @@ public class DrawboardPlayerBoardLeft extends JPanel {
   private void drawPlayerThreePlayfield(Graphics g) {
     //Rechtecke der Patternlines werden gezeichnet.
     ((Graphics2D) g).setStroke(new BasicStroke(1));
-    g.setColor(Color.black);
 
     for (int count = 1; count <= 5; count++) {
       IntPair[] speicher = coordinatePatternLinesPlayerThree.get(count);
       for (int i = 0; i < speicher.length; i++) {
-        g.drawRect(speicher[i].getX(), speicher[i].getY(), widthOfPatternLineCell,
-            heightOfPatternLineCell);
+        g.drawRect(speicher[i].getX(), speicher[i].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
       }
     }
 
@@ -355,7 +346,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     //draw Blue
     IntPair[] blueWall = coordinateWallPlayerOne.get(1);
-    g.setColor(Color.yellow);
+    g.setColor(Color.blue);
     if (wall[0][1]) {
       g.fillRect(blueWall[0].getX(), blueWall[0].getY(), widthOfPatternLineCell,
           heightOfPatternLineCell);
@@ -542,8 +533,8 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
           IntPair[] cache = coordinatePatternLinesPlayerThree.get(i);
 
-          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i - 1][j].getColor();
-          if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)) {
+          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i][j].getColor();
+          if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
             g.setColor(Color.black);
           } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
             g.setColor(Color.blue);
@@ -679,25 +670,25 @@ public class DrawboardPlayerBoardLeft extends JPanel {
     List<Tile> floorLine = playerBoardPlayer3.getFloorLine();
 
     if (floorLine.size() == 0) {
-
+      ;
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
-        if (floorLine.get(i).toString() == "(-1)") {
+        if (floorLine.get(i).toString().equals("(-1)")) {
           g.setColor(Color.gray);
         } else {
-          if (floorLine.get(i).toString() == "BLUE") {
+          if (floorLine.get(i).toString().equals("BLUE")) {
             g.setColor(Color.blue);
           }
-          if (floorLine.get(i).toString() == "YELLOW") {
+          if (floorLine.get(i).toString().equals("YELLOW")) {
             g.setColor(Color.yellow);
           }
-          if (floorLine.get(i).toString() == "RED") {
+          if (floorLine.get(i).toString().equals("RED")) {
             g.setColor(Color.red);
           }
-          if (floorLine.get(i).toString() == "BLACK") {
+          if (floorLine.get(i).toString().equals("BLACK")) {
             g.setColor(Color.black);
           }
-          if (floorLine.get(i).toString() == "WHITE") {
+          if (floorLine.get(i).toString().equals("WHITE")) {
             g.setColor(Color.green);
           }
         }

@@ -13,10 +13,7 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JPanel;
-
-/**
- * Right Panel of the Game. In which players two and four are drawn.
- */
+import javax.swing.JPanel;
 
 public class DrawboardPlayerBoardRight extends JPanel {
 
@@ -82,11 +79,15 @@ public class DrawboardPlayerBoardRight extends JPanel {
     }
   }
 
+  public void repaintRightBoard() {
+    repaint();
+  }
+
   /**
    * Sets the coordinates for the individual objecte.
    */
   private void initializePlayfieldRight() {
-    //Pattern Lines of Player Two
+
 
     IntPair[] firstPatternLinePlayerTwo = {new IntPair(145, 5)};
     IntPair[] secondPatternLinePlayerTwo = {new IntPair(110, 40), new IntPair(145, 40)};
@@ -265,7 +266,8 @@ public class DrawboardPlayerBoardRight extends JPanel {
     for (int count = 1; count <= 5; count++) {
       IntPair[] zwischenspeicher = coordinateWallPlayerFour.get(count);
       for (int i = 0; i < zwischenspeicher.length; i++) {
-        g.drawRect(zwischenspeicher[i].getX(), zwischenspeicher[i].getY(), widthOfPlayFieldCell,
+        g.drawRect(zwischenspeicher[i].getX(), zwischenspeicher[i].getY(),
+            widthOfPlayFieldCell,
             heightOfPlayFieldCell);
       }
       if (count == 1) {
@@ -344,7 +346,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
           }
           g.fillRect(cache[j].getX(), cache[j].getY(), widthOfPatternLineCell,
               heightOfPatternLineCell);
-
         }
       }
     }
@@ -467,25 +468,25 @@ public class DrawboardPlayerBoardRight extends JPanel {
     List<Tile> floorLine = playerBoardPlayer2.getFloorLine();
 
     if (floorLine.size() == 0) {
-
+      ;
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
-        if (floorLine.get(i).toString() == "(-1)") {
+        if (floorLine.get(i).toString().equals("(-1)")) {
           g.setColor(Color.gray);
         } else {
-          if (floorLine.get(i).toString() == "BLUE") {
+          if (floorLine.get(i).toString().equals("BLUE")) {
             g.setColor(Color.blue);
           }
-          if (floorLine.get(i).toString() == "YELLOW") {
+          if (floorLine.get(i).toString().equals("YELLOW")) {
             g.setColor(Color.yellow);
           }
-          if (floorLine.get(i).toString() == "RED") {
+          if (floorLine.get(i).toString().equals("RED")) {
             g.setColor(Color.red);
           }
-          if (floorLine.get(i).toString() == "BLACK") {
+          if (floorLine.get(i).toString().equals("BLACK")) {
             g.setColor(Color.black);
           }
-          if (floorLine.get(i).toString() == "WHITE") {
+          if (floorLine.get(i).toString().equals("WHITE")) {
             g.setColor(Color.green);
           }
         }
@@ -666,25 +667,25 @@ public class DrawboardPlayerBoardRight extends JPanel {
     List<Tile> floorLine = playerBoardPlayer4.getFloorLine();
 
     if (floorLine.size() == 0) {
-
+      ;
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
-        if (floorLine.get(i).toString() == "(-1)") {
+        if (floorLine.get(i).toString().equals("(-1)")) {
           g.setColor(Color.gray);
         } else {
-          if (floorLine.get(i).toString() == "BLUE") {
+          if (floorLine.get(i).toString().equals("BLUE")) {
             g.setColor(Color.blue);
           }
-          if (floorLine.get(i).toString() == "YELLOW") {
+          if (floorLine.get(i).toString().equals("YELLOW")) {
             g.setColor(Color.yellow);
           }
-          if (floorLine.get(i).toString() == "RED") {
+          if (floorLine.get(i).toString().equals("RED")) {
             g.setColor(Color.red);
           }
-          if (floorLine.get(i).toString() == "BLACK") {
+          if (floorLine.get(i).toString().equals("BLACK")) {
             g.setColor(Color.black);
           }
-          if (floorLine.get(i).toString() == "WHITE") {
+          if (floorLine.get(i).toString().equals("WHITE")) {
             g.setColor(Color.green);
           }
         }

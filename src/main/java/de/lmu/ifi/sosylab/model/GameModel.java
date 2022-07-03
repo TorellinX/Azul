@@ -348,7 +348,6 @@ public class GameModel {
     }
     player.playerBoard.addColorTilesToLine(selectedTiles, row);
     selectedTiles.clear();
-    notifyListeners(MODEL_CHANGED);
     return true;
   }
 
@@ -415,7 +414,6 @@ public class GameModel {
     tiles.remove(tiles.size() - 1); // one tile remains on the wall
     box.addAll(tiles);
     Arrays.fill(playerBoard.patternLines[row], null);
-    notifyListeners(MODEL_CHANGED);
   }
 
   /**

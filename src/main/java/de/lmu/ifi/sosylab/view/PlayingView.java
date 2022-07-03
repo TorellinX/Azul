@@ -22,15 +22,13 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
- * Displays the playing field.
+ * Graphic display of the playing view.
  */
-
 public class PlayingView extends JFrame implements PropertyChangeListener {
 
   @Serial
   private static final long serialVersionUID = 1L;
-
-  private JPanel menu;
+private JPanel menu;
   JComboBox<String> menuItems = new JComboBox<String>(
       new String[]{"- menu -", "restart", "leave", "end game"});
   private DrawboardPlayerBoardLeft drawboardPlayerBoardLeft;
@@ -57,12 +55,12 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private GameModel model;
 
   /**
-   * Constructor of Class.
+   * Initializes the playing view.
    *
-   * @param playerCount Number of Players
-   * @param nicknames   Nicknames of Player
-   * @param controller  controller
-   * @param model       model
+   * @param playerCount number of players
+   * @param nicknames list of nicknames of players
+   * @param controller controller instance
+   * @param model model instance
    */
   public PlayingView(int playerCount, List<String> nicknames, Controller controller,
       GameModel model) {
@@ -157,7 +155,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     c.add(drawboardPlayerBoardLeft, BorderLayout.WEST);
     c.add(drawboardTableCenter, BorderLayout.CENTER);
 
-
   }
 
   /**
@@ -249,10 +246,9 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     }
   }
 
-  /**
+/**
    * Adds the buttons of player three.
-   */
-  private void addButtonPlayerThree() {
+   */  private void addButtonPlayerThree() {
     JButton firstrowu3button = new JButton();
     firstrowu3button.setBounds(145, 305, 35, 35);
 
@@ -344,15 +340,23 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private void addButtonPlayboard() {
 
     positionButtonsFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17),
-        new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17), new IntPair(208, 17),
+        new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17),
+        new IntPair(208, 17),
         new IntPair(167, 58), new IntPair(208, 58),
-        new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58), new IntPair(358, 58),
-        new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158), new IntPair(133, 158),
-        new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158), new IntPair(283, 158),
-        new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283), new IntPair(133, 283),
-        new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283), new IntPair(283, 283),
-        new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408), new IntPair(133, 408),
-        new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408), new IntPair(283, 408)};
+        new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58),
+        new IntPair(358, 58),
+        new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158),
+        new IntPair(133, 158),
+        new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158),
+        new IntPair(283, 158),
+        new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283),
+        new IntPair(133, 283),
+        new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283),
+        new IntPair(283, 283),
+        new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408),
+        new IntPair(133, 408),
+        new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408),
+        new IntPair(283, 408)};
 
     buttonsFactory = new ArrayList<>();
     for (int i = 0; i < positionButtonsFactory.length; i++) {
@@ -402,7 +406,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   private void addActionListenerFirstPlayer() {
     /*
-    for(int i = 0; i < buttonsFirstPlayer.size(); i++){
+    for (int i = 0; i < buttonsFirstPlayer.size(); i++) {
       row = i;
       buttonsFirstPlayer.get(i).setName(Integer.toString(row));
       buttonsFirstPlayer.get(i).addActionListener(new ActionListener() {
@@ -471,7 +475,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    */
   private void addActionListenerSecondPlayer() {
     /*
-    for(int i = 0; i < buttonsFirstPlayer.size(); i++){
+    for (int i = 0; i < buttonsFirstPlayer.size(); i++) {
       row = i;
       buttonsSecondPlayer.get(i).addActionListener(new ActionListener() {
         @Override
@@ -536,7 +540,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    */
   private void addActionListenerThridPlayer() {
     /*
-    for(int i = 0; i < buttonsThridPlayer.size(); i++){
+    for (int i = 0; i < buttonsThridPlayer.size(); i++) {
       row = i;
       buttonsThridPlayer.get(i).addActionListener(new ActionListener() {
         @Override
@@ -602,7 +606,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   private void addActionListenerFourthPlayer() {
     /*
-    for(int i = 0; i < buttonsFourthPlayer.size(); i++){
+    for (int i = 0; i < buttonsFourthPlayer.size(); i++) {
       row = i;
       buttonsFourthPlayer.get(i).addActionListener(new ActionListener() {
         @Override
@@ -667,13 +671,17 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    */
   private void addActionListenerFactory() {
     /*
-    for(int i = 0; i < buttonsFactory.size(); i++){
+    for (int i = 0; i < buttonsFactory.size(); i++) {
       coutnCach = i;
       row = i;
       buttonsFactory.get(i).addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-        de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY());
+          de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(
+              buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY());
+          System.out.println("ActionEvent from buttonsFactory #" + coutnCach + " X:"
+              + buttonsFactory.get(coutnCach).getX() + " Y:" + buttonsFactory.get(coutnCach).getY()
+              + ", color " + color);
           System.out.println(buttonsFactory.indexOf(buttonsFactory.get(row)) + " " +buttonsFactory.get(row).getX() + " " + buttonsFactory.get(row).getY());
         if(controller.pickTilesFromPlate(color, model.getPlayers().get(model.getPlayerToMoveIndex()),
               model.getPlates().get(drawboardTableCenter.getPlate(buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY())))){
@@ -682,7 +690,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
           System.out.println("N");
         }
 
-        System.out.println("Test");
+
+          System.out.println("ActionEvent from buttonsFactory #");
         }
       });
     }
@@ -717,14 +726,19 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   /**
    * Adds ActionListeners for Table Center buttons.
-   */
-  private void addActionListenerTableCenter() {
-    for (int i = 0; i < buttonsTable.size(); i++) {
+   */private void addActionListenerTableCenter() {
+for (int i = 0; i < buttonsTable.size(); i++) {
       final int final_i = i;
       buttonsTable.get(i).addActionListener(new ActionListener() {
         @Override
-        public void actionPerformed(ActionEvent e) {
-          System.out.println(
+        /**
+   * Listener for a property change notice from model.
+   *
+   * @param event A PropertyChangeEvent object describing the event source
+   *          and the property that has changed.
+   */
+  public void actionPerformed(ActionEvent e) {
+    System.out.println(
               buttonsTable.indexOf(buttonsTable.get(final_i)) + " " + buttonsTable.get(final_i)
                   .getX() + " " + buttonsTable.get(final_i).getY());
 

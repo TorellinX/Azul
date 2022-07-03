@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 /**
  * Center Panel of the Game. Shows the panels and the center of the table.
  */
-
 public class DrawboardTableCenter extends JPanel {
 
   private int hightOfCell = 35;
@@ -45,13 +44,11 @@ public class DrawboardTableCenter extends JPanel {
   private List<Plate> listFactorys;
   private GameModel model;
 
-
   /**
-   * Constructor of the class.
+   * Initializes the table center.
    *
-   * @param model
+   * @param model game model instance
    */
-
   public DrawboardTableCenter(GameModel model) {
     setPreferredSize(new Dimension(400, 600));
     initialize();
@@ -63,23 +60,28 @@ public class DrawboardTableCenter extends JPanel {
   /**
    * Sets the coordinates for the individual objects.
    */
-
   private void initialize() {
-    firstFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17), new IntPair(17, 58),
+    firstFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17),
+        new IntPair(17, 58),
         new IntPair(58, 58)};
-    secondFactory = new IntPair[]{new IntPair(167, 17), new IntPair(208, 17), new IntPair(167, 58),
+    secondFactory = new IntPair[]{new IntPair(167, 17), new IntPair(208, 17),
+        new IntPair(167, 58),
         new IntPair(208, 58)};
-    thirdFactory = new IntPair[]{new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58),
+    thirdFactory = new IntPair[]{new IntPair(317, 17), new IntPair(358, 17),
+        new IntPair(317, 58),
         new IntPair(358, 58)};
-    fourthFactory = new IntPair[]{new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158),
+    fourthFactory = new IntPair[]{new IntPair(92, 117), new IntPair(133, 117),
+        new IntPair(92, 158),
         new IntPair(133, 158)};
     fifthFactory = new IntPair[]{new IntPair(242, 117), new IntPair(283, 117),
         new IntPair(242, 158), new IntPair(283, 158)};
-    sixthFactory = new IntPair[]{new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283),
+    sixthFactory = new IntPair[]{new IntPair(92, 242), new IntPair(133, 242),
+        new IntPair(92, 283),
         new IntPair(133, 283)};
     seventhFactory = new IntPair[]{new IntPair(242, 242), new IntPair(283, 242),
         new IntPair(242, 283), new IntPair(283, 283)};
-    eighthFactory = new IntPair[]{new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408),
+    eighthFactory = new IntPair[]{new IntPair(92, 367), new IntPair(133, 367),
+        new IntPair(92, 408),
         new IntPair(133, 408)};
     ninthFactory = new IntPair[]{new IntPair(242, 367), new IntPair(283, 367),
         new IntPair(242, 408), new IntPair(283, 408)};
@@ -163,6 +165,12 @@ public class DrawboardTableCenter extends JPanel {
    */
 
   private void drawTilesFactory(Graphics g) {
+    // System.out.print("drawTilesFactory");
+    // System.out.print("Plates: ");
+    // for (Plate plate : listFactorys) {
+    //   System.out.print(plate.getTiles() + ", ");
+    // }
+    // System.out.println();
 
     for (int i = 0; i < listFactorys.size(); i++) {
       Plate plate = listFactorys.get(i);
@@ -201,6 +209,7 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param g
    */
+
 
   private void drawTableCenter(Graphics g) {
     List<Tile> tileList = model.getTableCenter().getTiles();
@@ -251,6 +260,13 @@ public class DrawboardTableCenter extends JPanel {
    * @return Color of Tile
    */
 
+  /**
+   * Getter for the color of a tile on a plate addresed by table center related coordinates.
+   *
+   * @param x x- coordinate
+   * @param y y - coordinate
+   * @return color of the addressed tile
+   */
   public de.lmu.ifi.sosylab.model.Color getColorOfTileOnPlate(int x, int y) {
     de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
     for (int count = 1; count < listFactorys.size(); count++) {
@@ -268,6 +284,14 @@ public class DrawboardTableCenter extends JPanel {
 
   }
 
+  /**
+   * Get the count number for a particular plate in table center addressed by table center
+   * related coordinates.
+   *
+   * @param x x-coordinate
+   * @param y y-coordinate
+   * @return number of the plate
+   */
   public de.lmu.ifi.sosylab.model.Color getColorOfTileTableCenter(int x, int y) {
     de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
 

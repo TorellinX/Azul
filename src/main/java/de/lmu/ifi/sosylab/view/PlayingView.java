@@ -25,7 +25,10 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   @Serial
   private static final long serialVersionUID = 1L;
-  
+
+  private JPanel menu;
+  JComboBox<String> menuItems = new JComboBox<String>(
+      new String[]{"- menu -", "restart", "leave", "end game"});
   private DrawboardPlayerBoardLeft drawboardPlayerBoardLeft;
   private DrawboardPlayerBoardRight drawboardPlayerBoardRight;
   private DrawboardTableCenter drawboardTableCenter;
@@ -73,6 +76,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     createPlayingView();
 
     startGame();
+    addListeners();
 
     for (Player player : model.getPlayers()) {
       if (player.getState() == PlayerState.TO_MOVE) {
@@ -99,13 +103,12 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private void createPlayingView() {
     Color backroundColor = new Color(135, 206, 250);
     //Oberes Panel wird mit Combobox gefüllt.
-    JPanel panelUp = new JPanel();
-    panelUp.setSize(1200, 75);
-    panelUp.setLayout(new FlowLayout());
-    JComboBox<String> menu = new JComboBox<String>(
-        new String[]{"- menu -", "restart", "leave", "end game"});
-    panelUp.add(menu);
-    panelUp.setBackground(backroundColor);
+    menu = new JPanel();
+    menu.setSize(1200, 75);
+    menu.setLayout(new FlowLayout());
+
+    menu.add(menuItems);
+    menu.setBackground(backroundColor);
 
     //Zeichenelemente werden übergeben.
     drawboardPlayerBoardLeft = new DrawboardPlayerBoardLeft(playerCount, nicknames, player);
@@ -144,7 +147,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
     //Teile des Borderlayouts werden mit Panels und Graphikelementen gefüllt.
     Container c = getContentPane();
-    c.add(panelUp, BorderLayout.NORTH);
+    c.add(menu, BorderLayout.NORTH);
     c.add(panelSouth, BorderLayout.SOUTH);
     c.add(drawboardPlayerBoardRight, BorderLayout.EAST);
     c.add(drawboardPlayerBoardLeft, BorderLayout.WEST);
@@ -723,6 +726,20 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   }
 
+  private void addListeners() {
+    menuItems.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if(menuItems.getSelectedItem().equals("end game")) {
+          System.exit(0);
+        }
+        System.out.println(menuItems.getSelectedItem());
+      }
+
+      private void dispose() {
+      }
+    });
+  }
+
   /**
    *Will be informed when the model is updated.
    */
@@ -738,7 +755,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   private void handleModelUpdate(PropertyChangeEvent event){
     if(event.getPropertyName().equals("Model changed")) {
-      System.out.println("model changed");
       repaint();
     }
   }

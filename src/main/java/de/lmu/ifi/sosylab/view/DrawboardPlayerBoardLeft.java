@@ -66,6 +66,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
   }
 
   public JPanel getPanel() {
+
     return drawboardplayerboard;
   }
 

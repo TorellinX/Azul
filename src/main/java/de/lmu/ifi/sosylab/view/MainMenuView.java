@@ -17,6 +17,7 @@ import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -77,7 +78,10 @@ public class MainMenuView extends JFrame implements PropertyChangeListener {
   public MainMenuView(Controller controller, GameModel model) {
     super("Azul");
 
-    this.model = requireNonNull(model);
+    List<GameModel> gameModelList = new ArrayList<>();
+    gameModelList.add(requireNonNull(model));
+    List<GameModel> unmodGML = Collections.unmodifiableList(gameModelList);
+    this.model = unmodGML.get(0);
     this.controller = requireNonNull(controller);
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

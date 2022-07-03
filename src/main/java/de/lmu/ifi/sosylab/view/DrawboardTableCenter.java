@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JPanel;
@@ -52,7 +53,10 @@ public class DrawboardTableCenter extends JPanel {
   public DrawboardTableCenter(GameModel model) {
     setPreferredSize(new Dimension(400, 600));
     initialize();
-    this.model = model;
+    List<GameModel> gameModelList = new ArrayList<>();
+    gameModelList.add(model);
+    List<GameModel> unmodGML = Collections.unmodifiableList(gameModelList);
+    this.model = unmodGML.get(0);
     this.tableCenter = model.getTableCenter();
     this.listFactorys = model.getPlates();
   }

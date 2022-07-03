@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
+import static java.util.Objects.requireNonNull;
+
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
@@ -14,6 +16,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -65,10 +68,14 @@ private JPanel menu;
   public PlayingView(int playerCount, List<String> nicknames, Controller controller,
       GameModel model) {
     this.playerCount = playerCount;
-    this.nicknames = nicknames;
+    List<String> unmodNL = Collections.unmodifiableList(nicknames);
+    this.nicknames = unmodNL;
     this.player = model.getPlayers();
     this.controller = controller;
-    this.model = model;
+    List<GameModel> gameModelList = new ArrayList<>();
+    gameModelList.add(model);
+    List<GameModel> unmodGML = Collections.unmodifiableList(gameModelList);
+    this.model = unmodGML.get(0);
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);

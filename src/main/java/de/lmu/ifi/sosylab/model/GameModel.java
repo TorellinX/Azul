@@ -49,7 +49,10 @@ public class GameModel {
   private int playerToMoveIndex;
 
   public Player getPlayerToMove() {
-    return playerToMove;
+    List<Player> ptmList = new ArrayList<>();
+    ptmList.add(playerToMove);
+    List<Player> unmodPtmList = Collections.unmodifiableList(ptmList);
+    return unmodPtmList.get(0);
   }
 
   private Player playerToMove;
@@ -654,8 +657,10 @@ public class GameModel {
   }
 
   public TableCenter getTableCenter() {
-    // TODO: make unmutable
-    return tableCenter;
+    List<TableCenter> tcList = new ArrayList<>();
+    tcList.add(tableCenter);
+    List<TableCenter> unmodTcList = Collections.unmodifiableList(tcList);
+    return unmodTcList.get(0);
   }
 
   public RoundState getRoundState() {

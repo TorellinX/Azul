@@ -52,8 +52,10 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
   public DrawboardPlayerBoardLeft(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
-    this.nicknames = nicknames;
-    this.player = player;
+    List<String> namesList = Collections.unmodifiableList(nicknames);
+    this.nicknames = namesList;
+    List<Player> playerList = Collections.unmodifiableList(player);
+    this.player = playerList;
     initializePlayfieldLeft();
     setPreferredSize(new Dimension(400, 700));
     // repaint();

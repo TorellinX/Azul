@@ -447,7 +447,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       @Override
       public void actionPerformed(ActionEvent e) {
         System.out.println("P1" + 5);
-        controller.placeTiles(player.get(0), 5);
+        controller.placeTiles(player.get(0), -1);
       }
     });
   }
@@ -512,7 +512,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       @Override
       public void actionPerformed(ActionEvent e) {
         System.out.println("P2" + 5);
-        controller.placeTiles(player.get(1), 5);
+        controller.placeTiles(player.get(1), -1);
       }
     });
   }
@@ -577,7 +577,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       @Override
       public void actionPerformed(ActionEvent e) {
         System.out.println("P3" + 5);
-        controller.placeTiles(player.get(2), 5);
+        controller.placeTiles(player.get(2), -1);
       }
     });
   }
@@ -643,7 +643,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       @Override
       public void actionPerformed(ActionEvent e) {
         System.out.println("P4" + 5);
-        controller.placeTiles(player.get(3), 5);
+        controller.placeTiles(player.get(3), -1);
       }
     });
   }
@@ -708,7 +708,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
         public void actionPerformed(ActionEvent e) {
           System.out.println(buttonsTable.indexOf(buttonsTable.get(final_i)) + " " +buttonsTable.get(final_i).getX() + " " + buttonsTable.get(final_i).getY());
 
-          de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
+          de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileTableCenter(buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
 
           if(controller.pickTilesFromTableCenter(color, model.getPlayers().get(model.getPlayerToMoveIndex()))){
             System.out.println("pickTilesFromTableCenter: Yes");

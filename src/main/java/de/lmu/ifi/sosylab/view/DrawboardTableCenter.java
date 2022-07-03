@@ -216,13 +216,19 @@ public class DrawboardTableCenter extends JPanel {
           g.setColor(Color.red);
         }
 
+        //g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
+            //widthOfCell, hightOfCell);
+      }
+      if(tileList.get(0) instanceof PenaltyTile){
         g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
             widthOfCell, hightOfCell);
+      } else {
+        g.fillRect(positionTilesTableCenter.get(i+1).getX(), positionTilesTableCenter.get(i+1).getY(),
+            widthOfCell, hightOfCell);
       }
-      g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
-          widthOfCell, hightOfCell);
+
     }
-    System.out.println("Table Center Drawn");
+
   }
 
   /**
@@ -235,18 +241,35 @@ public class DrawboardTableCenter extends JPanel {
   public de.lmu.ifi.sosylab.model.Color getColorOfTileOnPlate(int x, int y) {
     de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
     for (int count = 1; count < listFactorys.size(); count++) {
-      IntPair[] cach = mapFactorys.get(count);
+      IntPair[] cache = mapFactorys.get(count);
       Plate plate = listFactorys.get(count - 1);
       List<ColorTile> colorTilesFacotry = plate.getTiles();
 
-      for (int i = 0; i < cach.length; i++) {
-        if (x == cach[i].getX() && y == cach[i].getY()) {
+      for (int i = 0; i < cache.length; i++) {
+        if (x == cache[i].getX() && y == cache[i].getY()) {
           toReturn = colorTilesFacotry.get(i).getColor();
         }
       }
     }
     return toReturn;
 
+  }
+
+  public de.lmu.ifi.sosylab.model.Color getColorOfTileTableCenter(int x, int y){
+    de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
+
+    for(int i = 0; i < positionTilesTableCenter.size(); i++){
+      int x_Cache = positionTilesTableCenter.get(i).getX();
+      int y_Cache = positionTilesTableCenter.get(i).getY();
+      if(x == x_Cache && y == y_Cache){
+        toReturn =  model.getTableCenter().getColorTiles().get(i-1).getColor();
+
+      }
+
+
+
+    }
+    return toReturn;
   }
 
   /**

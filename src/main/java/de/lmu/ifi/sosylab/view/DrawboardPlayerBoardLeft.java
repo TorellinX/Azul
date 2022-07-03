@@ -84,10 +84,10 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     //Pattern Lines of Player One
     IntPair[] firstPatternLinePlayerOne = {new IntPair(145, 5)};
-    IntPair[] secondPatternLinePlayerOne = {new IntPair(145, 40), new IntPair(110, 40)};
-    IntPair[] thirdPatternLinePlayerOne = {new IntPair(145, 75), new IntPair(110, 75), new IntPair(75, 75)};
-    IntPair[] fourthPatternLinePlayerOne = {new IntPair(145, 110), new IntPair(110, 110), new IntPair(75, 110), new IntPair(40, 110)};
-    IntPair[] fifthPatternLinePlayerOne = {new IntPair(145, 145), new IntPair(110, 145), new IntPair(75, 145), new IntPair(40, 145), new IntPair(05, 145)};
+    IntPair[] secondPatternLinePlayerOne = {new IntPair(110, 40), new IntPair(145, 40)};
+    IntPair[] thirdPatternLinePlayerOne = {new IntPair(75, 75),new IntPair(110, 75), new IntPair(145, 75)};
+    IntPair[] fourthPatternLinePlayerOne = {new IntPair(40, 110), new IntPair(75, 110), new IntPair(110, 110), new IntPair(145, 110),};
+    IntPair[] fifthPatternLinePlayerOne = {new IntPair(05, 145), new IntPair(40, 145), new IntPair(75, 145), new IntPair(110, 145), new IntPair(145, 145)};
 
     coordinatePatternLinesPlayerOne.put(1, firstPatternLinePlayerOne);
     coordinatePatternLinesPlayerOne.put(2, secondPatternLinePlayerOne);
@@ -303,6 +303,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
             de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i-1][j].getColor();
             if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
+              System.out.println("blackkk");
               g.setColor(Color.black);
             } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
               g.setColor(Color.blue);
@@ -336,19 +337,19 @@ public class DrawboardPlayerBoardLeft extends JPanel {
     //draw Yellow
     IntPair[] yellowWall = coordinateWallPlayerOne.get(2);
     g.setColor(Color.yellow);
-    if(wall[0][1] == true){
+    if(wall[0][1]){
       g.fillRect(yellowWall[0].getX(),yellowWall[0].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[1][2] == true){
+    if(wall[1][2]){
       g.fillRect(yellowWall[1].getX(),yellowWall[1].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[2][3] == true){
+    if(wall[2][3]){
       g.fillRect(yellowWall[2].getX(),yellowWall[2].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[3][4] == true){
+    if(wall[3][4]){
       g.fillRect(yellowWall[3].getX(),yellowWall[3].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[4][0] == true){
+    if(wall[4][0]){
       g.fillRect(yellowWall[4].getX(),yellowWall[4].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
 
@@ -357,19 +358,19 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     IntPair[] redWall = coordinateWallPlayerOne.get(3);
     g.setColor(Color.red);
-    if(wall[0][2] == true){
+    if(wall[0][2]){
       g.fillRect(redWall[0].getX(),redWall[0].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[1][3] == true){
+    if(wall[1][3]){
       g.fillRect(redWall[1].getX(),redWall[1].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[2][4] == true){
+    if(wall[2][4]){
       g.fillRect(redWall[2].getX(),redWall[2].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[3][0] == true){
+    if(wall[3][0]){
       g.fillRect(redWall[3].getX(),redWall[3].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[4][1] == true){
+    if(wall[4][1]){
       g.fillRect(redWall[4].getX(),redWall[4].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
 
@@ -377,19 +378,19 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     IntPair[] blackWall = coordinateWallPlayerOne.get(4);
     g.setColor(Color.black);
-    if(wall[0][3] == true){
+    if(wall[0][3]){
       g.fillRect(blackWall[0].getX(),blackWall[0].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[1][4] == true){
+    if(wall[1][4]){
       g.fillRect(blackWall[1].getX(),blackWall[1].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[2][0] == true){
+    if(wall[2][0]){
       g.fillRect(blackWall[2].getX(),blackWall[2].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[3][1] == true){
+    if(wall[3][1]){
       g.fillRect(blackWall[3].getX(),blackWall[3].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[4][2] == true){
+    if(wall[4][2]){
       g.fillRect(blackWall[4].getX(),blackWall[4].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
 
@@ -398,19 +399,19 @@ public class DrawboardPlayerBoardLeft extends JPanel {
     //draw Green
     IntPair[] greenWall = coordinateWallPlayerOne.get(5);
     g.setColor(Color.green);
-    if(wall[0][4] == true){
+    if(wall[0][4]){
       g.fillRect(greenWall[0].getX(),greenWall[0].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[1][0] == true){
+    if(wall[1][0]){
       g.fillRect(greenWall[1].getX(),greenWall[1].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[2][1] == true){
+    if(wall[2][1]){
       g.fillRect(greenWall[2].getX(),greenWall[2].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[3][2] == true){
+    if(wall[3][2]){
       g.fillRect(greenWall[3].getX(),greenWall[3].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
-    if(wall[4][3] == true){
+    if(wall[4][3]){
       g.fillRect(greenWall[4].getX(),greenWall[4].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
     }
 

@@ -79,11 +79,12 @@ public class DrawboardPlayerBoardRight extends JPanel {
    */
   private void initializePlayfieldRight(){
     //Pattern Lines of Player Two
+
     IntPair[] firstPatternLinePlayerTwo = {new IntPair(145, 5)};
-    IntPair[] secondPatternLinePlayerTwo = {new IntPair(145, 40), new IntPair(110, 40)};
-    IntPair[] thirdPatternLinePlayerTwo = {new IntPair(145, 75), new IntPair(110, 75), new IntPair(75, 75)};
-    IntPair[] fourthPatternLinePlayerTwo = {new IntPair(145, 110), new IntPair(110, 110), new IntPair(75, 110), new IntPair(40, 110)};
-    IntPair[] fifthPatternLinePlayerTwo = {new IntPair(145, 145), new IntPair(110, 145), new IntPair(75, 145), new IntPair(40, 145), new IntPair(05, 145)};
+    IntPair[] secondPatternLinePlayerTwo = {new IntPair(110, 40), new IntPair(145, 40)};
+    IntPair[] thirdPatternLinePlayerTwo = {new IntPair(75, 75),new IntPair(110, 75), new IntPair(145, 75)};
+    IntPair[] fourthPatternLinePlayerTwo = {new IntPair(40, 110), new IntPair(75, 110), new IntPair(110, 110), new IntPair(145, 110),};
+    IntPair[] fifthPatternLinePlayerTwo = {new IntPair(05, 145), new IntPair(40, 145), new IntPair(75, 145), new IntPair(110, 145), new IntPair(145, 145)};
 
     coordinatePatternLinesPlayerTwo.put(1, firstPatternLinePlayerTwo);
     coordinatePatternLinesPlayerTwo.put(2, secondPatternLinePlayerTwo);

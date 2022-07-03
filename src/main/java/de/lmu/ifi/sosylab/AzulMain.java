@@ -19,7 +19,7 @@ import java.util.Arrays;
 public class AzulMain {
 
   /**
-   * Main method of the Azul game app.
+   * Main method of the Azul game application.
    *
    * @param args unused
    */

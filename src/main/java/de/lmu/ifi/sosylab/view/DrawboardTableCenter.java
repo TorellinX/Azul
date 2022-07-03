@@ -1,7 +1,5 @@
 package de.lmu.ifi.sosylab.view;
 
-// import de.lmu.ifi.sosylab.model.*;
-
 import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
@@ -19,7 +17,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 /**
- * Part of the game - table center.
+ * Center Panel of the Game. Shows the panels and the center of the table.
  */
 public class DrawboardTableCenter extends JPanel {
 
@@ -59,6 +57,9 @@ public class DrawboardTableCenter extends JPanel {
     this.listFactorys = model.getPlates();
   }
 
+  /**
+   * Sets the coordinates for the individual objects.
+   */
   private void initialize() {
     firstFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17),
         new IntPair(17, 58),
@@ -115,6 +116,12 @@ public class DrawboardTableCenter extends JPanel {
 
   }
 
+  /**
+   * Calls the individual methods to draw the playing field.
+   *
+   * @param g the <code>Graphics</code> object to protect
+   */
+
 
   @Override
 
@@ -126,6 +133,7 @@ public class DrawboardTableCenter extends JPanel {
     g.setColor(tableColor);
     g.fillRoundRect(5, 490, 395, 185, 20, 20);
 
+    updateTable();
     drawFacotry(g);
     drawTilesFactory(g);
 
@@ -133,10 +141,11 @@ public class DrawboardTableCenter extends JPanel {
 
   }
 
-  public void repaintCenterBoard() {
-    repaint();
-  }
-
+  /**
+   * Draws the panels in the center of the table.
+   *
+   * @param g
+   */
   private void drawFacotry(Graphics g) {
     for (int i = 0; i < positionOfFactory.length; i++) {
       Color backroundColor = new Color(135, 206, 250);
@@ -149,6 +158,12 @@ public class DrawboardTableCenter extends JPanel {
           hightOfFactory);
     }
   }
+
+  /**
+   * Draws the tiles on the Facotrys.
+   *
+   * @param g
+   */
 
   private void drawTilesFactory(Graphics g) {
     // System.out.print("drawTilesFactory");
@@ -182,6 +197,7 @@ public class DrawboardTableCenter extends JPanel {
           g.setColor(Color.red);
         }
         g.fillRect(cach[j].getX(), cach[j].getY(), widthOfCell, hightOfCell);
+
       }
 
     }
@@ -189,9 +205,16 @@ public class DrawboardTableCenter extends JPanel {
 
   }
 
+  /**
+   * Draws the tiles in the center of the table.
+   *
+   * @param g
+   */
+
+
   private void drawTableCenter(Graphics g) {
     List<Tile> tileList = model.getTableCenter().getTiles();
-    System.out.println("TableCenter tiles: " + tileList);
+    //System.out.println("TableCenter tiles: " + tileList);
     for (int i = 0; i < tileList.size(); i++) {
       if (tileList.get(i) instanceof PenaltyTile) {
         g.setColor(Color.gray);
@@ -214,13 +237,29 @@ public class DrawboardTableCenter extends JPanel {
           g.setColor(Color.red);
         }
 
+        //g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
+        //widthOfCell, hightOfCell);
+      }
+      if (tileList.get(0) instanceof PenaltyTile) {
         g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
             widthOfCell, hightOfCell);
+      } else {
+        g.fillRect(positionTilesTableCenter.get(i + 1).getX(),
+            positionTilesTableCenter.get(i + 1).getY(),
+            widthOfCell, hightOfCell);
       }
-      g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
-          widthOfCell, hightOfCell);
+
     }
+
   }
+
+  /**
+   * Reads from a point which color of tiles is there.
+   *
+   * @param x X-Coordinate
+   * @param y Y-Coordinate
+   * @return Color of Tile
+   */
 
   /**
    * Getter for the color of a tile on a plate addresed by table center related coordinates.
@@ -232,12 +271,12 @@ public class DrawboardTableCenter extends JPanel {
   public de.lmu.ifi.sosylab.model.Color getColorOfTileOnPlate(int x, int y) {
     de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
     for (int count = 1; count < listFactorys.size(); count++) {
-      IntPair[] cach = mapFactorys.get(count);
+      IntPair[] cache = mapFactorys.get(count);
       Plate plate = listFactorys.get(count - 1);
       List<ColorTile> colorTilesFacotry = plate.getTiles();
 
-      for (int i = 0; i < cach.length; i++) {
-        if (x == cach[i].getX() && y == cach[i].getY()) {
+      for (int i = 0; i < cache.length; i++) {
+        if (x == cache[i].getX() && y == cache[i].getY()) {
           toReturn = colorTilesFacotry.get(i).getColor();
         }
       }
@@ -254,6 +293,30 @@ public class DrawboardTableCenter extends JPanel {
    * @param y y-coordinate
    * @return number of the plate
    */
+  public de.lmu.ifi.sosylab.model.Color getColorOfTileTableCenter(int x, int y) {
+    de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
+
+    for (int i = 0; i < positionTilesTableCenter.size(); i++) {
+      int x_Cache = positionTilesTableCenter.get(i).getX();
+      int y_Cache = positionTilesTableCenter.get(i).getY();
+      if (x == x_Cache && y == y_Cache) {
+        toReturn = model.getTableCenter().getColorTiles().get(i - 1).getColor();
+
+      }
+
+
+    }
+    return toReturn;
+  }
+
+  /**
+   * Returns for a coordinate which plate is located there.
+   *
+   * @param x X-Coordinate
+   * @param y Y-Coordinate
+   * @return Int of Plate
+   */
+
   public int getPlate(int x, int y) {
     int fac = 0;
 
@@ -261,10 +324,14 @@ public class DrawboardTableCenter extends JPanel {
       IntPair[] cach = mapFactorys.get(i);
       for (int j = 0; j < cach.length; j++) {
         if (x == cach[j].getX() && y == cach[j].getY()) {
-          fac = i;
+          fac = i - 1;
         }
       }
     }
     return fac;
+  }
+
+  private void updateTable() {
+    //this.tileListColor = tableCenter.getColorTiles();
   }
 }

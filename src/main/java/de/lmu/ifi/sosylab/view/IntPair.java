@@ -1,30 +1,41 @@
 package de.lmu.ifi.sosylab.view;
 
 /**
- * Stores two integers as a pair for addressing fields on the table.
+ * The class stores two Int as a pair so that the coordinates for the fields are passed.
  */
 
 public class IntPair {
-  private int horizontal;
-  private int vertical;
+
+  private int x;
+  private int y;
 
   /**
-   * Set new 2D coordinates.
+   * Constructor of Class
    *
-   * @param x x-coordinate
-   * @param y y-coordinate
+   * @param x
+   * @param y
    */
   public IntPair(int x, int y) {
 
-    horizontal = x;
-    vertical = y;
+    this.x = x;
+    this.y = y;
   }
 
+  /**
+   * Get X.
+   *
+   * @return X-Coordinate
+   */
   public int getX() {
-    return horizontal;
+    return x;
   }
 
+  /**
+   * Get Y.
+   *
+   * @return Y-Coordinate
+   */
   public int getY() {
-    return vertical;
+    return y;
   }
 }

@@ -25,8 +25,8 @@ public class GameModel {
   private static final int POINTS_PRO_COLUMN = 7;
   private static final int POINTS_PRO_COLOR = 10;
   private static final int[] PENALTY_POINTS = new int[]{0, -1, -2, -4, -6, -8, -11, -14};
-
-  // String STATE_CHANGED = "State changed";
+  private static final String MODEL_CHANGED = "Model changed";
+  private static final String MODEL_STATE_CHANGED = "GameState changed";
 
 
   private List<Player> players;
@@ -36,13 +36,22 @@ public class GameModel {
   private final List<ColorTile> bag = Arrays.stream(Color.values())
       .flatMap(color -> IntStream.range(0, TILES_PER_COLOR).mapToObj(i -> new ColorTile(color)))
       .collect(Collectors.toList());
-
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
+
+  public State getState() {
+    return state;
+  }
+
   private State state;
   private RoundState roundState = RoundState.WAIT;
   private int startingPlayerIndex;
   private int playerToMoveIndex;
+
+  public Player getPlayerToMove() {
+    return playerToMove;
+  }
+
   private Player playerToMove;
   private int round = 1;
   List<ColorTile> selectedTiles = new ArrayList<>();
@@ -69,29 +78,12 @@ public class GameModel {
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
     linkBoxToPlayerBoard();
-    notifyListeners();
+    this.state = State.RUNNING;
+    notifyListeners(MODEL_STATE_CHANGED);
   }
 
   public void setState(State state) {
     this.state = state;
-  }
-
-  public void addPropertyChangeListener(PropertyChangeListener pcl) {
-    requireNonNull(pcl);
-    support.addPropertyChangeListener(pcl);
-  }
-
-  public void removePropertyChangeListener(PropertyChangeListener pcl) {
-    requireNonNull(pcl);
-    support.removePropertyChangeListener(pcl);
-  }
-
-  /**
-   * Invokes the model to fire a new event, such that any attached observer (i.e.,
-   * {@link PropertyChangeListener}) gets notified about a change in this model.
-   */
-  private void notifyListeners() {
-    support.firePropertyChange("State changed", null, this);
   }
 
   private void linkBoxToPlayerBoard() {
@@ -106,6 +98,7 @@ public class GameModel {
   private void chooseRandomStartingPlayer() {
     startingPlayerIndex = playerToMoveIndex = random.nextInt(players.size());
     playerToMove = players.get(playerToMoveIndex);
+    playerToMove.setState(PlayerState.TO_MOVE);
   }
 
   /**
@@ -127,6 +120,7 @@ public class GameModel {
     for (Plate plate : plates) {
       plate.addTiles(getAndRemoveTilesFromBagForPlate());
     }
+    notifyListeners(MODEL_CHANGED);
   }
 
   // (patternLines (0-4) or floorLine (-1)
@@ -142,23 +136,30 @@ public class GameModel {
     if (roundState != RoundState.PICKED) {
       return false;
     }
-    if (player != playerToMove) {
+    if (player.getState() != PlayerState.TO_MOVE) {
       throw new IllegalArgumentException("\"set to row\" event from non-active player");
     }
     System.out.println("    Setting tiles to row " + row + "...");
     if (!setTilesToRow(player, row)) {
       return false;
     }
-    playerToMoveIndex = getNextPlayerIndex();
-    playerToMove = players.get(playerToMoveIndex);
+    setPlayerToMove(getNextPlayerIndex());
     if (!areThereMoreTiles()) {
       endRound();
       return true;
     }
-    System.out.println("Active Player: " + getPlayerToMoveIndex());
+    System.out.println(
+        "Active Player: " + getPlayerToMoveIndex() + " State: " + playerToMove.getState());
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
     return true;
+  }
+
+  private void setPlayerToMove(int newPlayerToMoveIndex) {
+    playerToMove.setState(PlayerState.READY);
+    playerToMoveIndex = newPlayerToMoveIndex;
+    playerToMove = players.get(playerToMoveIndex);
+    playerToMove.setState(PlayerState.TO_MOVE);
   }
 
   private boolean areThereMoreTiles() {
@@ -183,17 +184,18 @@ public class GameModel {
       return;
     }
     round++;
-    playerToMoveIndex = startingPlayerIndex;
-    playerToMove = players.get(playerToMoveIndex);
+    setPlayerToMove(startingPlayerIndex);
     fillPlates();
     tableCenter.addPenaltyTile(new PenaltyTile());
     roundState = RoundState.WAIT;
+    notifyListeners(MODEL_CHANGED);
   }
 
   private void endGame() {
     calculateEndScore();
     roundState = RoundState.FINISHED;
     state = State.FINISHED;
+    notifyListeners(MODEL_STATE_CHANGED);
   }
 
   /**
@@ -278,9 +280,9 @@ public class GameModel {
     if (tiles.remaining().isPresent()) {
       tableCenter.addColorTiles(tiles.remaining().get());
     }
-    notifyListeners();
     roundState = RoundState.PICKED;
     System.out.println("    roundState: PICKED " + selectedTiles + " tiles");
+    notifyListeners(MODEL_CHANGED);
     return true;
   }
 
@@ -305,7 +307,7 @@ public class GameModel {
     selectedTiles.addAll(tiles.colorTiles());
     roundState = RoundState.PICKED;
     System.out.println("    roundState: PICKED " + selectedTiles + " tiles");
-    notifyListeners();
+    notifyListeners(MODEL_CHANGED);
     return true;
   }
 
@@ -425,7 +427,6 @@ public class GameModel {
     tiles.remove(tiles.size() - 1); // one tile remains on the wall
     box.addAll(tiles);
     Arrays.fill(playerBoard.patternLines[row], null);
-    notifyListeners();
   }
 
   /**
@@ -436,19 +437,19 @@ public class GameModel {
   private void moveFloorLineToBox(PlayerBoard playerBoard) {
     for (Tile tile : playerBoard.floorLine) {
       if (tile instanceof PenaltyTile) {
-        tableCenter.addPenaltyTile((PenaltyTile) tile);
         continue;
       }
       box.add((ColorTile) tile);
     }
     playerBoard.floorLine.clear();
-    notifyListeners();
+    notifyListeners(MODEL_CHANGED);
   }
 
   private void moveBoxTilesToBagAndShuffle() {
     bag.addAll(box);
     box.clear();
     shuffleBag();
+    notifyListeners(MODEL_CHANGED);
   }
 
   private void shuffleBag() {
@@ -683,5 +684,27 @@ public class GameModel {
     return round;
   }
 
+  /**
+   * Add a {@link PropertyChangeListener} to the model to get notified about any changes that the
+   * the model publishes.
+   *
+   * @param pcl the view that subscribes itself to the model.
+   */
+  public void addPropertyChangeListener(PropertyChangeListener pcl) {
+    requireNonNull(pcl);
+    support.addPropertyChangeListener(pcl);
+  }
 
+  public void removePropertyChangeListener(PropertyChangeListener pcl) {
+    requireNonNull(pcl);
+    support.removePropertyChangeListener(pcl);
+  }
+
+  /**
+   * Invokes the model to fire a new event, such that any attached observer (i.e.,
+   * {@link PropertyChangeListener}) gets notified about a change in this model.
+   */
+  private void notifyListeners(String state) {
+    support.firePropertyChange(state, null, this);
+  }
 }

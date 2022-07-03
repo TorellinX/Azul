@@ -12,6 +12,7 @@ import javax.swing.JPanel;
  * Main class to set up the graphic user interface for Azul.
  */
 public class GraphicAzul extends JPanel {
+
   @Serial
   private static final long serialVersionUID = 1L;
 

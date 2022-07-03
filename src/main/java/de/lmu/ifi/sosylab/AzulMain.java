@@ -7,9 +7,9 @@ import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.view.MainMenuView;
 import java.util.ArrayList;
 import java.util.Arrays;
+import de.lmu.ifi.sosylab.view.MainMenuView;
 
 // TODO: refine JavaDoc
 
@@ -27,7 +27,7 @@ public class AzulMain {
 
     GameModel model = new GameModel();
     Controller controller = new GameController(model);
-    MainMenuView menuView = new MainMenuView(model, controller);
+    MainMenuView view = new MainMenuView(controller, model);
 
     //controller.setView(menuView);
     //View view = GameView(model, controller);
@@ -121,27 +121,27 @@ public class AzulMain {
     System.out.println();
     System.out.println("Active Player: " + model.getPlayerToMoveIndex());
     for (int i = 0; i < 9; i++) {
-      System.out.println("     controller.pickTilesFromPlate: "
-          + controller.pickTilesFromPlate(model.getPlates().get(i).getTiles().get(0).getColor(),
+      System.out.println("     controller.pickTilesFromPlate: " +
+          controller.pickTilesFromPlate(model.getPlates().get(i).getTiles().get(0).getColor(),
               model.getPlayers().get(model.getPlayerToMoveIndex()),
               model.getPlates().get(i)));
-      System.out.println("     controller.placeTiles: "
-          + controller.placeTiles(model.getPlayers().get(model.getPlayerToMoveIndex()), i % 4));
-      System.out.println("     pickTilesFromTableCenter: "
-          + controller.pickTilesFromTableCenter(
+      System.out.println("     controller.placeTiles: " +
+          controller.placeTiles(model.getPlayers().get(model.getPlayerToMoveIndex()), i % 4));
+      System.out.println("     pickTilesFromTableCenter: " +
+          controller.pickTilesFromTableCenter(
               ((ColorTile) model.getTableCenter().getTiles().get(0)).getColor(),
               model.getPlayers().get(model.getPlayerToMoveIndex())));
-      System.out.println("     controller.placeTiles: "
-          + controller.placeTiles(model.getPlayers().get(model.getPlayerToMoveIndex()), i % 4));
+      System.out.println("     controller.placeTiles: " +
+          controller.placeTiles(model.getPlayers().get(model.getPlayerToMoveIndex()), i % 4));
 
       System.out.println("TableCenter: " + model.getTableCenter().getTiles());
     }
-    System.out.println("     controller.pickTilesFromPlate: "
-        + controller.pickTilesFromPlate(model.getPlates().get(5).getTiles().get(0).getColor(),
+    System.out.println("     controller.pickTilesFromPlate: " +
+        controller.pickTilesFromPlate(model.getPlates().get(5).getTiles().get(0).getColor(),
             model.getPlayers().get(model.getPlayerToMoveIndex()),
             model.getPlates().get(5)));
-    System.out.println("     controller.placeTiles: "
-        + controller.placeTiles(model.getPlayers().get(model.getPlayerToMoveIndex()), 5 % 4));
+    System.out.println("     controller.placeTiles: " +
+        controller.placeTiles(model.getPlayers().get(model.getPlayerToMoveIndex()), 5 % 4));
     int round = model.getRound();
     System.out.println(model.getTableCenter().getTiles());
     while (model.getTableCenter().getTiles().size() != 0) {

@@ -14,6 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -37,7 +38,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private DrawboardPlayerBoardRight drawboardPlayerBoardRight;
   private DrawboardTableCenter drawboardTableCenter;
 
-  private ArrayList<JButton> buttonsFirstPlayer;
+  private List<JButton> buttonsFirstPlayer;
   private ArrayList<JButton> buttonsSecondPlayer;
   private ArrayList<JButton> buttonsThridPlayer;
   private ArrayList<JButton> buttonsFourthPlayer;
@@ -165,43 +166,32 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    */
 
   private void addButtonsPlayerOne() {
-    JButton firstrowu1button = new JButton();
-    firstrowu1button.setBounds(145, 5, 35, 35);
+    buttonsFirstPlayer = Arrays.asList(
+        new JButton() {{
+          setBounds(145, 5, 35, 35);
+        }},
+        new JButton() {{
+          setBounds(110, 40, 70, 35);
+        }},
+        new JButton() {{
+          setBounds(75, 75, 105, 35);
+        }},
+        new JButton() {{
+          setBounds(40, 110, 140, 35);
+        }},
+        new JButton() {{
+          setBounds(5, 145, 175, 35);
+        }},
+        new JButton() {{
+          setBounds(5, 205, 245, 35);
+        }}
+    );
 
-    JButton secondrowu1button = new JButton();
-    secondrowu1button.setBounds(110, 40, 70, 35);
-
-    JButton thirdrowu1button = new JButton();
-    thirdrowu1button.setBounds(75, 75, 105, 35);
-
-    JButton fourthrowu1button = new JButton();
-    fourthrowu1button.setBounds(40, 110, 140, 35);
-
-    JButton fifthrowu1button = new JButton();
-    fifthrowu1button.setBounds(5, 145, 175, 35);
-
-    JButton floorlineu1button = new JButton();
-    floorlineu1button.setBounds(5, 205, 245, 35);
-
-    buttonsFirstPlayer = new ArrayList<>();
-    buttonsFirstPlayer.add(firstrowu1button);
-    buttonsFirstPlayer.add(secondrowu1button);
-    buttonsFirstPlayer.add(thirdrowu1button);
-    buttonsFirstPlayer.add(fourthrowu1button);
-    buttonsFirstPlayer.add(fifthrowu1button);
-    buttonsFirstPlayer.add(floorlineu1button);
-
-    drawboardPlayerBoardLeft.add(firstrowu1button);
-    drawboardPlayerBoardLeft.add(secondrowu1button);
-    drawboardPlayerBoardLeft.add(thirdrowu1button);
-    drawboardPlayerBoardLeft.add(fourthrowu1button);
-    drawboardPlayerBoardLeft.add(fifthrowu1button);
-    drawboardPlayerBoardLeft.add(floorlineu1button);
-
-    for (int i = 0; i < buttonsFirstPlayer.size(); i++) {
-      buttonsFirstPlayer.get(i).setOpaque(false);
-      buttonsFirstPlayer.get(i).setContentAreaFilled(false);
-      buttonsFirstPlayer.get(i).setBorderPainted(false);
+    for (JButton button : buttonsFirstPlayer) {
+      button.setOpaque(false);
+      button.setContentAreaFilled(false);
+      button.setBorderPainted(false);
+      drawboardPlayerBoardLeft.add(button);
     }
   }
 

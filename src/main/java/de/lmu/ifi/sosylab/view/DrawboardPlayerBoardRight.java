@@ -1,8 +1,5 @@
 package de.lmu.ifi.sosylab.view;
 
-// import de.lmu.ifi.sosylab.model.*;
-
-
 import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerBoard;
@@ -13,18 +10,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JPanel;
 
 /**
- * Part of the player graphics - player board right.
+ * Right Panel of the Game. In which players two and four are drawn.
  */
+
 public class DrawboardPlayerBoardRight extends JPanel {
 
   private static final long serialVersionUID = 1L;
-  // private Graphics2D g;
+  private Graphics2D g;
   private Color playerboardcolor = new Color(204, 201, 199);
   private Color scorecolor = new Color(235, 79, 0);
   private Color floorlinecolor = new Color(139, 0, 139);
@@ -45,30 +42,37 @@ public class DrawboardPlayerBoardRight extends JPanel {
   private int playerCount;
   private List<String> nicknames;
   private List<Player> player;
+  private String TEXT_POINTS = "Points: ";
+
 
   /**
-   * Class constructor.
+   * Constructor of the panel.
    *
-   * @param playerCount number of players
-   * @param nicknames player nicknames
-   * @param player list of players
+   * @param playerCount Number of Player
+   * @param nicknames   Nickames of Player
+   * @param player      Player
    */
+
   public DrawboardPlayerBoardRight(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
-    List<String> immutableNamesList = Collections.unmodifiableList(nicknames);
-    this.nicknames = immutableNamesList;
-    List<Player> immutablePlayerList = Collections.unmodifiableList(player);
-    this.player = immutablePlayerList;
+    this.nicknames = nicknames;
+    this.player = player;
     initializePlayfieldRight();
     setPreferredSize(new Dimension(400, 700));
-    repaint();
+    //repaint();
   }
 
+
+  /**
+   * Calls the methods to draw the players.
+   *
+   * @param g the <code>Graphics</code> object to protect
+   */
 
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    // g = (Graphics2D) g;
+    g = (Graphics2D) g;
     drawPlayerTwoPlayfield(g);
     drawPlayerTwo(g);
 
@@ -78,21 +82,20 @@ public class DrawboardPlayerBoardRight extends JPanel {
     }
   }
 
-  public void repaintRightBoard() {
-    repaint();
-  }
-
-
+  /**
+   * Sets the coordinates for the individual objecte.
+   */
   private void initializePlayfieldRight() {
     //Pattern Lines of Player Two
+
     IntPair[] firstPatternLinePlayerTwo = {new IntPair(145, 5)};
-    IntPair[] secondPatternLinePlayerTwo = {new IntPair(145, 40), new IntPair(110, 40)};
-    IntPair[] thirdPatternLinePlayerTwo = {new IntPair(145, 75), new IntPair(110, 75),
-        new IntPair(75, 75)};
-    IntPair[] fourthPatternLinePlayerTwo = {new IntPair(145, 110), new IntPair(110, 110),
-        new IntPair(75, 110), new IntPair(40, 110)};
-    IntPair[] fifthPatternLinePlayerTwo = {new IntPair(145, 145), new IntPair(110, 145),
-        new IntPair(75, 145), new IntPair(40, 145), new IntPair(05, 145)};
+    IntPair[] secondPatternLinePlayerTwo = {new IntPair(110, 40), new IntPair(145, 40)};
+    IntPair[] thirdPatternLinePlayerTwo = {new IntPair(75, 75), new IntPair(110, 75),
+        new IntPair(145, 75)};
+    IntPair[] fourthPatternLinePlayerTwo = {new IntPair(40, 110), new IntPair(75, 110),
+        new IntPair(110, 110), new IntPair(145, 110),};
+    IntPair[] fifthPatternLinePlayerTwo = {new IntPair(05, 145), new IntPair(40, 145),
+        new IntPair(75, 145), new IntPair(110, 145), new IntPair(145, 145)};
 
     coordinatePatternLinesPlayerTwo.put(1, firstPatternLinePlayerTwo);
     coordinatePatternLinesPlayerTwo.put(2, secondPatternLinePlayerTwo);
@@ -101,12 +104,12 @@ public class DrawboardPlayerBoardRight extends JPanel {
     coordinatePatternLinesPlayerTwo.put(5, fifthPatternLinePlayerTwo);
 
     //Wall Player two
-    IntPair[] blueWallPlayerTwo = {new IntPair(205, 10), new IntPair(240, 45),
-        new IntPair(275, 80), new IntPair(310, 115), new IntPair(345, 150)};
+    IntPair[] blueWallPlayerTwo = {new IntPair(205, 10), new IntPair(240, 45), new IntPair(275, 80),
+        new IntPair(310, 115), new IntPair(345, 150)};
     IntPair[] yellowWallPlayerTwo = {new IntPair(240, 10), new IntPair(275, 45),
         new IntPair(310, 80), new IntPair(345, 115), new IntPair(205, 150)};
-    IntPair[] redWallPlayerTwo = {new IntPair(275, 10), new IntPair(310, 45),
-        new IntPair(345, 80), new IntPair(205, 115), new IntPair(240, 150)};
+    IntPair[] redWallPlayerTwo = {new IntPair(275, 10), new IntPair(310, 45), new IntPair(345, 80),
+        new IntPair(205, 115), new IntPair(240, 150)};
     IntPair[] blackWallPlayerTwo = {new IntPair(310, 10), new IntPair(345, 45),
         new IntPair(205, 80), new IntPair(240, 115), new IntPair(275, 150)};
     IntPair[] greenWallPlayerTwo = {new IntPair(345, 10), new IntPair(205, 45),
@@ -118,7 +121,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
     coordinateWallPlayerTwo.put(4, blackWallPlayerTwo);
     coordinateWallPlayerTwo.put(5, greenWallPlayerTwo);
 
-
     //Minus Player two
     coordinateMinusPlayerTwo = new IntPair[7];
     int x = 05;
@@ -127,18 +129,15 @@ public class DrawboardPlayerBoardRight extends JPanel {
       x += 35;
     }
 
-
-
     //Pattern Lines of Player Four
     IntPair[] firstPatternLinePlayerFour = {new IntPair(145, 305)};
-    IntPair[] secondPatternLinePlayerFour = {new IntPair(145, 340),
-        new IntPair(110, 340)};
+    IntPair[] secondPatternLinePlayerFour = {new IntPair(110, 340), new IntPair(145, 340)};
     IntPair[] thirdPatternLinePlayerFour = {new IntPair(75, 375), new IntPair(110, 375),
         new IntPair(145, 375)};
     IntPair[] fourthPatternLinePlayerFour = {new IntPair(40, 410), new IntPair(75, 410),
-        new IntPair(110, 410), new IntPair(145, 410)};
-    IntPair[] fifthPatternLinePlayerFour = {new IntPair(05, 410), new IntPair(40, 410),
-        new IntPair(75, 410), new IntPair(110, 410), new IntPair(145, 410)};
+        new IntPair(110, 410), new IntPair(145, 410),};
+    IntPair[] fifthPatternLinePlayerFour = {new IntPair(05, 445), new IntPair(40, 445),
+        new IntPair(75, 445), new IntPair(110, 445), new IntPair(145, 445)};
 
     coordinatePatternLinesPlayerFour.put(1, firstPatternLinePlayerFour);
     coordinatePatternLinesPlayerFour.put(2, secondPatternLinePlayerFour);
@@ -174,7 +173,11 @@ public class DrawboardPlayerBoardRight extends JPanel {
     }
   }
 
-
+  /**
+   * Playing field of the second player is drawn.
+   *
+   * @param g
+   */
 
   private void drawPlayerTwoPlayfield(Graphics g) {
 
@@ -194,7 +197,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
     //Ränder der Rechtecke der Wall werden gezeichnet.
     ((Graphics2D) g).setStroke(new BasicStroke(2));
-
     g.setColor(Color.blue);
     for (int count = 1; count <= 5; count++) {
       IntPair[] zwischenspeicher = coordinateWallPlayerTwo.get(count);
@@ -234,6 +236,12 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
   }
 
+  /**
+   * Playing field of the fourth player is drawn.
+   *
+   * @param g
+   */
+
   private void drawPlayerFourPlayfield(Graphics g, String nickname) {
     g.setColor(Color.black);
     g.drawString(nickname, 5, 315);
@@ -257,8 +265,8 @@ public class DrawboardPlayerBoardRight extends JPanel {
     for (int count = 1; count <= 5; count++) {
       IntPair[] zwischenspeicher = coordinateWallPlayerFour.get(count);
       for (int i = 0; i < zwischenspeicher.length; i++) {
-        g.drawRect(zwischenspeicher[i].getX(), zwischenspeicher[i].getY(),
-            widthOfPlayFieldCell, heightOfPlayFieldCell);
+        g.drawRect(zwischenspeicher[i].getX(), zwischenspeicher[i].getY(), widthOfPlayFieldCell,
+            heightOfPlayFieldCell);
       }
       if (count == 1) {
         g.setColor(Color.yellow);
@@ -292,13 +300,18 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
   }
 
+  /**
+   * Draws player two according to the model.
+   *
+   * @param g Graphics Element
+   */
+
   private void drawPlayerTwo(Graphics g) {
     Player player2 = player.get(1);
 
     PlayerBoard playerBoardPlayer2 = player2.getPlayerBoard();
 
     ColorTile[][] patternLines = playerBoardPlayer2.getPatternLines();
-
 
     if (player2.getState().equals(PlayerState.TO_MOVE)) {
       g.setColor(Color.green);
@@ -308,8 +321,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
       g.drawString(player2.getNickname(), 5, 15);
     }
 
-
-
     //Draw Pattern Line of Player One
 
     for (int i = 1; i < (patternLines.length + 1); i++) {
@@ -318,7 +329,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
           IntPair[] cache = coordinatePatternLinesPlayerTwo.get(i);
 
-          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i][j].getColor();
+          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i - 1][j].getColor();
           if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)) {
             g.setColor(Color.black);
           } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
@@ -333,6 +344,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
           }
           g.fillRect(cache[j].getX(), cache[j].getY(), widthOfPatternLineCell,
               heightOfPatternLineCell);
+
         }
       }
     }
@@ -340,8 +352,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
     // Draw Wall of Player One
 
     boolean[][] wall = playerBoardPlayer2.getWall();
-
-
 
     //draw Blue
     IntPair[] blueWall = coordinateWallPlayerTwo.get(1);
@@ -377,7 +387,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
       g.fillRect(yellowWall[4].getX(), yellowWall[4].getY(), widthOfPatternLineCell,
           heightOfPatternLineCell);
     }
-
 
     //draw Red
 
@@ -429,8 +438,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
           heightOfPatternLineCell);
     }
 
-
-
     //draw Green
     IntPair[] greenWall = coordinateWallPlayerTwo.get(5);
     g.setColor(Color.green);
@@ -460,25 +467,25 @@ public class DrawboardPlayerBoardRight extends JPanel {
     List<Tile> floorLine = playerBoardPlayer2.getFloorLine();
 
     if (floorLine.size() == 0) {
-      ;
+
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
-        if (floorLine.get(i).toString().equals("(-1)")) {
+        if (floorLine.get(i).toString() == "(-1)") {
           g.setColor(Color.gray);
         } else {
-          if (floorLine.get(i).toString().equals("BLUE")) {
+          if (floorLine.get(i).toString() == "BLUE") {
             g.setColor(Color.blue);
           }
-          if (floorLine.get(i).toString().equals("YELLOW")) {
+          if (floorLine.get(i).toString() == "YELLOW") {
             g.setColor(Color.yellow);
           }
-          if (floorLine.get(i).toString().equals("RED")) {
+          if (floorLine.get(i).toString() == "RED") {
             g.setColor(Color.red);
           }
-          if (floorLine.get(i).toString().equals("BLACK")) {
+          if (floorLine.get(i).toString() == "BLACK") {
             g.setColor(Color.black);
           }
-          if (floorLine.get(i).toString().equals("WHITE")) {
+          if (floorLine.get(i).toString() == "WHITE") {
             g.setColor(Color.green);
           }
         }
@@ -489,9 +496,15 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
     //Score:
     g.setColor(scorecolor);
-    g.drawString("Punkte:", 5, 260);
+    g.drawString(TEXT_POINTS, 5, 260);
     g.drawString(Integer.toString(player2.getScore()), 50, 260);
   }
+
+  /**
+   * Draws player three according to the model.
+   *
+   * @param g Graphics Element
+   */
 
   private void drawPlayerFour(Graphics g) {
     Player player4 = player.get(3);
@@ -499,7 +512,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
     PlayerBoard playerBoardPlayer4 = player4.getPlayerBoard();
 
     ColorTile[][] patternLines = playerBoardPlayer4.getPatternLines();
-
 
     if (player4.getState().equals(PlayerState.TO_MOVE)) {
       g.setColor(Color.green);
@@ -509,7 +521,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
       g.drawString(player4.getNickname(), 5, 315);
     }
 
-
     //Draw Pattern Line of Player One
 
     for (int i = 1; i < (patternLines.length + 1); i++) {
@@ -518,7 +529,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
           IntPair[] cache = coordinatePatternLinesPlayerFour.get(i);
 
-          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i][j].getColor();
+          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i - 1][j].getColor();
           if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)) {
             g.setColor(Color.black);
           } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
@@ -540,7 +551,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
     // Draw Wall of Player One
 
     boolean[][] wall = playerBoardPlayer4.getWall();
-
 
     //draw Blue
     IntPair[] blueWall = coordinateWallPlayerFour.get(1);
@@ -576,7 +586,6 @@ public class DrawboardPlayerBoardRight extends JPanel {
       g.fillRect(yellowWall[4].getX(), yellowWall[4].getY(), widthOfPatternLineCell,
           heightOfPatternLineCell);
     }
-
 
     //draw Red
 
@@ -657,25 +666,25 @@ public class DrawboardPlayerBoardRight extends JPanel {
     List<Tile> floorLine = playerBoardPlayer4.getFloorLine();
 
     if (floorLine.size() == 0) {
-      ;
+
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
-        if (floorLine.get(i).toString().equals("(-1)")) {
+        if (floorLine.get(i).toString() == "(-1)") {
           g.setColor(Color.gray);
         } else {
-          if (floorLine.get(i).toString().equals("BLUE")) {
+          if (floorLine.get(i).toString() == "BLUE") {
             g.setColor(Color.blue);
           }
-          if (floorLine.get(i).toString().equals("YELLOW")) {
+          if (floorLine.get(i).toString() == "YELLOW") {
             g.setColor(Color.yellow);
           }
-          if (floorLine.get(i).toString().equals("RED")) {
+          if (floorLine.get(i).toString() == "RED") {
             g.setColor(Color.red);
           }
-          if (floorLine.get(i).toString().equals("BLACK")) {
+          if (floorLine.get(i).toString() == "BLACK") {
             g.setColor(Color.black);
           }
-          if (floorLine.get(i).toString().equals("WHITE")) {
+          if (floorLine.get(i).toString() == "WHITE") {
             g.setColor(Color.green);
           }
         }
@@ -685,7 +694,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
     }
 
     g.setColor(scorecolor);
-    g.drawString("Punkte:", 5, 560);
+    g.drawString(TEXT_POINTS, 5, 560);
     g.drawString(Integer.toString(player4.getScore()), 50, 560);
   }
 

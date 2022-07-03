@@ -58,7 +58,7 @@ public class GameController implements Controller {
    * @return true if success.
    */
   public boolean pickTilesFromPlate(Color color, Player player, Plate plate) {
-    if (player != model.getPlayers().get(model.getPlayerToMoveIndex())) {
+    if (player != model.getPlayerToMove()) {
       // pickTile from non-active player
       return false;
     }
@@ -66,9 +66,9 @@ public class GameController implements Controller {
       // pickTile not allowed in another round state
       return false;
     }
-    if (!model.getPlates().stream().anyMatch(p -> p == plate)) {
+    /*if (!model.getPlates().stream().anyMatch(p -> p == plate)) {
       return false;
-    }
+    }*/
     if (plate.getState() == PlateState.EMPTY) {
       return false;
     }
@@ -86,7 +86,7 @@ public class GameController implements Controller {
    * @return true if success.
    */
   public boolean pickTilesFromTableCenter(Color color, Player player) {
-    if (player != model.getPlayers().get(model.getPlayerToMoveIndex())) {
+    if (player != model.getPlayerToMove()) {
       // pickTile from non-active player
       return false;
     }
@@ -94,11 +94,10 @@ public class GameController implements Controller {
       // pickTile not allowed in another round state
       return false;
     }
-    // TODO: сode below returns false even if color is present.
-    // if (model.getTableCenter().getColorTiles().stream()
-    //    .anyMatch(colorTile -> colorTile.getColor() == color)) {
-    //  return false;
-    // }
+    if (!model.getTableCenter().getColorTiles().stream()
+        .anyMatch(colorTile -> colorTile.getColor() == color)) {
+      return false;
+    }
     return model.pickTilesFromTableCenter(color, player);
   }
 

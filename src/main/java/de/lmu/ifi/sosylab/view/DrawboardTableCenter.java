@@ -1,7 +1,5 @@
 package de.lmu.ifi.sosylab.view;
 
-// import de.lmu.ifi.sosylab.model.*;
-
 import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
@@ -14,14 +12,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JPanel;
 
 /**
- * Part of the game - table center.
+ * Center Panel of the Game. Shows the panels and the center of the table.
  */
+
 public class DrawboardTableCenter extends JPanel {
 
   private int hightOfCell = 35;
@@ -47,44 +45,41 @@ public class DrawboardTableCenter extends JPanel {
   private List<Plate> listFactorys;
   private GameModel model;
 
+
   /**
-   * Initializes the table center.
+   * Constructor of the class.
    *
-   * @param model game model instance
+   * @param model
    */
+
   public DrawboardTableCenter(GameModel model) {
     setPreferredSize(new Dimension(400, 600));
     initialize();
-    List<GameModel> gameModelList = new ArrayList<>();
-    gameModelList.add(model);
-    List<GameModel> immutableGameModelList = Collections.unmodifiableList(gameModelList);
-    this.model = immutableGameModelList.get(0);
+    this.model = model;
     this.tableCenter = model.getTableCenter();
     this.listFactorys = model.getPlates();
   }
 
+  /**
+   * Sets the coordinates for the individual objects.
+   */
+
   private void initialize() {
-    firstFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17),
-        new IntPair(17, 58),
+    firstFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17), new IntPair(17, 58),
         new IntPair(58, 58)};
-    secondFactory = new IntPair[]{new IntPair(167, 17), new IntPair(208, 17),
-        new IntPair(167, 58),
+    secondFactory = new IntPair[]{new IntPair(167, 17), new IntPair(208, 17), new IntPair(167, 58),
         new IntPair(208, 58)};
-    thirdFactory = new IntPair[]{new IntPair(317, 17), new IntPair(358, 17),
-        new IntPair(317, 58),
+    thirdFactory = new IntPair[]{new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58),
         new IntPair(358, 58)};
-    fourthFactory = new IntPair[]{new IntPair(92, 117), new IntPair(133, 117),
-        new IntPair(92, 158),
+    fourthFactory = new IntPair[]{new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158),
         new IntPair(133, 158)};
     fifthFactory = new IntPair[]{new IntPair(242, 117), new IntPair(283, 117),
         new IntPair(242, 158), new IntPair(283, 158)};
-    sixthFactory = new IntPair[]{new IntPair(92, 242), new IntPair(133, 242),
-        new IntPair(92, 283),
+    sixthFactory = new IntPair[]{new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283),
         new IntPair(133, 283)};
     seventhFactory = new IntPair[]{new IntPair(242, 242), new IntPair(283, 242),
         new IntPair(242, 283), new IntPair(283, 283)};
-    eighthFactory = new IntPair[]{new IntPair(92, 367), new IntPair(133, 367),
-        new IntPair(92, 408),
+    eighthFactory = new IntPair[]{new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408),
         new IntPair(133, 408)};
     ninthFactory = new IntPair[]{new IntPair(242, 367), new IntPair(283, 367),
         new IntPair(242, 408), new IntPair(283, 408)};
@@ -102,8 +97,7 @@ public class DrawboardTableCenter extends JPanel {
 
     positionOfFactory = new IntPair[]{new IntPair(5, 5), new IntPair(155, 5),
         new IntPair(305, 5), new IntPair(80, 105), new IntPair(230, 105),
-        new IntPair(80, 230), new IntPair(230, 230), new IntPair(80, 355),
-        new IntPair(230, 355)};
+        new IntPair(80, 230), new IntPair(230, 230), new IntPair(80, 355), new IntPair(230, 355)};
 
     //Table Center Steine werden hinzugefügt
     positionTilesTableCenter = new ArrayList<>();
@@ -119,6 +113,12 @@ public class DrawboardTableCenter extends JPanel {
 
   }
 
+  /**
+   * Calls the individual methods to draw the playing field.
+   *
+   * @param g the <code>Graphics</code> object to protect
+   */
+
 
   @Override
 
@@ -130,6 +130,7 @@ public class DrawboardTableCenter extends JPanel {
     g.setColor(tableColor);
     g.fillRoundRect(5, 490, 395, 185, 20, 20);
 
+    updateTable();
     drawFacotry(g);
     drawTilesFactory(g);
 
@@ -137,10 +138,11 @@ public class DrawboardTableCenter extends JPanel {
 
   }
 
-  public void repaintCenterBoard() {
-    repaint();
-  }
-
+  /**
+   * Draws the panels in the center of the table.
+   *
+   * @param g
+   */
   private void drawFacotry(Graphics g) {
     for (int i = 0; i < positionOfFactory.length; i++) {
       Color backroundColor = new Color(135, 206, 250);
@@ -154,13 +156,13 @@ public class DrawboardTableCenter extends JPanel {
     }
   }
 
+  /**
+   * Draws the tiles on the Facotrys.
+   *
+   * @param g
+   */
+
   private void drawTilesFactory(Graphics g) {
-    // System.out.print("drawTilesFactory");
-    // System.out.print("Plates: ");
-    // for (Plate plate : listFactorys) {
-    //   System.out.print(plate.getTiles() + ", ");
-    // }
-    // System.out.println();
 
     for (int i = 0; i < listFactorys.size(); i++) {
       Plate plate = listFactorys.get(i);
@@ -186,6 +188,7 @@ public class DrawboardTableCenter extends JPanel {
           g.setColor(Color.red);
         }
         g.fillRect(cach[j].getX(), cach[j].getY(), widthOfCell, hightOfCell);
+
       }
 
     }
@@ -193,9 +196,15 @@ public class DrawboardTableCenter extends JPanel {
 
   }
 
+  /**
+   * Draws the tiles in the center of the table.
+   *
+   * @param g
+   */
+
   private void drawTableCenter(Graphics g) {
     List<Tile> tileList = model.getTableCenter().getTiles();
-    System.out.println("TableCenter tiles: " + tileList);
+    //System.out.println("TableCenter tiles: " + tileList);
     for (int i = 0; i < tileList.size(); i++) {
       if (tileList.get(i) instanceof PenaltyTile) {
         g.setColor(Color.gray);
@@ -218,30 +227,39 @@ public class DrawboardTableCenter extends JPanel {
           g.setColor(Color.red);
         }
 
+        //g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
+        //widthOfCell, hightOfCell);
+      }
+      if (tileList.get(0) instanceof PenaltyTile) {
         g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
             widthOfCell, hightOfCell);
+      } else {
+        g.fillRect(positionTilesTableCenter.get(i + 1).getX(),
+            positionTilesTableCenter.get(i + 1).getY(),
+            widthOfCell, hightOfCell);
       }
-      g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
-          widthOfCell, hightOfCell);
+
     }
+
   }
 
   /**
-   * Getter for the color of a tile on a plate addresed by table center related coordinates.
+   * Reads from a point which color of tiles is there.
    *
-   * @param x x- coordinate
-   * @param y y - coordinate
-   * @return color of the addressed tile
+   * @param x X-Coordinate
+   * @param y Y-Coordinate
+   * @return Color of Tile
    */
+
   public de.lmu.ifi.sosylab.model.Color getColorOfTileOnPlate(int x, int y) {
     de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
     for (int count = 1; count < listFactorys.size(); count++) {
-      IntPair[] cach = mapFactorys.get(count);
+      IntPair[] cache = mapFactorys.get(count);
       Plate plate = listFactorys.get(count - 1);
       List<ColorTile> colorTilesFacotry = plate.getTiles();
 
-      for (int i = 0; i < cach.length; i++) {
-        if (x == cach[i].getX() && y == cach[i].getY()) {
+      for (int i = 0; i < cache.length; i++) {
+        if (x == cache[i].getX() && y == cache[i].getY()) {
           toReturn = colorTilesFacotry.get(i).getColor();
         }
       }
@@ -250,14 +268,30 @@ public class DrawboardTableCenter extends JPanel {
 
   }
 
+  public de.lmu.ifi.sosylab.model.Color getColorOfTileTableCenter(int x, int y) {
+    de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
+
+    for (int i = 0; i < positionTilesTableCenter.size(); i++) {
+      int x_Cache = positionTilesTableCenter.get(i).getX();
+      int y_Cache = positionTilesTableCenter.get(i).getY();
+      if (x == x_Cache && y == y_Cache) {
+        toReturn = model.getTableCenter().getColorTiles().get(i - 1).getColor();
+
+      }
+
+
+    }
+    return toReturn;
+  }
+
   /**
-   * Get the count number for a particular plate in table center addressed by table center
-   * related coordinates.
+   * Returns for a coordinate which plate is located there.
    *
-   * @param x x-coordinate
-   * @param y y-coordinate
-   * @return number of the plate
+   * @param x X-Coordinate
+   * @param y Y-Coordinate
+   * @return Int of Plate
    */
+
   public int getPlate(int x, int y) {
     int fac = 0;
 
@@ -265,10 +299,14 @@ public class DrawboardTableCenter extends JPanel {
       IntPair[] cach = mapFactorys.get(i);
       for (int j = 0; j < cach.length; j++) {
         if (x == cach[j].getX() && y == cach[j].getY()) {
-          fac = i;
+          fac = i - 1;
         }
       }
     }
     return fac;
+  }
+
+  private void updateTable() {
+    //this.tileListColor = tableCenter.getColorTiles();
   }
 }

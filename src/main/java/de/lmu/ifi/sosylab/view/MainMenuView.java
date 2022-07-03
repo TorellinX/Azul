@@ -3,8 +3,8 @@ package de.lmu.ifi.sosylab.view;
 import static java.util.Objects.requireNonNull;
 
 import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
+import de.lmu.ifi.sosylab.model.State;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -14,8 +14,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -26,13 +27,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 /**
  * Starts a JFrame which displays the menu items of the game.
  */
 
-public class MainMenuView extends JFrame {
+public class MainMenuView extends JFrame implements PropertyChangeListener {
 
   private int width = 1200;
   private int hight = 700;
@@ -67,23 +69,16 @@ public class MainMenuView extends JFrame {
 
 
   /**
-   * Constructor of the class.
+   * Constructor of the class
    *
    * @param controller Controller
    * @param model      Model
    */
-  public MainMenuView(GameModel model, Controller controller) {
+  public MainMenuView(Controller controller, GameModel model) {
     super("Azul");
 
-    List<GameModel> gameModelList = new ArrayList<>();
-    gameModelList.add(requireNonNull(model));
-    List<GameModel> immutableGameModelList = Collections.unmodifiableList(gameModelList);
-    this.model = immutableGameModelList.get(0);
-
-    List<Controller> controllerList = new ArrayList<>();
-    controllerList.add(requireNonNull(controller));
-    List<Controller> immutableControllerList = Collections.unmodifiableList(controllerList);
-    this.controller = immutableControllerList.get(0);
+    this.model = requireNonNull(model);
+    this.controller = requireNonNull(controller);
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);
@@ -222,10 +217,11 @@ public class MainMenuView extends JFrame {
     //Unteres Panel
     JPanel panelBottomMultiplayer = new JPanel(new GridLayout(1, 3));
     connect = new JButton("Enter Room");
-    panelBottomMultiplayer.add(connect);
     leaveOnlineMode = new JButton("Leave");
-    panelBottomMultiplayer.add(leaveOnlineMode);
     createRoom = new JButton("Create New Room");
+
+    panelBottomMultiplayer.add(connect);
+    panelBottomMultiplayer.add(leaveOnlineMode);
     panelBottomMultiplayer.add(createRoom);
 
     multiplayerPanel.add(panelUpMultiplayer, BorderLayout.NORTH);
@@ -272,9 +268,12 @@ public class MainMenuView extends JFrame {
    */
 
   private void showGame() {
+    if (model.getState() == State.RUNNING)
+      ;
     setVisible(false);
     PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(),
         controller, model);
+    model.addPropertyChangeListener(playingviewframe);
   }
 
 
@@ -418,7 +417,7 @@ public class MainMenuView extends JFrame {
    *
    * @return list of nicknames
    */
-  public ArrayList<String> getNicknames() {
+  public List<String> getNicknames() {
     ArrayList<String> listOfPlayer = new ArrayList<>();
     DefaultTableModel localPlayer = (DefaultTableModel) localPlayers.getModel();
 
@@ -427,5 +426,16 @@ public class MainMenuView extends JFrame {
     }
     System.out.println(listOfPlayer);
     return listOfPlayer;
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+    SwingUtilities.invokeLater(() -> handleModelUpdate(propertyChangeEvent));
+  }
+
+  private void handleModelUpdate(PropertyChangeEvent event) {
+    if (event.getPropertyName().equals("GameState changed")) {
+      showGame();
+    }
   }
 }

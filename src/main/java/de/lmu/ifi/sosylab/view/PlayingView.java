@@ -1,12 +1,9 @@
 package de.lmu.ifi.sosylab.view;
 
-import static java.util.Objects.requireNonNull;
-
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.GameModel;
-import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.model.Tile;
+import de.lmu.ifi.sosylab.model.PlayerState;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -17,7 +14,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,13 +22,17 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
- * Graphic display of the playing view.
+ * Displays the playing field.
  */
+
 public class PlayingView extends JFrame implements PropertyChangeListener {
 
   @Serial
   private static final long serialVersionUID = 1L;
 
+  private JPanel menu;
+  JComboBox<String> menuItems = new JComboBox<String>(
+      new String[]{"- menu -", "restart", "leave", "end game"});
   private DrawboardPlayerBoardLeft drawboardPlayerBoardLeft;
   private DrawboardPlayerBoardRight drawboardPlayerBoardRight;
   private DrawboardTableCenter drawboardTableCenter;
@@ -55,33 +55,22 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private List<Player> player;
   private Controller controller;
   private GameModel model;
-  private int row;
-  private int coutnCach;
 
   /**
-   * Initializes the playing view.
+   * Constructor of Class.
    *
-   * @param playerCount number of players
-   * @param nicknames list of nicknames of players
-   * @param controller controller instance
-   * @param model model instance
+   * @param playerCount Number of Players
+   * @param nicknames   Nicknames of Player
+   * @param controller  controller
+   * @param model       model
    */
   public PlayingView(int playerCount, List<String> nicknames, Controller controller,
       GameModel model) {
     this.playerCount = playerCount;
-    List<String> immutableNamesList = Collections.unmodifiableList(nicknames);
-    this.nicknames = immutableNamesList;
+    this.nicknames = nicknames;
     this.player = model.getPlayers();
     this.controller = controller;
-    List<GameModel> gameModelList = new ArrayList<>();
-    gameModelList.add(requireNonNull(model));
-    List<GameModel> immutableGameModelList = Collections.unmodifiableList(gameModelList);
-    this.model = immutableGameModelList.get(0);
-
-    List<Controller> controllerList = new ArrayList<>();
-    controllerList.add(requireNonNull(controller));
-    List<Controller> immutableControllerList = Collections.unmodifiableList(controllerList);
-    this.controller = immutableControllerList.get(0);
+    this.model = model;
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);
@@ -92,27 +81,63 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     createPlayingView();
 
     startGame();
+    addListeners();
+
+    for (Player player : model.getPlayers()) {
+      if (player.getState() == PlayerState.TO_MOVE) {
+        System.out.println("Active Player: " + player);
+      } else {
+        System.out.println("Inactive Player: " + player);
+      }
+    }
+
   }
 
+  /**
+   * Shows the Game.
+   */
   private void startGame() {
     setVisible(true);
   }
 
+  /**
+   * Creates the view. Adds the buttons and the associated ActionListeners.
+   */
+
   private void createPlayingView() {
     Color backroundColor = new Color(135, 206, 250);
     //Oberes Panel wird mit Combobox gefüllt.
-    JPanel panelUp = new JPanel();
-    panelUp.setSize(1200, 75);
-    panelUp.setLayout(new FlowLayout());
-    JComboBox<String> menu = new JComboBox<String>(
-        new String[]{"- menu -", "restart", "leave", "end game"});
-    panelUp.add(menu);
-    panelUp.setBackground(backroundColor);
+    menu = new JPanel();
+    menu.setSize(1200, 75);
+    menu.setLayout(new FlowLayout());
+
+    menu.add(menuItems);
+    menu.setBackground(backroundColor);
 
     //Zeichenelemente werden übergeben.
     drawboardPlayerBoardLeft = new DrawboardPlayerBoardLeft(playerCount, nicknames, player);
     drawboardPlayerBoardRight = new DrawboardPlayerBoardRight(playerCount, nicknames, player);
     drawboardTableCenter = new DrawboardTableCenter(model);
+
+    addButtonPlayboard();
+    addButtonsPlayerOne();
+    addActionListenerFirstPlayer();
+    addButtonPlayerTwo();
+    addActionListenerSecondPlayer();
+    addActionListenerFactory();
+    addActionListenerTableCenter();
+    if (player.size() == 3) {
+      addButtonPlayerThree();
+      addActionListenerThridPlayer();
+    }
+    if (player.size() == 4) {
+      addButtonPlayerThree();
+      addActionListenerThridPlayer();
+
+      addButtonPlayerFour();
+      addActionListenerFourthPlayer();
+    }
+
     drawboardPlayerBoardLeft.setLayout(null);
     drawboardPlayerBoardRight.setLayout(null);
 
@@ -126,27 +151,18 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
     //Teile des Borderlayouts werden mit Panels und Graphikelementen gefüllt.
     Container c = getContentPane();
-    c.add(panelUp, BorderLayout.NORTH);
+    c.add(menu, BorderLayout.NORTH);
     c.add(panelSouth, BorderLayout.SOUTH);
     c.add(drawboardPlayerBoardRight, BorderLayout.EAST);
     c.add(drawboardPlayerBoardLeft, BorderLayout.WEST);
     c.add(drawboardTableCenter, BorderLayout.CENTER);
 
-    addButtonPlayboard();
-    addButtonsPlayerOne();
-    addActionListenerFirstPlayer();
-    addButtonPlayerTwo();
-    addActionListenerSecondPlayer();
-    addActionListenerFactory();
-    if (player.size() == 3) {
-      addButtonPlayerThree();
-      addActionListenerThridPlayer();
-    }
-    if (player.size() == 4) {
-      addButtonPlayerFour();
-      addActionListenerFourthPlayer();
-    }
+
   }
+
+  /**
+   * Adds the buttons of player one.
+   */
 
   private void addButtonsPlayerOne() {
     JButton firstrowu1button = new JButton();
@@ -189,6 +205,9 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     }
   }
 
+  /**
+   * Adds the buttons of player two.
+   */
   private void addButtonPlayerTwo() {
     JButton firstrowu2button = new JButton();
     firstrowu2button.setBounds(145, 5, 35, 35);
@@ -230,6 +249,9 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     }
   }
 
+  /**
+   * Adds the buttons of player three.
+   */
   private void addButtonPlayerThree() {
     JButton firstrowu3button = new JButton();
     firstrowu3button.setBounds(145, 305, 35, 35);
@@ -257,12 +279,12 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     buttonsThridPlayer.add(fifthrowu3button);
     buttonsThridPlayer.add(floorlineu3button);
 
-    drawboardPlayerBoardRight.add(firstrowu3button);
-    drawboardPlayerBoardRight.add(secondrowu3button);
-    drawboardPlayerBoardRight.add(thirdrowu3button);
-    drawboardPlayerBoardRight.add(fourthrowu3button);
-    drawboardPlayerBoardRight.add(fifthrowu3button);
-    drawboardPlayerBoardRight.add(floorlineu3button);
+    drawboardPlayerBoardLeft.add(firstrowu3button);
+    drawboardPlayerBoardLeft.add(secondrowu3button);
+    drawboardPlayerBoardLeft.add(thirdrowu3button);
+    drawboardPlayerBoardLeft.add(fourthrowu3button);
+    drawboardPlayerBoardLeft.add(fifthrowu3button);
+    drawboardPlayerBoardLeft.add(floorlineu3button);
 
     for (int i = 0; i < buttonsThridPlayer.size(); i++) {
       buttonsThridPlayer.get(i).setOpaque(false);
@@ -270,6 +292,10 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       buttonsThridPlayer.get(i).setBorderPainted(false);
     }
   }
+
+  /**
+   * Adds the buttons of player four.
+   */
 
   private void addButtonPlayerFour() {
     JButton firstrowu4button = new JButton();
@@ -312,26 +338,21 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     }
   }
 
+  /**
+   * Adds the buttons for the Playbord.
+   */
   private void addButtonPlayboard() {
 
     positionButtonsFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17),
-        new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17),
-        new IntPair(208, 17),
+        new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17), new IntPair(208, 17),
         new IntPair(167, 58), new IntPair(208, 58),
-        new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58),
-        new IntPair(358, 58),
-        new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158),
-        new IntPair(133, 158),
-        new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158),
-        new IntPair(283, 158),
-        new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283),
-        new IntPair(133, 283),
-        new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283),
-        new IntPair(283, 283),
-        new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408),
-        new IntPair(133, 408),
-        new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408),
-        new IntPair(283, 408)};
+        new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58), new IntPair(358, 58),
+        new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158), new IntPair(133, 158),
+        new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158), new IntPair(283, 158),
+        new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283), new IntPair(133, 283),
+        new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283), new IntPair(283, 283),
+        new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408), new IntPair(133, 408),
+        new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408), new IntPair(283, 408)};
 
     buttonsFactory = new ArrayList<>();
     for (int i = 0; i < positionButtonsFactory.length; i++) {
@@ -375,20 +396,82 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     }
   }
 
+  /**
+   * Adds ActionListeners for player one buttons.
+   */
+
   private void addActionListenerFirstPlayer() {
-    for (int i = 0; i < buttonsFirstPlayer.size(); i++) {
+    /*
+    for(int i = 0; i < buttonsFirstPlayer.size(); i++){
       row = i;
+      buttonsFirstPlayer.get(i).setName(Integer.toString(row));
       buttonsFirstPlayer.get(i).addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          controller.placeTiles(player.get(0), row);
+          final int final_i = Integer.parseInt(buttonsFirstPlayer.get(row).getName());
+          controller.placeTiles(player.get(0), final_i);
+          System.out.println(final_i);
         }
       });
     }
+
+     */
+
+    buttonsFirstPlayer.get(0).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P1" + 0);
+        controller.placeTiles(player.get(0), 0);
+      }
+    });
+
+    buttonsFirstPlayer.get(1).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P1" + 1);
+        controller.placeTiles(player.get(0), 1);
+      }
+    });
+
+    buttonsFirstPlayer.get(2).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P1" + 2);
+        controller.placeTiles(player.get(0), 2);
+      }
+    });
+
+    buttonsFirstPlayer.get(3).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P1" + 3);
+        controller.placeTiles(player.get(0), 3);
+      }
+    });
+
+    buttonsFirstPlayer.get(4).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P1" + 4);
+        controller.placeTiles(player.get(0), 4);
+      }
+    });
+
+    buttonsFirstPlayer.get(5).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P1" + 5);
+        controller.placeTiles(player.get(0), -1);
+      }
+    });
   }
 
+  /**
+   * Adds ActionListeners for player two buttons.
+   */
   private void addActionListenerSecondPlayer() {
-    for (int i = 0; i < buttonsFirstPlayer.size(); i++) {
+    /*
+    for(int i = 0; i < buttonsFirstPlayer.size(); i++){
       row = i;
       buttonsSecondPlayer.get(i).addActionListener(new ActionListener() {
         @Override
@@ -397,10 +480,63 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
         }
       });
     }
+
+     */
+    buttonsSecondPlayer.get(0).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P2" + 0);
+        controller.placeTiles(player.get(1), 0);
+      }
+    });
+
+    buttonsSecondPlayer.get(1).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P2" + 1);
+        controller.placeTiles(player.get(1), 1);
+      }
+    });
+
+    buttonsSecondPlayer.get(2).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P2" + 2);
+        controller.placeTiles(player.get(1), 2);
+      }
+    });
+
+    buttonsSecondPlayer.get(3).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P2" + 3);
+        controller.placeTiles(player.get(1), 3);
+      }
+    });
+
+    buttonsSecondPlayer.get(4).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P2" + 4);
+        controller.placeTiles(player.get(1), 4);
+      }
+    });
+
+    buttonsSecondPlayer.get(5).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P2" + 5);
+        controller.placeTiles(player.get(1), -1);
+      }
+    });
   }
 
+  /**
+   * Adds ActionListeners for player three buttons.
+   */
   private void addActionListenerThridPlayer() {
-    for (int i = 0; i < buttonsThridPlayer.size(); i++) {
+    /*
+    for(int i = 0; i < buttonsThridPlayer.size(); i++){
       row = i;
       buttonsThridPlayer.get(i).addActionListener(new ActionListener() {
         @Override
@@ -409,10 +545,64 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
         }
       });
     }
+
+     */
+    buttonsThridPlayer.get(0).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P3" + 0);
+        controller.placeTiles(player.get(2), 0);
+      }
+    });
+
+    buttonsThridPlayer.get(1).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P3" + 1);
+        controller.placeTiles(player.get(2), 1);
+      }
+    });
+
+    buttonsThridPlayer.get(2).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P3" + 2);
+        controller.placeTiles(player.get(2), 2);
+      }
+    });
+
+    buttonsThridPlayer.get(3).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P3" + 3);
+        controller.placeTiles(player.get(2), 3);
+      }
+    });
+
+    buttonsThridPlayer.get(4).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P3" + 4);
+        controller.placeTiles(player.get(1), 4);
+      }
+    });
+
+    buttonsThridPlayer.get(5).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P3" + 5);
+        controller.placeTiles(player.get(2), -1);
+      }
+    });
   }
 
+  /**
+   * Adds ActionListeners for player four buttons.
+   */
+
   private void addActionListenerFourthPlayer() {
-    for (int i = 0; i < buttonsFourthPlayer.size(); i++) {
+    /*
+    for(int i = 0; i < buttonsFourthPlayer.size(); i++){
       row = i;
       buttonsFourthPlayer.get(i).addActionListener(new ActionListener() {
         @Override
@@ -421,55 +611,173 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
         }
       });
     }
-  }
 
-  private void addActionListenerFactory() {
-    for (int i = 0; i < buttonsFactory.size(); i++) {
-      coutnCach = i;
-      buttonsFactory.get(i).addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(
-              buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY());
-          System.out.println("ActionEvent from buttonsFactory #" + coutnCach + " X:"
-              + buttonsFactory.get(coutnCach).getX() + " Y:" + buttonsFactory.get(coutnCach).getY()
-              + ", color " + color);
-
-          controller.pickTilesFromPlate(color, model.getPlayers().get(model.getPlayerToMoveIndex()),
-              model.getPlates().get(
-                  drawboardTableCenter.getPlate(buttonsFactory.get(coutnCach).getX(),
-                      buttonsFactory.get(coutnCach).getY())));
-          System.out.println("ActionEvent from buttonsFactory #");
-        }
-      });
-    }
-
-  }
-
-  private void addActionListenerTableCenter() {
-
-  }
-
-  /**
-   * Listener for a property change notice from model.
-   *
-   * @param event A PropertyChangeEvent object describing the event source
-   *          and the property that has changed.
-   */
-  public void propertyChange(PropertyChangeEvent event) {
-    SwingUtilities.invokeLater(new Runnable() {
+     */
+    buttonsFourthPlayer.get(0).addActionListener(new ActionListener() {
       @Override
-      public void run() {
-        handleModelUpdate(event);
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P4" + 0);
+        controller.placeTiles(player.get(3), 0);
+      }
+    });
+
+    buttonsFourthPlayer.get(1).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P4" + 1);
+        controller.placeTiles(player.get(3), 1);
+      }
+    });
+
+    buttonsFourthPlayer.get(2).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P4" + 2);
+        controller.placeTiles(player.get(3), 2);
+      }
+    });
+
+    buttonsFourthPlayer.get(3).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P4" + 3);
+        controller.placeTiles(player.get(3), 3);
+      }
+    });
+
+    buttonsFourthPlayer.get(4).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P4" + 4);
+        controller.placeTiles(player.get(3), 4);
+      }
+    });
+
+    buttonsFourthPlayer.get(5).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        System.out.println("P4" + 5);
+        controller.placeTiles(player.get(3), -1);
       }
     });
   }
 
-  private void handleModelUpdate(PropertyChangeEvent event) {
-    drawboardPlayerBoardLeft.repaintLeftBoard();
-    drawboardPlayerBoardRight.repaintRightBoard();
-    drawboardTableCenter.repaintCenterBoard();
+  /**
+   * Adds ActionListeners for Factory buttons.
+   */
+  private void addActionListenerFactory() {
+    /*
+    for(int i = 0; i < buttonsFactory.size(); i++){
+      coutnCach = i;
+      row = i;
+      buttonsFactory.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY());
+          System.out.println(buttonsFactory.indexOf(buttonsFactory.get(row)) + " " +buttonsFactory.get(row).getX() + " " + buttonsFactory.get(row).getY());
+        if(controller.pickTilesFromPlate(color, model.getPlayers().get(model.getPlayerToMoveIndex()),
+              model.getPlates().get(drawboardTableCenter.getPlate(buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY())))){
+          System.out.println("y");
+          } else {
+          System.out.println("N");
+        }
+
+        System.out.println("Test");
+        }
+      });
+    }
+
+     */
+
+    for (int i = 0; i < buttonsFactory.size(); i++) {
+      final int final_i = i;
+      buttonsFactory.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          System.out.println(
+              buttonsFactory.indexOf(buttonsFactory.get(final_i)) + " " + buttonsFactory.get(
+                  final_i).getX() + " " + buttonsFactory.get(final_i).getY());
+
+          de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(
+              buttonsFactory.get(final_i).getX(), buttonsFactory.get(final_i).getY());
+
+          if (controller.pickTilesFromPlate(color,
+              model.getPlayers().get(model.getPlayerToMoveIndex()),
+              model.getPlates().get(
+                  drawboardTableCenter.getPlate(buttonsFactory.get(final_i).getX(),
+                      buttonsFactory.get(final_i).getY())))) {
+            System.out.println("y");
+          } else {
+            System.out.println("N");
+          }
+        }
+      });
+    }
+  }
+
+  /**
+   * Adds ActionListeners for Table Center buttons.
+   */
+  private void addActionListenerTableCenter() {
+    for (int i = 0; i < buttonsTable.size(); i++) {
+      final int final_i = i;
+      buttonsTable.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          System.out.println(
+              buttonsTable.indexOf(buttonsTable.get(final_i)) + " " + buttonsTable.get(final_i)
+                  .getX() + " " + buttonsTable.get(final_i).getY());
+
+          de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileTableCenter(
+              buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
+
+          if (controller.pickTilesFromTableCenter(color,
+              model.getPlayers().get(model.getPlayerToMoveIndex()))) {
+            System.out.println("pickTilesFromTableCenter: Yes");
+          } else {
+            System.out.println("pickTilesFromTableCenter: No");
+          }
+
+        }
+      });
+    }
+
 
   }
+
+  private void addListeners() {
+    menuItems.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (menuItems.getSelectedItem().equals("end game")) {
+          System.exit(0);
+        }
+        System.out.println(menuItems.getSelectedItem());
+      }
+
+      private void dispose() {
+      }
+    });
+  }
+
+  /**
+   * Will be informed when the model is updated.
+   */
+  @Override
+  public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+    SwingUtilities.invokeLater(() -> handleModelUpdate(propertyChangeEvent));
+  }
+
+  /**
+   * Redraws the playing field.
+   *
+   * @param event
+   */
+
+  private void handleModelUpdate(PropertyChangeEvent event) {
+    if (event.getPropertyName().equals("Model changed")) {
+      repaint();
+    }
+  }
 }
+
 

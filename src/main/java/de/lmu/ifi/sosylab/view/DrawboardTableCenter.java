@@ -273,7 +273,7 @@ public class DrawboardTableCenter extends JPanel {
    */
   public de.lmu.ifi.sosylab.model.Color getColorOfTileOnPlate(int x, int y) {
     de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
-    for (int count = 1; count < listFactorys.size(); count++) {
+    for (int count = 1; count < listFactorys.size() + 1; count++) {
       IntPair[] cache = mapFactorys.get(count);
       Plate plate = listFactorys.get(count - 1);
       List<ColorTile> colorTilesFacotry = plate.getTiles();

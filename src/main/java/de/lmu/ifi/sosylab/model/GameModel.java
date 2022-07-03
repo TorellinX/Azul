@@ -47,6 +47,11 @@ public class GameModel {
   private RoundState roundState = RoundState.WAIT;
   private int startingPlayerIndex;
   private int playerToMoveIndex;
+
+  public Player getPlayerToMove() {
+    return playerToMove;
+  }
+
   private Player playerToMove;
   private int round = 1;
   List<ColorTile> selectedTiles = new ArrayList<>();

@@ -35,27 +35,22 @@ public class DrawboardTableCenter extends JPanel {
   private IntPair[] seventhFactory;
   private IntPair[] eighthFactory;
   private IntPair[] ninthFactory;
-
-  private List<Tile> tileList;
   private TableCenter tableCenter;
   private List<Plate> listFactorys;
-  private List<ColorTile> tileListColor;
+  private GameModel model;
 
 
   /**
    * Constructor of the class.
-   * @param listFactorys List of Factorys
+   * @param model
    */
 
-  public DrawboardTableCenter(List<Plate> listFactorys) {
+  public DrawboardTableCenter(GameModel model) {
     setPreferredSize(new Dimension(400, 600));
     initialize();
-    tableCenter = new TableCenter();
-    this.tileList = tableCenter.getTiles();
-    this.listFactorys = listFactorys;
-    this.tileListColor = tableCenter.getColorTiles();
-
-
+    this.model = model;
+    this.tableCenter = model.getTableCenter();
+    this.listFactorys = model.getPlates();
   }
 
   /**
@@ -63,15 +58,24 @@ public class DrawboardTableCenter extends JPanel {
    */
 
   private void initialize() {
-    firstFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17), new IntPair(17, 58), new IntPair(58, 58)};
-    secondFactory = new IntPair[]{new IntPair(167, 17), new IntPair(208, 17), new IntPair(167, 58), new IntPair(208, 58)};
-    thirdFactory = new IntPair[]{new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58), new IntPair(358, 58)};
-    fourthFactory = new IntPair[]{new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158), new IntPair(133, 158)};
-    fifthFactory = new IntPair[]{new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158), new IntPair(283, 158)};
-    sixthFactory = new IntPair[]{new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283), new IntPair(133, 283)};
-    seventhFactory = new IntPair[]{new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283), new IntPair(283, 283)};
-    eighthFactory = new IntPair[]{new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408), new IntPair(133, 408)};
-    ninthFactory = new IntPair[]{new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408), new IntPair(283, 408)};
+    firstFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17), new IntPair(17, 58),
+        new IntPair(58, 58)};
+    secondFactory = new IntPair[]{new IntPair(167, 17), new IntPair(208, 17), new IntPair(167, 58),
+        new IntPair(208, 58)};
+    thirdFactory = new IntPair[]{new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58),
+        new IntPair(358, 58)};
+    fourthFactory = new IntPair[]{new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158),
+        new IntPair(133, 158)};
+    fifthFactory = new IntPair[]{new IntPair(242, 117), new IntPair(283, 117),
+        new IntPair(242, 158), new IntPair(283, 158)};
+    sixthFactory = new IntPair[]{new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283),
+        new IntPair(133, 283)};
+    seventhFactory = new IntPair[]{new IntPair(242, 242), new IntPair(283, 242),
+        new IntPair(242, 283), new IntPair(283, 283)};
+    eighthFactory = new IntPair[]{new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408),
+        new IntPair(133, 408)};
+    ninthFactory = new IntPair[]{new IntPair(242, 367), new IntPair(283, 367),
+        new IntPair(242, 408), new IntPair(283, 408)};
 
     mapFactorys = new HashMap<>();
     mapFactorys.put(1, firstFactory);
@@ -121,6 +125,7 @@ public class DrawboardTableCenter extends JPanel {
     updateTable();
     drawFacotry(g);
     drawTilesFactory(g);
+
     drawTableCenter(g);
 
   }
@@ -133,10 +138,12 @@ public class DrawboardTableCenter extends JPanel {
     for(int i = 0; i < positionOfFactory.length; i++){
       Color backroundColor = new Color(135, 206, 250);
       g.setColor(backroundColor);
-      g.fillOval(positionOfFactory[i].getX(), positionOfFactory[i].getY(), widthOfFactory, hightOfFactory);
+      g.fillOval(positionOfFactory[i].getX(), positionOfFactory[i].getY(), widthOfFactory,
+          hightOfFactory);
       g.setColor(Color.black);
       ((Graphics2D) g).setStroke(new BasicStroke(2));
-      g.drawOval(positionOfFactory[i].getX(), positionOfFactory[i].getY(), widthOfFactory, hightOfFactory);
+      g.drawOval(positionOfFactory[i].getX(), positionOfFactory[i].getY(), widthOfFactory,
+          hightOfFactory);
     }
   }
 
@@ -147,31 +154,30 @@ public class DrawboardTableCenter extends JPanel {
 
   private void drawTilesFactory(Graphics g){
 
-    for(int i = 0; i < listFactorys.size(); i++){
+    for (int i = 0; i < listFactorys.size(); i++) {
       Plate plate = listFactorys.get(i);
       List<ColorTile> colorTilesFacotry = plate.getTiles();
 
-      IntPair[] cach = mapFactorys.get(i+1);
-      for(int j = 0; j < cach.length; j++){
-        if(colorTilesFacotry.size() != 0){
-          de.lmu.ifi.sosylab.model.Color color = colorTilesFacotry.get(j).getColor();
-          if(color.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)){
-            g.setColor(Color.yellow);
-          }
-          if(color.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
-            g.setColor(Color.black);
-          }
-          if(color.equals(de.lmu.ifi.sosylab.model.Color.WHITE)){
-            g.setColor(Color.green);
-          }
-          if(color.equals(de.lmu.ifi.sosylab.model.Color.BLUE)){
-            g.setColor(Color.blue);
-          }
-          if(color.equals(de.lmu.ifi.sosylab.model.Color.RED)){
-            g.setColor(Color.red);
-          }
-          g.fillRect(cach[j].getX(), cach[j].getY(), widthOfCell, hightOfCell);
+      IntPair[] cach = mapFactorys.get(i + 1);
+      for (int j = 0; j < colorTilesFacotry.size(); j++) {
+        de.lmu.ifi.sosylab.model.Color color = colorTilesFacotry.get(j).getColor();
+
+        if (color.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
+          g.setColor(Color.yellow);
         }
+        if (color.equals(de.lmu.ifi.sosylab.model.Color.BLACK)) {
+          g.setColor(Color.black);
+        }
+        if (color.equals(de.lmu.ifi.sosylab.model.Color.WHITE)) {
+          g.setColor(Color.green);
+        }
+        if (color.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
+          g.setColor(Color.blue);
+        }
+        if (color.equals(de.lmu.ifi.sosylab.model.Color.RED)) {
+          g.setColor(Color.red);
+        }
+        g.fillRect(cach[j].getX(), cach[j].getY(), widthOfCell, hightOfCell);
       }
 
     }
@@ -185,33 +191,38 @@ public class DrawboardTableCenter extends JPanel {
    * @param g
    */
 
-  private void drawTableCenter(Graphics g){
-    if(tileList.get(0) instanceof PenaltyTile){
-      g.setColor(Color.gray);
-      g.fillRect(positionTilesTableCenter.get(0).getX(), positionTilesTableCenter.get(0).getY(), widthOfCell, hightOfCell);
-    }
-    for(int i = 0; i < tileListColor.size(); i++){
-      de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tileList.get(i)).getColor();
-      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)){
-        g.setColor(Color.yellow);
-      }
-      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
-        g.setColor(Color.black);
-      }
-      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)){
-        g.setColor(Color.green);
-      }
-      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)){
-        g.setColor(Color.blue);
-      }
-      if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.RED)){
-        g.setColor(Color.red);
-      }
-      g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getX(), widthOfCell, hightOfCell);
-      System.out.println("Table Center Drawn");
+  private void drawTableCenter(Graphics g) {
+    List<Tile> tileList = model.getTableCenter().getTiles();
+    System.out.println("TableCenter tiles: " + tileList);
+    for (int i = 0; i < tileList.size(); i++) {
+      if (tileList.get(i) instanceof PenaltyTile) {
+        g.setColor(Color.gray);
+      } else {
+        de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tileList.get(i)).getColor();
 
-    }
+        if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
+          g.setColor(Color.yellow);
+        }
+        if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)) {
+          g.setColor(Color.black);
+        }
+        if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)) {
+          g.setColor(Color.green);
+        }
+        if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
+          g.setColor(Color.blue);
+        }
+        if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.RED)) {
+          g.setColor(Color.red);
+        }
 
+        g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
+            widthOfCell, hightOfCell);
+      }
+      g.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
+          widthOfCell, hightOfCell);
+    }
+    System.out.println("Table Center Drawn");
   }
 
   /**
@@ -221,17 +232,16 @@ public class DrawboardTableCenter extends JPanel {
    * @return Color of Tile
    */
 
-  public de.lmu.ifi.sosylab.model.Color getColorOfTileOnPlate(int x, int y){
+  public de.lmu.ifi.sosylab.model.Color getColorOfTileOnPlate(int x, int y) {
     de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
-    for(int count = 1; count < listFactorys.size(); count++){
-      IntPair[] cach =  mapFactorys.get(count);
-      Plate plate = listFactorys.get(count-1);
+    for (int count = 1; count < listFactorys.size(); count++) {
+      IntPair[] cach = mapFactorys.get(count);
+      Plate plate = listFactorys.get(count - 1);
       List<ColorTile> colorTilesFacotry = plate.getTiles();
 
-      for (int i = 0; i < cach.length; i++){
-        if(x == cach[i].getX() && y == cach[i].getY()) {
+      for (int i = 0; i < cach.length; i++) {
+        if (x == cach[i].getX() && y == cach[i].getY()) {
           toReturn = colorTilesFacotry.get(i).getColor();
-          break;
         }
       }
     }
@@ -249,11 +259,11 @@ public class DrawboardTableCenter extends JPanel {
   public int getPlate(int x, int y){
     int fac = 0;
 
-    for(int i = 1; i < mapFactorys.size(); i++){
-      IntPair[] cach =  mapFactorys.get(i);
-      for(int j = 0; j < cach.length; j++){
-        if(x == cach[j].getX() && y == cach[j].getY()){
-          fac = i-1;
+    for (int i = 1; i < mapFactorys.size(); i++) {
+      IntPair[] cach = mapFactorys.get(i);
+      for (int j = 0; j < cach.length; j++) {
+        if (x == cach[j].getX() && y == cach[j].getY()) {
+          fac = i - 1;
         }
       }
     }
@@ -261,6 +271,6 @@ public class DrawboardTableCenter extends JPanel {
   }
 
   private void updateTable(){
-    this.tileListColor = tableCenter.getColorTiles();
+    //this.tileListColor = tableCenter.getColorTiles();
   }
 }

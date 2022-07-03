@@ -20,7 +20,8 @@ import java.util.List;
  * Displays the playing field.
  */
 
-public class PlayingView extends JFrame  implements PropertyChangeListener {
+public class PlayingView extends JFrame implements PropertyChangeListener {
+
   @Serial
   private static final long serialVersionUID = 1L;
   
@@ -44,8 +45,6 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
   private int playerCount;
   private List<String> nicknames;
   private List<Player> player;
-  private List<Plate> listFactorys;
-
   private Controller controller;
   private GameModel model;
 
@@ -53,19 +52,16 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
    * Constructor of Class.
    * @param playerCount Number of Players
    * @param nicknames Nicknames of Player
-   * @param player Players
-   * @param tilesFactory Factorys
    * @param controller controller
    * @param model model
    */
-  public PlayingView(int playerCount, List<String> nicknames, List<Player> player, List<Plate> tilesFactory, Controller controller, GameModel model) {
+  public PlayingView(int playerCount, List<String> nicknames, Controller controller,
+      GameModel model) {
     this.playerCount = playerCount;
     this.nicknames = nicknames;
-    this.player = player;
-    this.listFactorys = tilesFactory;
+    this.player = model.getPlayers();
     this.controller = controller;
     this.model = model;
-
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);
@@ -93,19 +89,18 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
   private void createPlayingView() {
     Color backroundColor = new Color(135, 206, 250);
     //Oberes Panel wird mit Combobox gefüllt.
-
-
     JPanel panelUp = new JPanel();
     panelUp.setSize(1200, 75);
     panelUp.setLayout(new FlowLayout());
-    JComboBox<String> menu = new JComboBox<String>(new String[]{"- menu -", "restart", "leave", "end game"});
+    JComboBox<String> menu = new JComboBox<String>(
+        new String[]{"- menu -", "restart", "leave", "end game"});
     panelUp.add(menu);
     panelUp.setBackground(backroundColor);
 
     //Zeichenelemente werden übergeben.
     drawboardPlayerBoardLeft = new DrawboardPlayerBoardLeft(playerCount, nicknames, player);
     drawboardPlayerBoardRight = new DrawboardPlayerBoardRight(playerCount, nicknames, player);
-    drawboardTableCenter = new DrawboardTableCenter(listFactorys);
+    drawboardTableCenter = new DrawboardTableCenter(model);
 
     addButtonPlayboard();
     addButtonsPlayerOne();
@@ -152,13 +147,12 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
    *Adds the buttons of player one.
    */
 
-  private void addButtonsPlayerOne(){
+  private void addButtonsPlayerOne() {
     JButton firstrowu1button = new JButton();
     firstrowu1button.setBounds(145, 5, 35, 35);
 
     JButton secondrowu1button = new JButton();
     secondrowu1button.setBounds(110, 40, 70, 35);
-
 
     JButton thirdrowu1button = new JButton();
     thirdrowu1button.setBounds(75, 75, 105, 35);
@@ -187,7 +181,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     drawboardPlayerBoardLeft.add(fifthrowu1button);
     drawboardPlayerBoardLeft.add(floorlineu1button);
 
-    for(int i = 0; i < buttonsFirstPlayer.size(); i++){
+    for (int i = 0; i < buttonsFirstPlayer.size(); i++) {
       buttonsFirstPlayer.get(i).setOpaque(false);
       buttonsFirstPlayer.get(i).setContentAreaFilled(false);
       buttonsFirstPlayer.get(i).setBorderPainted(false);
@@ -197,7 +191,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
   /**
    *Adds the buttons of player two.
    */
-  private void addButtonPlayerTwo(){
+  private void addButtonPlayerTwo() {
     JButton firstrowu2button = new JButton();
     firstrowu2button.setBounds(145, 5, 35, 35);
 
@@ -231,7 +225,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     drawboardPlayerBoardRight.add(fifthrowu2button);
     drawboardPlayerBoardRight.add(floorlineu2button);
 
-    for(int i = 0; i < buttonsSecondPlayer.size(); i++){
+    for(int i = 0; i < buttonsSecondPlayer.size(); i++) {
       buttonsSecondPlayer.get(i).setOpaque(false);
       buttonsSecondPlayer.get(i).setContentAreaFilled(false);
       buttonsSecondPlayer.get(i).setBorderPainted(false);
@@ -241,7 +235,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
   /**
    *Adds the buttons of player three.
    */
-  private void addButtonPlayerThree(){
+  private void addButtonPlayerThree() {
     JButton firstrowu3button = new JButton();
     firstrowu3button.setBounds(145, 305, 35, 35);
 
@@ -260,8 +254,6 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     JButton floorlineu3button = new JButton();
     floorlineu3button.setBounds(5, 505, 245, 35);
 
-
-
     buttonsThridPlayer = new ArrayList<>();
     buttonsThridPlayer.add(firstrowu3button);
     buttonsThridPlayer.add(secondrowu3button);
@@ -277,7 +269,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     drawboardPlayerBoardLeft.add(fifthrowu3button);
     drawboardPlayerBoardLeft.add(floorlineu3button);
 
-    for(int i = 0; i < buttonsThridPlayer.size(); i++){
+    for (int i = 0; i < buttonsThridPlayer.size(); i++) {
       buttonsThridPlayer.get(i).setOpaque(false);
       buttonsThridPlayer.get(i).setContentAreaFilled(false);
       buttonsThridPlayer.get(i).setBorderPainted(false);
@@ -288,7 +280,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
    *Adds the buttons of player four.
    */
 
-  private void addButtonPlayerFour(){
+  private void addButtonPlayerFour() {
     JButton firstrowu4button = new JButton();
     firstrowu4button.setBounds(145, 305, 35, 35);
 
@@ -323,7 +315,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     drawboardPlayerBoardRight.add(fifthrowu4button);
     drawboardPlayerBoardRight.add(floorlineu4button);
 
-    for(int i = 0; i < buttonsFourthPlayer.size(); i++){
+    for (int i = 0; i < buttonsFourthPlayer.size(); i++) {
       buttonsFourthPlayer.get(i).setOpaque(false);
       buttonsFourthPlayer.get(i).setContentAreaFilled(false);
       buttonsFourthPlayer.get(i).setBorderPainted(false);
@@ -333,7 +325,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
   /**
    *Adds the buttons for the Playbord.
    */
-  private void addButtonPlayboard(){
+  private void addButtonPlayboard() {
 
     positionButtonsFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17), new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17), new IntPair(208, 17), new IntPair(167, 58), new IntPair(208, 58),
         new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58), new IntPair(358, 58), new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158), new IntPair(133, 158),
@@ -341,15 +333,16 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
         new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283), new IntPair(283, 283), new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408), new IntPair(133, 408), new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408), new IntPair(283, 408)};
 
     buttonsFactory = new ArrayList<>();
-    for(int i = 0; i < positionButtonsFactory.length; i++){
+    for(int i = 0; i < positionButtonsFactory.length; i++) {
       buttonsFactory.add(new JButton());
-      buttonsFactory.get(i).setBounds(positionButtonsFactory[i].getX(), positionButtonsFactory[i].getY(), widthOfButtons, hightOfButtons);
+      buttonsFactory.get(i).setBounds(positionButtonsFactory[i].getX(), positionButtonsFactory[i].getY(),
+          widthOfButtons, hightOfButtons);
       buttonsFactory.get(i).setOpaque(false);
       buttonsFactory.get(i).setContentAreaFilled(false);
       buttonsFactory.get(i).setBorderPainted(false);
     }
 
-    for(int j = 0; j < buttonsFactory.size(); j++){
+    for (int j = 0; j < buttonsFactory.size(); j++) {
       drawboardTableCenter.add(buttonsFactory.get(j));
     }
 
@@ -364,16 +357,18 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
     }
 
     buttonsTable = new ArrayList<>();
-    for(int count = 0; count < positionButtonTable.size(); count++){
+    for (int count = 0; count < positionButtonTable.size(); count++) {
       buttonsTable.add(new JButton());
-      buttonsTable.get(count).setBounds(positionButtonTable.get(count).getX(), positionButtonTable.get(count).getY(), widthOfButtons, hightOfButtons);
+      buttonsTable.get(count)
+          .setBounds(positionButtonTable.get(count).getX(), positionButtonTable.get(count).getY(),
+              widthOfButtons, hightOfButtons);
       buttonsTable.get(count).setOpaque(false);
       buttonsTable.get(count).setContentAreaFilled(false);
       buttonsTable.get(count).setBorderPainted(false);
 
     }
 
-    for(int m = 0; m < buttonsTable.size(); m++){
+    for (int m = 0; m < buttonsTable.size(); m++) {
       drawboardTableCenter.add(buttonsTable.get(m));
     }
   }
@@ -695,8 +690,8 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
   /**
    *Adds ActionListeners for Table Center buttons.
    */
-  private void addActionListenerTableCenter(){
-    for(int i = 0; i < buttonsTable.size(); i++){
+  private void addActionListenerTableCenter() {
+    for (int i = 0; i < buttonsTable.size(); i++) {
       final int final_i = i;
       buttonsTable.get(i).addActionListener(new ActionListener() {
         @Override
@@ -706,9 +701,9 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
           de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
 
           if(controller.pickTilesFromTableCenter(color, model.getPlayers().get(model.getPlayerToMoveIndex()))){
-            System.out.println("y");
+            System.out.println("pickTilesFromTableCenter: Yes");
           } else {
-            System.out.println("N");
+            System.out.println("pickTilesFromTableCenter: No");
           }
 
         }
@@ -721,7 +716,7 @@ public class PlayingView extends JFrame  implements PropertyChangeListener {
   /**
    *Will be informed when the model is updated.
    */
-  public void propertyChange(PropertyChangeEvent event){
+  public void propertyChange(PropertyChangeEvent event) {
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {

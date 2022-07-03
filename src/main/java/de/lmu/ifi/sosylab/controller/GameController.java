@@ -129,6 +129,11 @@ public class GameController implements Controller {
 
 
   public boolean placeTiles(Player player, int row) {
-    return model.setTiles(player, row);
+    if(player == model.getPlayerToMove()) {
+      return model.setTiles(player, row);
+    }
+    else {
+      return false;
+    }
   }
 }

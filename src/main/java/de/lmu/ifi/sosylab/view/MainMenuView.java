@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -73,8 +75,15 @@ public class MainMenuView extends JFrame {
   public MainMenuView(GameModel model, Controller controller) {
     super("Azul");
 
-    this.model = requireNonNull(model);
-    this.controller = requireNonNull(controller);
+    List<GameModel> gameModelList = new ArrayList<>();
+    gameModelList.add(requireNonNull(model));
+    List<GameModel> immutableGameModelList = Collections.unmodifiableList(gameModelList);
+    this.model = immutableGameModelList.get(0);
+
+    List<Controller> controllerList = new ArrayList<>();
+    controllerList.add(requireNonNull(controller));
+    List<Controller> immutableControllerList = Collections.unmodifiableList(controllerList);
+    this.controller = immutableControllerList.get(0);
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);

@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
+import static java.util.Objects.requireNonNull;
+
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Plate;
@@ -15,6 +17,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -66,10 +69,19 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   public PlayingView(int playerCount, List<String> nicknames, Controller controller,
       GameModel model) {
     this.playerCount = playerCount;
-    this.nicknames = nicknames;
+    List<String> immutableNamesList = Collections.unmodifiableList(nicknames);
+    this.nicknames = immutableNamesList;
     this.player = model.getPlayers();
     this.controller = controller;
-    this.model = model;
+    List<GameModel> gameModelList = new ArrayList<>();
+    gameModelList.add(requireNonNull(model));
+    List<GameModel> immutableGameModelList = Collections.unmodifiableList(gameModelList);
+    this.model = immutableGameModelList.get(0);
+
+    List<Controller> controllerList = new ArrayList<>();
+    controllerList.add(requireNonNull(controller));
+    List<Controller> immutableControllerList = Collections.unmodifiableList(controllerList);
+    this.controller = immutableControllerList.get(0);
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);

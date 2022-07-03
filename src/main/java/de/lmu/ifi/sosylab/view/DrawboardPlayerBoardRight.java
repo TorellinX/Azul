@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JPanel;
@@ -54,8 +55,10 @@ public class DrawboardPlayerBoardRight extends JPanel {
    */
   public DrawboardPlayerBoardRight(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
-    this.nicknames = nicknames;
-    this.player = player;
+    List<String> immutableNamesList = Collections.unmodifiableList(nicknames);
+    this.nicknames = immutableNamesList;
+    List<Player> immutablePlayerList = Collections.unmodifiableList(player);
+    this.player = immutablePlayerList;
     initializePlayfieldRight();
     setPreferredSize(new Dimension(400, 700));
     repaint();

@@ -1,9 +1,18 @@
-# Sample project
-
-This project consists of some example source files done for the SEP SS22 at LMU Munich.
+# Readme for Azul team 07
 
 ## Dependencies
 
-We recommend Java 17 for this project.
-It was tested on Ubuntu 20.04 with openjdk-17.0.3,
-so no other guarantees can be made.
+This project is based on Java 17.
+For testing Junit 5.8.2 is set.
+
+## Application
+
+For building the application:
+maven -> Plugins -> jar -> jar:jar
+This results in a directory named "target"
+containing the jar - file.
+
+## Release
+
+Move the jar - file to the release folder and
+rename if desired. Don't overwrite older releases.

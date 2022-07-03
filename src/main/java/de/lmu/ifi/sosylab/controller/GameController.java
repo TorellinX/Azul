@@ -11,6 +11,9 @@ import de.lmu.ifi.sosylab.model.RoundState;
 import de.lmu.ifi.sosylab.model.State;
 import java.util.List;
 
+/**
+ * Class for starting the game and managing game actions by players.
+ */
 public class GameController implements Controller {
 
   GameModel model;
@@ -25,17 +28,30 @@ public class GameController implements Controller {
     //view.showLobby;
   }
 
+  /**
+   * Start a new Azul game.
+   *
+   * @param playerNames List of player names
+   * @return true if success
+   */
   public boolean startGame(List<String> playerNames) {
-    if (playerNames.size() > 4 || playerNames.size() < 2){
+    if (playerNames.size() > 4 || playerNames.size() < 2) {
       return false;
-    }
-    else {
+    } else {
       model.createPlayers(playerNames);
       model.setState(State.RUNNING);
       return true;
     }
   }
 
+  /**
+   * Player action: pick a tile from a plate.
+   *
+   * @param color Color of the selected tiles.
+   * @param player Player to move.
+   * @param plate Plate from where the tiles where selected.
+   * @return true if success.
+   */
   public boolean pickTilesFromPlate(Color color, Player player, Plate plate) {
     if (player != model.getPlayers().get(model.getPlayerToMoveIndex())) {
       // pickTile from non-active player
@@ -57,6 +73,13 @@ public class GameController implements Controller {
     return model.pickTilesFromPlate(plate, color);
   }
 
+  /**
+   * Player action: pick a tile from table center.
+   *
+   * @param color Color of the selected tiles.
+   * @param player Player to move.
+   * @return true if success.
+   */
   public boolean pickTilesFromTableCenter(Color color, Player player) {
     if (player != model.getPlayers().get(model.getPlayerToMoveIndex())) {
       // pickTile from non-active player
@@ -74,7 +97,8 @@ public class GameController implements Controller {
     return model.pickTilesFromTableCenter(color, player);
   }
 
-/*  public boolean placePlateTiles(Plate plate, Color color, Player player, int rowIndex) {
+  /*
+  public boolean placePlateTiles(Plate plate, Color color, Player player, int rowIndex) {
     if (player.getPlayerBoard().countFreeFieldsInRow(rowIndex) > 0
         && player.getPlayerBoard().getPatternLineColor(rowIndex) == color) {
       model.pickTilesFromPlate(plate, color, player, rowIndex);

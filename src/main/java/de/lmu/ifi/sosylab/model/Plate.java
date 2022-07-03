@@ -1,13 +1,33 @@
 package de.lmu.ifi.sosylab.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Factory class providing 4 tiles to pick.
+ */
 public class Plate {
 
+  /**
+   * Record holding the picked color tiles after a pick as well as the remaining tiles to be
+   * transferred to the table center.
+   *
+   * @param selected  list of tiles of the selected color from this plate (factory)
+   * @param remaining list of tiles of the other colors from this plate
+   */
   public record SelectedAndRemainingTiles(List<ColorTile> selected,
                                           Optional<List<ColorTile>> remaining) {
+
+    public SelectedAndRemainingTiles {
+      selected = List.copyOf(selected);
+    }
+
+    public List<ColorTile> selected() {
+      List<ColorTile> immutableColorTileList = Collections.unmodifiableList(selected);
+      return immutableColorTileList;
+    }
 
   }
 
@@ -19,6 +39,11 @@ public class Plate {
     this.addTiles(tiles);
   }
 
+  /**
+   * Adds color tiles to this plate. 4 tiles are expected, otherwise exception is thrown.
+   *
+   * @param tiles list of color tiles to add
+   */
   public void addTiles(List<ColorTile> tiles) {
     if (tiles.size() != 4) {
       throw new RuntimeException("A plate has to be filled with exactly 4 tiles");
@@ -27,6 +52,13 @@ public class Plate {
     this.state = PlateState.FULL;
   }
 
+  /**
+   * Builds the record containing Lists of tiles of the selected color and the residual tiles.
+   * Expects valid argument.
+   *
+   * @param color selected color from this plate
+   * @return record with lists as described above
+   */
   public SelectedAndRemainingTiles pickTiles(Color color) {
     if (state == PlateState.EMPTY) {
       throw new RuntimeException("Can not pick tiles from empty plate");
@@ -48,7 +80,8 @@ public class Plate {
   }
 
   public List<ColorTile> getTiles() {
-    return tiles;
+    List<ColorTile> unmodifiableTilesList = Collections.unmodifiableList(tiles);
+    return unmodifiableTilesList;
   }
 
   public boolean containsColor(Color color) {

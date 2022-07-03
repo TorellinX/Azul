@@ -1,9 +1,36 @@
-# Sample project
-
-This project consists of some example source files done for the SEP SS22 at LMU Munich.
+# Readme for Azul team 07
 
 ## Dependencies
 
-We recommend Java 17 for this project.
-It was tested on Ubuntu 20.04 with openjdk-17.0.3,
-so no other guarantees can be made.
+This project is based on Java 17.
+For testing Junit 5.8.2 is set.
+
+## Compile
+
+### _command line_
+
+``mvn compiler:compile``
+
+### _IntelliJ_
+
+maven -> Plugins -> compiler -> compiler:compile
+
+
+## Build Application
+
+### _command line_
+
+``mvn jar:jar``
+
+### _IntelliJ_
+
+maven -> Plugings -> jar -> jar:jar
+
+## Run the Application 
+
+``java -jar releases/DeepThought-1.0.jar``
+
+## Release
+
+Move the jar - file to the release folder and
+rename if desired. Don't overwrite older releases.

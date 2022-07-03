@@ -5,9 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>groupId</groupId>
-    <artifactId>team07</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>DeepThought</artifactId>
+    <version>1.0</version>
     <build>
+        <testSourceDirectory>${myTestSourceDirectory}</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -18,7 +19,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>de.lmu.ifi.sosylab.HelloWorld</mainClass>
+                            <mainClass>de.lmu.ifi.sosylab.AzulMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -48,6 +49,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <myTestSourceDirectory>${project.basedir}/src/test/java</myTestSourceDirectory>
 
         <!-- variables for checkstyle -->
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>

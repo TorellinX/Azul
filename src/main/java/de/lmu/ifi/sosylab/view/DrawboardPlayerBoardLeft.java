@@ -120,9 +120,9 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     //Pattern Lines of Player Three
     IntPair[] firstPatternLinePlayerThree = {new IntPair(145, 305)};
-    IntPair[] secondPatternLinePlayerThree = {new IntPair(145, 340), new IntPair(110, 340)};
-    IntPair[] thirdPatternLinePlayerThree = {new IntPair(75, 375), new IntPair(110, 375), new IntPair(145, 375)};
-    IntPair[] fourthPatternLinePlayerThree = {new IntPair(40, 410), new IntPair(75, 410), new IntPair(110, 410), new IntPair(145, 410)};
+    IntPair[] secondPatternLinePlayerThree = {new IntPair(110, 340), new IntPair(145, 340)};
+    IntPair[] thirdPatternLinePlayerThree = {new IntPair(75, 375),new IntPair(110, 375), new IntPair(145, 375)};
+    IntPair[] fourthPatternLinePlayerThree = {new IntPair(40, 410), new IntPair(75, 410), new IntPair(110, 410), new IntPair(145, 410),};
     IntPair[] fifthPatternLinePlayerThree = {new IntPair(05, 445), new IntPair(40, 445), new IntPair(75, 445), new IntPair(110, 445), new IntPair(145, 445)};
 
     coordinatePatternLinesPlayerThree.put(1, firstPatternLinePlayerThree);

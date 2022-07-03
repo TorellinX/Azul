@@ -533,7 +533,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
           IntPair[] cache = coordinatePatternLinesPlayerThree.get(i);
 
-          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i][j].getColor();
+          de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i-1][j].getColor();
           if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
             g.setColor(Color.black);
           } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {

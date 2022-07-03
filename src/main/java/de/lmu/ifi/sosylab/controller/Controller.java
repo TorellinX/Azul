@@ -5,6 +5,9 @@ import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
 import java.util.List;
 
+/**
+ * Controller interface between view and model.
+ */
 public interface Controller {
 
   void start();

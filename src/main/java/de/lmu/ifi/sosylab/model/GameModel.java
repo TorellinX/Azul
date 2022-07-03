@@ -26,7 +26,7 @@ public class GameModel {
   private static final int POINTS_PRO_COLOR = 10;
   private static final int[] PENALTY_POINTS = new int[]{0, -1, -2, -4, -6, -8, -11, -14};
 
-  String STATE_CHANGED = "State changed";
+  // String STATE_CHANGED = "State changed";
 
 
   private List<Player> players;
@@ -54,6 +54,11 @@ public class GameModel {
     shuffleBag(); //shuffle Bag on Game Construction
   }
 
+  /**
+   * Create the list of players from player names.
+   *
+   * @param playerNames player names.
+   */
   public void createPlayers(List<String> playerNames) {
     if (playerNames.size() < 2 || playerNames.size() > 4) {
       throw new IllegalArgumentException("Invalid number of players, needs to be from 2 to 4");
@@ -85,7 +90,7 @@ public class GameModel {
    * {@link PropertyChangeListener}) gets notified about a change in this model.
    */
   private void notifyListeners() {
-    support.firePropertyChange(STATE_CHANGED, null, this);
+    support.firePropertyChange("State changed", null, this);
   }
 
   private void linkBoxToPlayerBoard() {
@@ -124,6 +129,14 @@ public class GameModel {
   }
 
   // (patternLines (0-4) or floorLine (-1)
+
+  /**
+   * Place picked tiles to a certain row on player board.
+   *
+   * @param player Player to move.
+   * @param row Row to place tile.
+   * @return true if success.
+   */
   public synchronized boolean setTiles(Player player, int row) {
     if (roundState != RoundState.PICKED) {
       return false;

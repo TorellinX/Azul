@@ -5,9 +5,10 @@ import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.Tile;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -15,8 +16,15 @@ import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-
+/**
+ * Graphic display of the playing view.
+ */
 public class PlayingView extends JFrame implements PropertyChangeListener {
 
   @Serial
@@ -47,6 +55,14 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private int row;
   private int coutnCach;
 
+  /**
+   * Initializes the playing view.
+   *
+   * @param playerCount number of players
+   * @param nicknames list of nicknames of players
+   * @param controller controller instance
+   * @param model model instance
+   */
   public PlayingView(int playerCount, List<String> nicknames, Controller controller,
       GameModel model) {
     this.playerCount = playerCount;
@@ -287,15 +303,23 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private void addButtonPlayboard() {
 
     positionButtonsFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17),
-        new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17), new IntPair(208, 17),
+        new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17),
+        new IntPair(208, 17),
         new IntPair(167, 58), new IntPair(208, 58),
-        new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58), new IntPair(358, 58),
-        new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158), new IntPair(133, 158),
-        new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158), new IntPair(283, 158),
-        new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283), new IntPair(133, 283),
-        new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283), new IntPair(283, 283),
-        new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408), new IntPair(133, 408),
-        new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408), new IntPair(283, 408)};
+        new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58),
+        new IntPair(358, 58),
+        new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158),
+        new IntPair(133, 158),
+        new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158),
+        new IntPair(283, 158),
+        new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283),
+        new IntPair(133, 283),
+        new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283),
+        new IntPair(283, 283),
+        new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408),
+        new IntPair(133, 408),
+        new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408),
+        new IntPair(283, 408)};
 
     buttonsFactory = new ArrayList<>();
     for (int i = 0; i < positionButtonsFactory.length; i++) {
@@ -395,8 +419,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
         public void actionPerformed(ActionEvent e) {
           de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(
               buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY());
-          System.out.println("ActionEvent from buttonsFactory #" + coutnCach + " X:" +
-              buttonsFactory.get(coutnCach).getX() + " Y:" + buttonsFactory.get(coutnCach).getY()
+          System.out.println("ActionEvent from buttonsFactory #" + coutnCach + " X:"
+              + buttonsFactory.get(coutnCach).getX() + " Y:" + buttonsFactory.get(coutnCach).getY()
               + ", color " + color);
 
           controller.pickTilesFromPlate(color, model.getPlayers().get(model.getPlayerToMoveIndex()),
@@ -414,6 +438,12 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   }
 
+  /**
+   * Listener for a property change notice from model.
+   *
+   * @param event A PropertyChangeEvent object describing the event source
+   *          and the property that has changed.
+   */
   public void propertyChange(PropertyChangeEvent event) {
     SwingUtilities.invokeLater(new Runnable() {
       @Override

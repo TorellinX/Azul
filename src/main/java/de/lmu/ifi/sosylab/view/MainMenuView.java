@@ -1,20 +1,30 @@
 package de.lmu.ifi.sosylab.view;
 
+import static java.util.Objects.requireNonNull;
+
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.*;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import static java.util.Objects.requireNonNull;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Starts a JFrame which displays the menu items of the game.
@@ -55,7 +65,7 @@ public class MainMenuView extends JFrame {
 
 
   /**
-   * Constructor of the class
+   * Constructor of the class.
    *
    * @param controller Controller
    * @param model      Model
@@ -203,11 +213,10 @@ public class MainMenuView extends JFrame {
     //Unteres Panel
     JPanel panelBottomMultiplayer = new JPanel(new GridLayout(1, 3));
     connect = new JButton("Enter Room");
-    leaveOnlineMode = new JButton("Leave");
-    createRoom = new JButton("Create New Room");
-
     panelBottomMultiplayer.add(connect);
+    leaveOnlineMode = new JButton("Leave");
     panelBottomMultiplayer.add(leaveOnlineMode);
+    createRoom = new JButton("Create New Room");
     panelBottomMultiplayer.add(createRoom);
 
     multiplayerPanel.add(panelUpMultiplayer, BorderLayout.NORTH);

@@ -81,4 +81,10 @@ public class Player {
   public int hashCode() {
     return Objects.hash(nickname);
   }
+
+  public void setState(PlayerState state) {
+    this.state = state;
+  }
+
+
 }

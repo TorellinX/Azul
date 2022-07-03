@@ -4,6 +4,7 @@ import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.model.PlayerState;
 import de.lmu.ifi.sosylab.model.Tile;
 
 import javax.swing.*;
@@ -72,6 +73,15 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     createPlayingView();
 
     startGame();
+
+    for (Player player : model.getPlayers()) {
+      if (player.getState() == PlayerState.TO_MOVE) {
+        System.out.println("Active Player: " + player);
+      } else {
+        System.out.println("Inactive Player: " + player) ;
+      }
+    }
+
   }
 
   /**

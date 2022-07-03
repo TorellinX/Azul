@@ -36,6 +36,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
   private int playerCount;
   private List<String> nicknames;
   private List<Player> player;
+  private String TEXT_POINTS = "Points: ";
 
 
   /**
@@ -447,7 +448,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
 
     //Score:
     g.setColor(scorecolor);
-    g.drawString("Punkte:", 5, 260);
+    g.drawString(TEXT_POINTS, 5, 260);
     g.drawString(Integer.toString(player2.getScore()), 50, 260);
   }
 
@@ -626,7 +627,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
     }
 
     g.setColor(scorecolor);
-    g.drawString("Punkte:", 5, 560);
+    g.drawString(TEXT_POINTS, 5, 560);
     g.drawString(Integer.toString(player4.getScore()), 50, 560);
   }
 

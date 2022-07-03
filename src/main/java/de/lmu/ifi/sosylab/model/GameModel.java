@@ -78,6 +78,7 @@ public class GameModel {
   private void chooseRandomStartingPlayer() {
     startingPlayerIndex = playerToMoveIndex = random.nextInt(players.size());
     playerToMove = players.get(playerToMoveIndex);
+    playerToMove.setState(PlayerState.TO_MOVE);
   }
 
   /**
@@ -106,15 +107,14 @@ public class GameModel {
     if (roundState != RoundState.PICKED) {
       return false;
     }
-    if (player != playerToMove) {
+    if (player.getState() != PlayerState.TO_MOVE) {
       throw new IllegalArgumentException("\"set to row\" event from non-active player");
     }
     System.out.println("    Setting tiles to row " + row + "...");
     if (!setTilesToRow(player, row)) {
       return false;
     }
-    playerToMoveIndex = getNextPlayerIndex();
-    playerToMove = players.get(playerToMoveIndex);
+    setPlayerToMove(getNextPlayerIndex());
     if (!areThereMoreTiles()) {
       endRound();
       return true;
@@ -123,6 +123,13 @@ public class GameModel {
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
     return true;
+  }
+
+  private void setPlayerToMove(int newPlayerToMoveIndex) {
+    playerToMove.setState(PlayerState.READY);
+    playerToMoveIndex = getNextPlayerIndex();
+    playerToMove = players.get(playerToMoveIndex);
+    playerToMove.setState(PlayerState.READY);
   }
 
   private boolean areThereMoreTiles() {
@@ -147,8 +154,7 @@ public class GameModel {
       return;
     }
     round++;
-    playerToMoveIndex = startingPlayerIndex;
-    playerToMove = players.get(playerToMoveIndex);
+    setPlayerToMove(startingPlayerIndex);
     fillPlates();
     tableCenter.addPenaltyTile(new PenaltyTile());
     roundState = RoundState.WAIT;

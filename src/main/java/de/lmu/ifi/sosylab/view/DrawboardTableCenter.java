@@ -193,7 +193,7 @@ public class DrawboardTableCenter extends JPanel {
 
   private void drawTableCenter(Graphics g) {
     List<Tile> tileList = model.getTableCenter().getTiles();
-    System.out.println("TableCenter tiles: " + tileList);
+    //System.out.println("TableCenter tiles: " + tileList);
     for (int i = 0; i < tileList.size(); i++) {
       if (tileList.get(i) instanceof PenaltyTile) {
         g.setColor(Color.gray);

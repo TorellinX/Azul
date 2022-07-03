@@ -61,11 +61,10 @@ public class GameController implements Controller {
       // pickTile not allowed in another round state
       return false;
     }
-    // TODO: сode below returns false even if color is present.
-    // if (model.getTableCenter().getColorTiles().stream()
-    //    .anyMatch(colorTile -> colorTile.getColor() == color)) {
-    //  return false;
-    // }
+     if (!model.getTableCenter().getColorTiles().stream()
+        .anyMatch(colorTile -> colorTile.getColor() == color)) {
+      return false;
+    }
     return model.pickTilesFromTableCenter(color, player);
   }
 

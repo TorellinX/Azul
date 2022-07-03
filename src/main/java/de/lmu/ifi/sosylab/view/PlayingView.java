@@ -726,13 +726,9 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   /**
    *Will be informed when the model is updated.
    */
-  public void propertyChange(PropertyChangeEvent event) {
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        handleModelUpdate(event);
-      }
-    });
+  @Override
+  public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+    SwingUtilities.invokeLater(() -> handleModelUpdate(propertyChangeEvent));
   }
 
   /**
@@ -741,7 +737,10 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    */
 
   private void handleModelUpdate(PropertyChangeEvent event){
-    repaint();
+    if(event.getPropertyName().equals("Model changed")) {
+      System.out.println("model changed");
+      repaint();
+    }
   }
 }
 

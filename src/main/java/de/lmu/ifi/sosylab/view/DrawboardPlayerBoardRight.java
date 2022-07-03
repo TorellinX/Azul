@@ -282,7 +282,7 @@ public class DrawboardPlayerBoardRight extends JPanel {
     ColorTile[][] patternLines = playerBoardPlayer2.getPatternLines();
 
     if(player2.getState().equals(PlayerState.TO_MOVE)){
-      g.setColor(Color.black);
+      g.setColor(Color.green);
       g.drawString(player2.getNickname(), 5, 15);
     }else {
       g.setColor(Color.black);

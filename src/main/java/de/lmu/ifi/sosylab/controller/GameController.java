@@ -21,10 +21,9 @@ public class GameController implements Controller {
   }
 
   public boolean startGame(List<String> playerNames) {
-    if (playerNames.size() > 4 || playerNames.size() < 2){
+    if (playerNames.size() > 4 || playerNames.size() < 2) {
       return false;
-    }
-    else {
+    } else {
       model.createPlayers(playerNames);
       model.setState(State.RUNNING);
       return true;
@@ -61,7 +60,7 @@ public class GameController implements Controller {
       // pickTile not allowed in another round state
       return false;
     }
-     if (!model.getTableCenter().getColorTiles().stream()
+    if (!model.getTableCenter().getColorTiles().stream()
         .anyMatch(colorTile -> colorTile.getColor() == color)) {
       return false;
     }

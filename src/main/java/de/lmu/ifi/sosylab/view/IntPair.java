@@ -5,15 +5,17 @@ package de.lmu.ifi.sosylab.view;
  */
 
 public class IntPair {
+
   private int x;
   private int y;
 
   /**
    * Constructor of Class
+   *
    * @param x
    * @param y
    */
-  public IntPair(int x, int y){
+  public IntPair(int x, int y) {
 
     this.x = x;
     this.y = y;
@@ -21,17 +23,19 @@ public class IntPair {
 
   /**
    * Get X.
+   *
    * @return X-Coordinate
    */
-  public int getX(){
+  public int getX() {
     return x;
   }
 
   /**
    * Get Y.
+   *
    * @return Y-Coordinate
    */
-  public int getY(){
+  public int getY() {
     return y;
   }
 }

@@ -1,23 +1,34 @@
 package de.lmu.ifi.sosylab.view;
 
-import de.lmu.ifi.sosylab.controller.*;
-import de.lmu.ifi.sosylab.model.*;
+import static java.util.Objects.requireNonNull;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.model.GameModel;
+import de.lmu.ifi.sosylab.model.State;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.*;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.lang.reflect.Array;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-
-import static java.util.Objects.requireNonNull;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Starts a JFrame which displays the menu items of the game.
@@ -257,13 +268,13 @@ public class MainMenuView extends JFrame implements PropertyChangeListener {
    */
 
   private void showGame() {
-    if (model.getState() == State.RUNNING);
+    if (model.getState() == State.RUNNING)
+      ;
     setVisible(false);
     PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(),
         controller, model);
     model.addPropertyChangeListener(playingviewframe);
   }
-
 
 
   /**
@@ -403,9 +414,10 @@ public class MainMenuView extends JFrame implements PropertyChangeListener {
 
   /**
    * Returns the list of players' nicknames.
+   *
    * @return list of nicknames
    */
-  public List<String> getNicknames(){
+  public List<String> getNicknames() {
     ArrayList<String> listOfPlayer = new ArrayList<>();
     DefaultTableModel localPlayer = (DefaultTableModel) localPlayers.getModel();
 
@@ -422,7 +434,8 @@ public class MainMenuView extends JFrame implements PropertyChangeListener {
   }
 
   private void handleModelUpdate(PropertyChangeEvent event) {
-    if(event.getPropertyName().equals("GameState changed"))
-    showGame();
+    if (event.getPropertyName().equals("GameState changed")) {
+      showGame();
+    }
   }
 }

@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
-import de.lmu.ifi.sosylab.view.MainMenuView;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -131,7 +130,8 @@ public class GameModel {
       endRound();
       return true;
     }
-    System.out.println("Active Player: " + getPlayerToMoveIndex() + " State: " + playerToMove.getState());
+    System.out.println(
+        "Active Player: " + getPlayerToMoveIndex() + " State: " + playerToMove.getState());
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
     return true;

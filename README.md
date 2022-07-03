@@ -5,12 +5,30 @@
 This project is based on Java 17.
 For testing Junit 5.8.2 is set.
 
-## Application
+## Compile
 
-For building the application:
-maven -> Plugins -> jar -> jar:jar
-This results in a directory named "target"
-containing the jar - file.
+### _command line_
+
+``mvn compiler:compile``
+
+### _IntelliJ_
+
+maven -> Plugins -> compiler -> compiler:compile
+
+
+## Build Application
+
+### _command line_
+
+``mvn jar:jar``
+
+### _IntelliJ_
+
+maven -> Plugings -> jar -> jar:jar
+
+## Run the Application 
+
+``java -jar target/DeepThought-1.0.jar``
 
 ## Release
 

@@ -17,6 +17,7 @@ import java.util.List;
 
 public class DrawboardPlayerBoardLeft extends JPanel {
 
+
   private static final long serialVersionUID = 1L;
   private JPanel drawboardplayerboard;
   private Graphics2D g;
@@ -303,7 +304,6 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
             de.lmu.ifi.sosylab.model.Color colorOfTile = patternLines[i-1][j].getColor();
             if(colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)){
-              System.out.println("blackkk");
               g.setColor(Color.black);
             } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
               g.setColor(Color.blue);

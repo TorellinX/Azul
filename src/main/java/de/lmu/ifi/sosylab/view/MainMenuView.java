@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * Starts a JFrame which displays the menu items of the game.
  */
 
-public class MainMenuView extends JFrame {
+public class MainMenuView extends JFrame implements PropertyChangeListener {
 
   private int width = 1200;
   private int hight = 700;
@@ -257,9 +257,11 @@ public class MainMenuView extends JFrame {
    */
 
   private void showGame() {
+    if (model.getState() == State.RUNNING);
     setVisible(false);
     PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(),
         controller, model);
+    model.addPropertyChangeListener(playingviewframe);
   }
 
 
@@ -412,5 +414,15 @@ public class MainMenuView extends JFrame {
     }
     System.out.println(listOfPlayer);
     return listOfPlayer;
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+    SwingUtilities.invokeLater(() -> handleModelUpdate(propertyChangeEvent));
+  }
+
+  private void handleModelUpdate(PropertyChangeEvent event) {
+    if(event.getPropertyName().equals("GameState changed"))
+    showGame();
   }
 }

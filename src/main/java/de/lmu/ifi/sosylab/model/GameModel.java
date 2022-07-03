@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
+import de.lmu.ifi.sosylab.view.MainMenuView;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +26,8 @@ public class GameModel {
   private static final int POINTS_PRO_COLUMN = 7;
   private static final int POINTS_PRO_COLOR = 10;
   private static final int[] PENALTY_POINTS = new int[]{0, -1, -2, -4, -6, -8, -11, -14};
+  private static final String MODEL_CHANGED = "Model changed";
+  private static final String MODEL_STATE_CHANGED = "GameState changed";
 
 
   private List<Player> players;
@@ -35,6 +39,11 @@ public class GameModel {
       .collect(Collectors.toList());
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
+
+  public State getState() {
+    return state;
+  }
+
   private State state;
   private RoundState roundState = RoundState.WAIT;
   private int startingPlayerIndex;
@@ -60,6 +69,8 @@ public class GameModel {
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
     linkBoxToPlayerBoard();
+    this.state = State.RUNNING;
+    notifyListeners(MODEL_STATE_CHANGED);
   }
 
   public void setState(State state) {
@@ -100,6 +111,7 @@ public class GameModel {
     for (Plate plate : plates) {
       plate.addTiles(getAndRemoveTilesFromBagForPlate());
     }
+    notifyListeners(MODEL_CHANGED);
   }
 
   // (patternLines (0-4) or floorLine (-1)
@@ -158,12 +170,14 @@ public class GameModel {
     fillPlates();
     tableCenter.addPenaltyTile(new PenaltyTile());
     roundState = RoundState.WAIT;
+    notifyListeners(MODEL_CHANGED);
   }
 
   private void endGame() {
     calculateEndScore();
     roundState = RoundState.FINISHED;
     state = State.FINISHED;
+    notifyListeners(MODEL_STATE_CHANGED);
   }
 
   /**
@@ -250,6 +264,7 @@ public class GameModel {
     }
     roundState = RoundState.PICKED;
     System.out.println("    roundState: PICKED " + selectedTiles + " tiles");
+    notifyListeners(MODEL_CHANGED);
     return true;
   }
 
@@ -274,6 +289,7 @@ public class GameModel {
     selectedTiles.addAll(tiles.colorTiles());
     roundState = RoundState.PICKED;
     System.out.println("    roundState: PICKED " + selectedTiles + " tiles");
+    notifyListeners(MODEL_CHANGED);
     return true;
   }
 
@@ -327,6 +343,7 @@ public class GameModel {
     }
     player.playerBoard.addColorTilesToLine(selectedTiles, row);
     selectedTiles.clear();
+    notifyListeners(MODEL_CHANGED);
     return true;
   }
 
@@ -393,6 +410,7 @@ public class GameModel {
     tiles.remove(tiles.size() - 1); // one tile remains on the wall
     box.addAll(tiles);
     Arrays.fill(playerBoard.patternLines[row], null);
+    notifyListeners(MODEL_CHANGED);
   }
 
   /**
@@ -408,12 +426,14 @@ public class GameModel {
       box.add((ColorTile) tile);
     }
     playerBoard.floorLine.clear();
+    notifyListeners(MODEL_CHANGED);
   }
 
   private void moveBoxTilesToBagAndShuffle() {
     bag.addAll(box);
     box.clear();
     shuffleBag();
+    notifyListeners(MODEL_CHANGED);
   }
 
   private void shuffleBag() {
@@ -643,5 +663,27 @@ public class GameModel {
     return round;
   }
 
+  /**
+   * Add a {@link PropertyChangeListener} to the model to get notified about any changes that the
+   * the model publishes.
+   *
+   * @param pcl the view that subscribes itself to the model.
+   */
+  public void addPropertyChangeListener(PropertyChangeListener pcl) {
+    requireNonNull(pcl);
+    support.addPropertyChangeListener(pcl);
+  }
 
+  public void removePropertyChangeListener(PropertyChangeListener pcl) {
+    requireNonNull(pcl);
+    support.removePropertyChangeListener(pcl);
+  }
+
+  /**
+   * Invokes the model to fire a new event, such that any attached observer (i.e.,
+   * {@link PropertyChangeListener}) gets notified about a change in this model.
+   */
+  private void notifyListeners(String state) {
+    support.firePropertyChange(state, null, this);
+  }
 }

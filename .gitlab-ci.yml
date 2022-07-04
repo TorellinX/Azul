@@ -25,7 +25,8 @@ build:
       - $OUTPUT_PATH
       - sources.txt
       - libraries.txt
-      - target/classes
+      #- target/classes
+      - pom.xml
 
 spotbugs:
   stage: test

@@ -11,6 +11,7 @@ stages:
 
 build:
   stage: build
+  image: maven:latest
   script:
     #- find $LIB_PATH -iname "*.jar" | tr '\n' ':' > libraries.txt
     #- find -name "*.java" > sources.txt

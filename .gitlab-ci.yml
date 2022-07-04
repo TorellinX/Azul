@@ -26,7 +26,7 @@ build:
       - sources.txt
       - libraries.txt
       #- target/classes
-      - build
+      - maven
 
 spotbugs:
   stage: test

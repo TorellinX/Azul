@@ -22,9 +22,9 @@ build:
   artifacts:
     paths:
     # Keep compiled java files and list of files
-     # - $OUTPUT_PATH
-      #- sources.txt
-     # - libraries.txt
+      - $OUTPUT_PATH
+      - sources.txt
+      - libraries.txt
       - target/classes
 
 spotbugs:

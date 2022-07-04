@@ -12,11 +12,12 @@ stages:
 build:
   stage: build
   script:
-    - find $LIB_PATH -iname "*.jar" | tr '\n' ':' > libraries.txt
-    - find -name "*.java" > sources.txt
-    - cat sources.txt
-    - mkdir $OUTPUT_PATH
-    - javac -d $OUTPUT_PATH -Xlint:all -Werror -g -cp "$CLASSPATH:$(cat libraries.txt)" @sources.txt
+    #- find $LIB_PATH -iname "*.jar" | tr '\n' ':' > libraries.txt
+    #- find -name "*.java" > sources.txt
+   # - cat sources.txt
+    #- mkdir $OUTPUT_PATH
+   # - javac -d $OUTPUT_PATH -Xlint:all -Werror -g -cp "$CLASSPATH:$(cat libraries.txt)" @sources.txt
+  - mvn package
   artifacts:
     paths:
     # Keep compiled java files and list of files
@@ -27,21 +28,24 @@ build:
 spotbugs:
   stage: test
   script:
-    - spotbugs -auxclasspath "$CLASSPATH:$(cat libraries.txt)" -textui -longBugCodes -effort:max -exitcode $OUTPUT_PATH
+   # - spotbugs -auxclasspath "$CLASSPATH:$(cat libraries.txt)" -textui -longBugCodes -effort:max -exitcode $OUTPUT_PATH
+    - mvn spotbugs:spotbugs
 
 checkstyle:
   stage: test
   script:
-    - java -jar /opt/checkstyle-10.3-all.jar -c /opt/google_checks.xml @sources.txt
+    #- java -jar /opt/checkstyle-10.3-all.jar -c /opt/google_checks.xml @sources.txt
+    - mvn checkstyle:check
 
 unit-tests:
   stage: test
   script:
-    - java -jar $JUNIT5_PATH --class-path "$OUTPUT_PATH:$(cat libraries.txt)" --scan-class-path
+    #- java -jar $JUNIT5_PATH --class-path "$OUTPUT_PATH:$(cat libraries.txt)" --scan-class-path
+    - mvn test
 
 execute:
   stage: execute
   script:
     # SEP Teams: adjust the next line for your project
-    -  java -cp "$OUTPUT_PATH:$(cat libraries.txt)" de.lmu.ifi.sosylab.HelloWorld
+    -  java -cp "$OUTPUT_PATH:$(cat libraries.txt)" de.lmu.ifi.sosylab.AzulMain
 

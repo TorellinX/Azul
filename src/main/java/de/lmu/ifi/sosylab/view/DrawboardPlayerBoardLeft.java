@@ -21,14 +21,13 @@ import javax.swing.JPanel;
  * Left Panel of the Game. In which players one and two are drawn.
  */
 
-public class DrawboardPlayerBoardLeft extends JPanel {
+public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
 
   @Serial
   private static final long serialVersionUID = 1L;
   private JPanel drawboardplayerboard;
   private Graphics2D g;
   private final Color playerboardcolor = new Color(204, 201, 199);
-  private final Color scorecolor = new Color(235, 79, 0);
   private final Color floorlinecolor = new Color(139, 0, 139);
   private final int heightOfPatternLineCell = 35;
   private final int widthOfPatternLineCell = 35;
@@ -180,16 +179,8 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
   private void drawPlayerOnePlayfield(Graphics g) {
 
-    //Rechtecke der Patternlines werden gezeichnet.
-    ((Graphics2D) g).setStroke(new BasicStroke(1));
+    drawPatternLinesFrames(g, coordinatePatternLinesPlayerOne);
 
-    for (int count = 1; count <= 5; count++) {
-      IntPair[] speicher = coordinatePatternLinesPlayerOne.get(count);
-      for (int i = 0; i < speicher.length; i++) {
-        g.drawRect(speicher[i].getX(), speicher[i].getY(), widthOfPatternLineCell,
-            heightOfPatternLineCell);
-      }
-    }
     //Hintergrund der Wall wird gezeichnet.
     g.setColor(playerboardcolor);
     g.fillRoundRect(200, 5, 181, 181, 20, 20);
@@ -241,15 +232,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
    * @param g
    */
   private void drawPlayerThreePlayfield(Graphics g) {
-    //Rechtecke der Patternlines werden gezeichnet.
-    ((Graphics2D) g).setStroke(new BasicStroke(1));
-
-    for (int count = 1; count <= 5; count++) {
-      IntPair[] speicher = coordinatePatternLinesPlayerThree.get(count);
-      for (int i = 0; i < speicher.length; i++) {
-        g.drawRect(speicher[i].getX(), speicher[i].getY(), widthOfPatternLineCell, heightOfPatternLineCell);
-      }
-    }
+    drawPatternLinesFrames(g, coordinatePatternLinesPlayerThree);
 
     g.setColor(playerboardcolor);
     g.fillRoundRect(200, 300, 185, 185, 20, 20);
@@ -307,13 +290,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     ColorTile[][] patternLines = playerBoardPlayer1.getPatternLines();
 
-    if (player1.getState().equals(PlayerState.TO_MOVE)) {
-      g.setColor(Color.green);
-      g.drawString(player1.getNickname(), 5, 15);
-    } else {
-      g.setColor(Color.black);
-      g.drawString(player1.getNickname(), 5, 15);
-    }
+    drawNickname(g, player1, 5, 15);
 
     //Draw Pattern Line of Player One
 
@@ -499,12 +476,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
       }
     }
 
-    //Score:
-    g.setColor(scorecolor);
-    g.drawString(TEXT_POINTS, 5, 260);
-    g.drawString(Integer.toString(player1.getScore()), 50, 260);
-
-
+    drawScores(g, player1, 5, 260);
   }
 
   /**
@@ -520,13 +492,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
 
     ColorTile[][] patternLines = playerBoardPlayer3.getPatternLines();
 
-    if (player3.getState().equals(PlayerState.TO_MOVE)) {
-      g.setColor(Color.green);
-      g.drawString(player3.getNickname(), 5, 315);
-    } else {
-      g.setColor(Color.black);
-      g.drawString(player3.getNickname(), 5, 315);
-    }
+    drawNickname(g, player3, 4, 315);
 
     //Draw Pattern Line of Player Three
     for (int i = 1; i < (patternLines.length + 1); i++) {
@@ -699,9 +665,7 @@ public class DrawboardPlayerBoardLeft extends JPanel {
       }
     }
 
-    g.setColor(scorecolor);
-    g.drawString(TEXT_POINTS, 5, 560);
-    g.drawString(Integer.toString(player3.getScore()), 50, 560);
+    drawScores(g, player3, 5, 560);
   }
 
 

@@ -150,6 +150,7 @@ public class GameModel {
     playerToMoveIndex = newPlayerToMoveIndex;
     playerToMove = players.get(playerToMoveIndex);
     playerToMove.setState(PlayerState.TO_MOVE);
+    notifyListeners(MODEL_CHANGED);
   }
 
   private boolean areThereMoreTiles() {
@@ -485,6 +486,10 @@ public class GameModel {
         player.score = 0; // the score can never drop below 0 points.
       }
     }
+    for (Player player : getPlayers()) {
+      System.out.println(Arrays.deepToString(player.playerBoard.wall));
+    }
+
   }
 
   /**

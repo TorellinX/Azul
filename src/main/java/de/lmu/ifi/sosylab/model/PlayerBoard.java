@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class PlayerBoard {
 
-  static final int WALL_SIZE = 5;
+  public static final int WALL_SIZE = 5;
   static final int FLOORLINE_SIZE = 7;
 
   private int score;

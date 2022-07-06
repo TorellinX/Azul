@@ -49,13 +49,11 @@ unit-tests:
     #- java -jar $JUNIT5_PATH --class-path "$OUTPUT_PATH:$(cat libraries.txt)" --scan-class-path
     - 'mvn test'
 
-execute:
-  stage: execute
-  image: maven:latest
-  script:
+#execute:
+ # stage: execute
+  #image: maven:latest
+  #script:
     # SEP Teams: adjust the next line for your project
-    #-  java -cp "$OUTPUT_PATH:$(cat libraries.txt)" de.lmu.ifi.sosylab.AzulMain
-#  - mvn test
   #- mvn exec:java
-    - export DISPLAY=:0.0 && mvn exec:java
+  #  - export DISPLAY=:0.0 && mvn exec:java
  # - mvn clean

@@ -13,18 +13,18 @@ build:
   stage: build
   image: maven:latest
   script:
-    - find $LIB_PATH -iname "*.jar" | tr '\n' ':' > libraries.txt
-    - find -name "*.java" > sources.txt
-    - cat sources.txt
-    - mkdir $OUTPUT_PATH
-    - javac -d $OUTPUT_PATH -Xlint:all -Werror -g -cp "$CLASSPATH:$(cat libraries.txt)" @sources.txt
+    #- find $LIB_PATH -iname "*.jar" | tr '\n' ':' > libraries.txt
+    #- find -name "*.java" > sources.txt
+    #- cat sources.txt
+    #- mkdir $OUTPUT_PATH
+    #- javac -d $OUTPUT_PATH -Xlint:all -Werror -g -cp "$CLASSPATH:$(cat libraries.txt)" @sources.txt
   - 'mvn package'
   artifacts:
     paths:
     # Keep compiled java files and list of files
-      - $OUTPUT_PATH
-      - sources.txt
-      - libraries.txt
+      #- $OUTPUT_PATH
+      #- sources.txt
+      #- libraries.txt
       - target/classes
       - maven
 
@@ -54,5 +54,5 @@ execute:
   image: maven:latest
   script:
     # SEP Teams: adjust the next line for your project
-    -  java -cp "$OUTPUT_PATH:$(cat libraries.txt)" de.lmu.ifi.sosylab.AzulMain
-
+    #-  java -cp "$OUTPUT_PATH:$(cat libraries.txt)" de.lmu.ifi.sosylab.AzulMain
+  - mvn exec:java

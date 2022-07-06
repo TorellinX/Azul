@@ -16,7 +16,7 @@ build:
     #- find $LIB_PATH -iname "*.jar" | tr '\n' ':' > libraries.txt
     #- find -name "*.java" > sources.txt
    # - cat sources.txt
-    #- mkdir $OUTPUT_PATH
+    - mkdir $OUTPUT_PATH
    # - javac -d $OUTPUT_PATH -Xlint:all -Werror -g -cp "$CLASSPATH:$(cat libraries.txt)" @sources.txt
   - 'mvn package'
   artifacts:
@@ -25,7 +25,7 @@ build:
       - $OUTPUT_PATH
       - sources.txt
       - libraries.txt
-      #- target/classes
+      - target/classes
       - maven
 
 spotbugs:

@@ -4,6 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <myTestSourceDirectory>${project.basedir}/src/test/java</myTestSourceDirectory>
+        <java.version>17</java.version>
+
+        <!-- variables for checkstyle -->
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+        <checkstyle.version>10.3</checkstyle.version>
+    </properties>
+
     <groupId>groupId</groupId>
     <artifactId>DeepThought</artifactId>
     <version>1.0</version>
@@ -57,10 +68,15 @@
                         <version>${checkstyle.version}</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
                 <executions>
                     <execution>
                         <id>checkstyle</id>
-                        <phase>verify</phase>
+                        <phase>validate</phase>
                         <goals><goal>check</goal></goals>
                     </execution>
                 </executions>
@@ -88,15 +104,6 @@
 
         </plugins>
     </build>
-
-    <properties>
-        <myTestSourceDirectory>${project.basedir}/src/test/java</myTestSourceDirectory>
-        <java.version>17</java.version>
-
-        <!-- variables for checkstyle -->
-        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-        <checkstyle.version>10.3</checkstyle.version>
-    </properties>
 
     <dependencies>
         <dependency>

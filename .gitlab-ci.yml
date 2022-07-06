@@ -55,4 +55,4 @@ execute:
   script:
     # SEP Teams: adjust the next line for your project
     #-  java -cp "$OUTPUT_PATH:$(cat libraries.txt)" de.lmu.ifi.sosylab.AzulMain
-  - mvn exec:java
+  - mvn test

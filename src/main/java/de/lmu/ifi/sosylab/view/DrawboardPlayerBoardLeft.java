@@ -9,14 +9,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.Collections;
 import java.io.Serial;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JPanel;
 
 /**
- * Left Panel of the Game. In which players one and two are drawn.
+ * Left Panel of the Game. Herein players one and two are drawn.
  */
 
 public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
@@ -24,7 +24,8 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
   @Serial
   private static final long serialVersionUID = 1L;
   private JPanel drawboardplayerboard;
-  private Graphics2D g;
+  // A field "Graphics2D g" is not required, as always the current graphics object is referenced.
+  // private Graphics2D g;
   private final Color playerboardcolor = new Color(204, 201, 199);
   private final int sizeOfPatternLineCell = 35;
   private final int sizeOfMinusCell = 35;
@@ -41,6 +42,13 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
   private List<Player> player;
 
 
+  /**
+   * Draw lefthand side of the playerboard.
+   *
+   * @param playerCount  number of players
+   * @param nicknames    list of player nicknames
+   * @param player       list of player instances
+   */
   public DrawboardPlayerBoardLeft(int playerCount, List<String> nicknames, List<Player> player) {
     this.playerCount = playerCount;
     List<String> namesList = Collections.unmodifiableList(nicknames);
@@ -56,12 +64,13 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
   /**
    * Calls the methods to draw the players.
    *
-   * @param g the <code>Graphics</code> object to protect
+   * @param g graphics object - kind of "internal reference"
    */
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    g = (Graphics2D) g;
+    // Self assignemet, as Graphics is superclass zu Graphics2G
+    // g = (Graphics2D) g;
     drawPlayerOnePlayerBoard(g);
     drawPlayerOne(g);
 
@@ -83,7 +92,7 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
     IntPair[] thirdPatternLinePlayerOne = {new IntPair(75, 75), new IntPair(110, 75),
         new IntPair(145, 75)};
     IntPair[] fourthPatternLinePlayerOne = {new IntPair(40, 110), new IntPair(75, 110),
-        new IntPair(110, 110), new IntPair(145, 110),};
+        new IntPair(110, 110), new IntPair(145, 110)};
     IntPair[] fifthPatternLinePlayerOne = {new IntPair(05, 145), new IntPair(40, 145),
         new IntPair(75, 145), new IntPair(110, 145), new IntPair(145, 145)};
 
@@ -125,7 +134,7 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
     IntPair[] thirdPatternLinePlayerThree = {new IntPair(75, 375), new IntPair(110, 375),
         new IntPair(145, 375)};
     IntPair[] fourthPatternLinePlayerThree = {new IntPair(40, 410), new IntPair(75, 410),
-        new IntPair(110, 410), new IntPair(145, 410),};
+        new IntPair(110, 410), new IntPair(145, 410)};
     IntPair[] fifthPatternLinePlayerThree = {new IntPair(05, 445), new IntPair(40, 445),
         new IntPair(75, 445), new IntPair(110, 445), new IntPair(145, 445)};
 
@@ -166,7 +175,7 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
   /**
    * Player board of the first player is drawn.
    *
-   * @param g
+   * @param g graphics object - kind of "internal reference"
    */
   private void drawPlayerOnePlayerBoard(Graphics g) {
     drawPatternLinesFrames(g, coordinatePatternLinesPlayerOne);
@@ -178,7 +187,7 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
   /**
    * Player board of the third player is drawn.
    *
-   * @param g
+   * @param g graphics object - kind of "internal reference"
    */
   private void drawPlayerThreePlayerBoard(Graphics g) {
     drawPatternLinesFrames(g, coordinatePatternLinesPlayerThree);
@@ -190,7 +199,7 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
   /**
    * Draws player one according to the model.
    *
-   * @param g Graphics Element
+   * @param g graphics object - kind of "internal reference"
    */
 
   private void drawPlayerOne(Graphics g) {
@@ -350,6 +359,7 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
     //drawFloorlineTiles
     List<Tile> floorLine = playerBoardPlayer1.getFloorLine();
     if (floorLine.size() == 0) {
+      ;
     } else {
       for (int i = 0; i < floorLine.size(); i++) {
         if (floorLine.get(i) instanceof PenaltyTile) {
@@ -381,7 +391,7 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
   /**
    * Draws player three according to the model.
    *
-   * @param g Graphics Element
+   * @param g graphics object - kind of "internal reference"
    */
 
   private void drawPlayerThree(Graphics g) {

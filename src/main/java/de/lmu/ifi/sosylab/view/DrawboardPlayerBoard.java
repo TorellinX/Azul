@@ -10,6 +10,9 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 import javax.swing.JPanel;
 
+/**
+ * DrawboardPLayerBoard parent class.
+ */
 public class DrawboardPlayerBoard extends JPanel {
 
   private final Color playerboardcolor = new Color(204, 201, 199);
@@ -71,6 +74,7 @@ public class DrawboardPlayerBoard extends JPanel {
         case 3 -> g.setColor(Color.red);
         case 4 -> g.setColor(Color.black);
         case 5 -> g.setColor(Color.green);
+        default -> throw new IllegalStateException("Unexpected value: " + colorNumber);
       }
       IntPair[] coordinatesOfColor = coordinateWallForPlayer.get(colorNumber);
       for (int i = 0; i < coordinatesOfColor.length; i++) {
@@ -101,7 +105,7 @@ public class DrawboardPlayerBoard extends JPanel {
    * @return de.lmu.ifi.sosylab.model.Color of tile
    */
   private de.lmu.ifi.sosylab.model.Color getColorOnWall(int row, int column) {
-    return de.lmu.ifi.sosylab.model.Color.values()[(de.lmu.ifi.sosylab.model.Color.values().length +
-        column - row) % de.lmu.ifi.sosylab.model.PlayerBoard.WALL_SIZE];
+    return de.lmu.ifi.sosylab.model.Color.values()[(de.lmu.ifi.sosylab.model.Color.values().length
+        + column - row) % de.lmu.ifi.sosylab.model.PlayerBoard.WALL_SIZE];
   }
 }

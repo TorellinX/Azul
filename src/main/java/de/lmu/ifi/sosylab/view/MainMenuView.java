@@ -70,7 +70,7 @@ public class MainMenuView extends JFrame implements PropertyChangeListener {
 
 
   /**
-   * Constructor of the class
+   * Constructor of the class.
    *
    * @param controller Controller
    * @param model      Model
@@ -80,8 +80,8 @@ public class MainMenuView extends JFrame implements PropertyChangeListener {
 
     List<GameModel> gameModelList = new ArrayList<>();
     gameModelList.add(requireNonNull(model));
-    List<GameModel> unmodGML = Collections.unmodifiableList(gameModelList);
-    this.model = unmodGML.get(0);
+    List<GameModel> unmodGameModelList = Collections.unmodifiableList(gameModelList);
+    this.model = unmodGameModelList.get(0);
     this.controller = requireNonNull(controller);
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -219,13 +219,13 @@ public class MainMenuView extends JFrame implements PropertyChangeListener {
     panelCenterMultiplayer.add(tableMultiplayer);
 
     //Unteres Panel
+    // Reihenfolge Def - add nicht ändern: Checkstyle requirement!
     JPanel panelBottomMultiplayer = new JPanel(new GridLayout(1, 3));
     connect = new JButton("Enter Room");
-    leaveOnlineMode = new JButton("Leave");
-    createRoom = new JButton("Create New Room");
-
     panelBottomMultiplayer.add(connect);
+    leaveOnlineMode = new JButton("Leave");
     panelBottomMultiplayer.add(leaveOnlineMode);
+    createRoom = new JButton("Create New Room");
     panelBottomMultiplayer.add(createRoom);
 
     multiplayerPanel.add(panelUpMultiplayer, BorderLayout.NORTH);
@@ -272,12 +272,12 @@ public class MainMenuView extends JFrame implements PropertyChangeListener {
    */
 
   private void showGame() {
-    if (model.getState() == State.RUNNING)
-      ;
-    setVisible(false);
-    PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(),
-        controller, model);
-    model.addPropertyChangeListener(playingviewframe);
+    if (model.getState() == State.RUNNING) {
+      setVisible(false);
+      PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(),
+          controller, model);
+      model.addPropertyChangeListener(playingviewframe);
+    }
   }
 
 

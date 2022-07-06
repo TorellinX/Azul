@@ -6,19 +6,19 @@ package de.lmu.ifi.sosylab.view;
 
 public class IntPair {
 
-  private int x;
-  private int y;
+  private int horizontal;
+  private int vertical;
 
   /**
-   * Constructor of Class
+   * Constructor of Class.
    *
-   * @param x
-   * @param y
+   * @param x horizontal coordinate
+   * @param y vertical coordinate
    */
   public IntPair(int x, int y) {
 
-    this.x = x;
-    this.y = y;
+    horizontal = x;
+    vertical = y;
   }
 
   /**
@@ -27,7 +27,7 @@ public class IntPair {
    * @return X-Coordinate
    */
   public int getX() {
-    return x;
+    return horizontal;
   }
 
   /**
@@ -36,6 +36,6 @@ public class IntPair {
    * @return Y-Coordinate
    */
   public int getY() {
-    return y;
+    return vertical;
   }
 }

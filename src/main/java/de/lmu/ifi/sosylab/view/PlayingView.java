@@ -110,13 +110,13 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    */
 
   private void createPlayingView() {
-    Color backroundColor = new Color(135, 206, 250);
-    menu.setBackground(backroundColor);
-
     //Oberes Panel wird mit Combobox gefüllt.
     menu = new JPanel();
     menu.setSize(1200, 75);
     menu.setLayout(new FlowLayout());
+
+    Color backroundColor = new Color(135, 206, 250);
+    menu.setBackground(backroundColor);
 
     menu.add(menuItems);
 

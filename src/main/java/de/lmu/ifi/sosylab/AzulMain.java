@@ -1,13 +1,12 @@
 package de.lmu.ifi.sosylab;
 
 import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.view.MainMenuView;
+import de.lmu.ifi.sosylab.view.StartMenuView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -26,17 +25,16 @@ public class AzulMain {
    */
   public static void main(String[] args) {
 
-    GameModel model = new GameModel();
-    Controller controller = new GameController(model);
-    MainMenuView view = new MainMenuView(controller, model);
+    // GameModel model = new GameModel();
+    // Controller controller = new GameController(model);
+    // MainMenuView view = new MainMenuView(controller, model);
 
     //controller.setView(menuView);
     //View view = GameView(model, controller);
     //controller.setView(view);
     //model.addPropertyChangeListener(view);
-    controller.start();
-
-    // TODO: start view.
+    // controller.start();
+    StartMenuView startView = new StartMenuView();
 
     // testModel(model);
     //testControllerModel(model, controller);

@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * Main class to set up the graphic user interface for Azul.
+ * Depicts the initial splash screen with picture for Azul.
  */
 public class GraphicAzul extends JPanel {
 

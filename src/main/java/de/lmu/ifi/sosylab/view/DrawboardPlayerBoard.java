@@ -1,6 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
 import static de.lmu.ifi.sosylab.model.PlayerBoard.WALL_SIZE;
+import static java.util.Objects.requireNonNull;
 
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerState;
@@ -88,6 +89,7 @@ public class DrawboardPlayerBoard extends JPanel {
           case RED -> g.setColor(tileRed);
           case BLACK -> g.setColor(tileBlack);
           case WHITE -> g.setColor(tileGreen);
+          default -> throw new IllegalArgumentException("Color not recognised.");
         }
         g.drawRect(x + (sizeOfWallCell + wallBorder) * col,
             y + (sizeOfWallCell + wallBorder) * row,
@@ -95,6 +97,27 @@ public class DrawboardPlayerBoard extends JPanel {
       }
     }
     g.setColor(Color.black);
+  }
+
+  void drawWall(boolean[][] wall, int x, int y, Graphics g) {
+    requireNonNull(wall);
+    for (int row = 0; row < wall.length; row++) {
+      for (int col = 0; col < wall[0].length; col++) {
+        de.lmu.ifi.sosylab.model.Color color = getColorOnWall(row, col);
+        switch (color) {
+          case BLUE -> g.setColor(tileBlue);
+          case YELLOW -> g.setColor(tileYellow);
+          case RED -> g.setColor(tileRed);
+          case BLACK -> g.setColor(tileBlack);
+          case WHITE -> g.setColor(tileGreen);
+          default -> throw new IllegalArgumentException("Color not recognised.");
+        }
+        if (wall[row][col]) {
+          g.fillRect(x + (sizeOfWallCell + wallBorder) * col,
+              y + (sizeOfWallCell + wallBorder) * row, sizeOfWallCell, sizeOfWallCell);
+        }
+      }
+    }
   }
 
   void drawFloorLineFrames(Graphics g, IntPair[] coordinateMinusForPlayer, int x, int y) {
@@ -109,24 +132,7 @@ public class DrawboardPlayerBoard extends JPanel {
     }
   }
 
-  void drawWall(boolean[][] wall, int x, int y, Graphics g) {
-    for (int row = 0; row < wall.length; row++) {
-      for (int col = 0; col < wall[0].length; col++) {
-        de.lmu.ifi.sosylab.model.Color color = getColorOnWall(row, col);
-        switch (color) {
-          case BLUE -> g.setColor(tileBlue);
-          case YELLOW -> g.setColor(tileYellow);
-          case RED -> g.setColor(tileRed);
-          case BLACK -> g.setColor(tileBlack);
-          case WHITE -> g.setColor(tileGreen);
-        }
-        if (wall[row][col]) {
-          g.fillRect(x + (sizeOfWallCell + wallBorder) * col,
-              y + (sizeOfWallCell + wallBorder) * row, sizeOfWallCell, sizeOfWallCell);
-        }
-      }
-    }
-  }
+
 
 
   /**

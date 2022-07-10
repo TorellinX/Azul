@@ -13,6 +13,7 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serial;
@@ -22,6 +23,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -69,8 +71,18 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     List<String> unmodNameList = Collections.unmodifiableList(nicknames);
     this.nicknames = unmodNameList;
     this.model = new GameModel();
-    this.player = model.getPlayers();
     this.controller = new GameController(model);
+
+    if (controller.startGame(nicknames)) {
+      this.player = model.getPlayers();
+    } else {
+      JOptionPane.showMessageDialog(null,
+          "Game could not be started!",
+          "Internal Error!", JOptionPane.ERROR_MESSAGE);
+      dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    };
+
+    this.player = model.getPlayers();
 
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -761,6 +773,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   }
 
   private void addListeners() {
+
+    model.addPropertyChangeListener(this);
     menuItems.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         if (menuItems.getSelectedItem().equals("end game")) {

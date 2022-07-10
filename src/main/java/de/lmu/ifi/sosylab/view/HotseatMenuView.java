@@ -100,6 +100,7 @@ public class HotseatMenuView extends JFrame {
     nicknameLocal.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+
         addPlayerToLocalGame(nicknameLocal.getText());
       }
     });
@@ -113,6 +114,7 @@ public class HotseatMenuView extends JFrame {
     addPlayerButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+
         addPlayerToLocalGame(nicknameLocal.getText());
       }
     });
@@ -148,7 +150,9 @@ public class HotseatMenuView extends JFrame {
           JOptionPane.showMessageDialog(null,
               "It was not possible to create a Game, there can only be 2-4 players");
         } else {
+
           PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames());
+
           // dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         }
       }
@@ -172,7 +176,7 @@ public class HotseatMenuView extends JFrame {
   private void addPlayerToLocalGame(String nickname) {
     DefaultTableModel modelOfLocalPlayer = (DefaultTableModel) localPlayers.getModel();
     Boolean isUserNameTaken = false;
-    nicknameLocal.setText("");
+
 
     for (int i = 0; i < numberOfPlayers; i++) {
       if (nickname.equals((String) modelOfLocalPlayer.getValueAt(i, 0))) {
@@ -190,6 +194,8 @@ public class HotseatMenuView extends JFrame {
       modelOfLocalPlayer.addRow(new Object[]{nickname});
       numberOfPlayers++;
     }
+
+    nicknameLocal.setText("");
   }
 
   /**

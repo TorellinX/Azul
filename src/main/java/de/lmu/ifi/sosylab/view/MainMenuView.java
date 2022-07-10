@@ -412,8 +412,8 @@ public class MainMenuView extends JFrame implements PropertyChangeListener {
     int row = localPlayers.getSelectedRow();
 
     DefaultTableModel model = (DefaultTableModel) localPlayers.getModel();
-
     model.removeRow(row);
+    numberOfPlayers--;
   }
 
   /**

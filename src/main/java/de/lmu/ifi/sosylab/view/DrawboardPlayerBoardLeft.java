@@ -224,7 +224,7 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
             g.setColor(Color.red);
           } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
             g.setColor(Color.yellow);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)) {
+          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.GREEN)) {
             //Keine Ahnung warum Model White, aber View macht grün draus
             g.setColor(Color.green);
           }
@@ -416,7 +416,7 @@ public class DrawboardPlayerBoardLeft extends DrawboardPlayerBoard {
             g.setColor(Color.red);
           } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
             g.setColor(Color.yellow);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)) {
+          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.GREEN)) {
             //Keine Ahnung warum Model White, aber View macht grün draus
             g.setColor(Color.green);
           }

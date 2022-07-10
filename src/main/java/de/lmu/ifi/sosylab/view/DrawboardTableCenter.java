@@ -190,7 +190,7 @@ public class DrawboardTableCenter extends JPanel {
         if (color.equals(de.lmu.ifi.sosylab.model.Color.BLACK)) {
           g.setColor(Color.black);
         }
-        if (color.equals(de.lmu.ifi.sosylab.model.Color.WHITE)) {
+        if (color.equals(de.lmu.ifi.sosylab.model.Color.GREEN)) {
           g.setColor(Color.green);
         }
         if (color.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {
@@ -230,7 +230,7 @@ public class DrawboardTableCenter extends JPanel {
         if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLACK)) {
           g.setColor(Color.black);
         }
-        if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)) {
+        if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.GREEN)) {
           g.setColor(Color.green);
         }
         if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.BLUE)) {

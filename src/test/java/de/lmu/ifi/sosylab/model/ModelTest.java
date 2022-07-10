@@ -167,6 +167,7 @@ public class ModelTest {
   public void moveFullPatternLineToBox_floorLineWhenPatternLineComplete() {
     //Arrange test
     GameModel model = newModelAndCreatePlayers();
+    //Score score = new Score();
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 4;
     ColorTile[] completeRow = new ColorTile[rowIndex + 1];
@@ -186,6 +187,7 @@ public class ModelTest {
   @Test
   public void moveFullPatternLineToBox_boxWhenPatternLineComplete() {
     //Arrange test
+   // Score score = new Score();
     GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 4;
@@ -210,6 +212,7 @@ public class ModelTest {
   @Test
   public void moveFullPatternLineToBox_whenPatternLineIncomplete() {
     //Arrange test
+    //Score score = new Score();
     GameModel model = newModelAndCreatePlayers();
     Player testingPlayer = model.getPlayers().get(0);
     int rowIndex = 4;

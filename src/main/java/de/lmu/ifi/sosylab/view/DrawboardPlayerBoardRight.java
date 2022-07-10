@@ -226,8 +226,7 @@ public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
             g.setColor(Color.red);
           } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
             g.setColor(Color.yellow);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)) {
-            //Keine Ahnung warum Model White, aber View macht grün draus
+          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.GREEN)) {
             g.setColor(Color.green);
           }
           g.fillRect(cache[j].getX(), cache[j].getY(), sizeOfPatternLineCell,
@@ -420,8 +419,7 @@ public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
             g.setColor(Color.red);
           } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.YELLOW)) {
             g.setColor(Color.yellow);
-          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.WHITE)) {
-            //Keine Ahnung warum Model White, aber View macht grün draus
+          } else if (colorOfTile.equals(de.lmu.ifi.sosylab.model.Color.GREEN)) {
             g.setColor(Color.green);
           }
           g.fillRect(cache[j].getX(), cache[j].getY(), sizeOfPatternLineCell,

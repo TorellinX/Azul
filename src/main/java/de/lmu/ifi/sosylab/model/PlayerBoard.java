@@ -80,8 +80,6 @@ public class PlayerBoard {
    * @return color of already placed tiles. 'null' if line is empty
    */
   public Color getPatternLineColor(int row) {
-    // TODO: validation (Line must be not empty, etc.)
-    // TODO: tests
     if (patternLines[row][patternLines[row].length - 1] == null) {
       return null;
     }
@@ -96,8 +94,6 @@ public class PlayerBoard {
    * @param row   the specified line of the wall
    */
   void addTileToWall(Color color, int row) {
-    //TODO: add validation
-    // TODO: tests
     int column = (row + color.ordinal()) % WALL_SIZE;
     wall[row][column] = true;
   }

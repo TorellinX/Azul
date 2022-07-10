@@ -3,6 +3,7 @@ package de.lmu.ifi.sosylab.view;
 import static java.util.Objects.requireNonNull;
 
 import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerState;
@@ -62,20 +63,15 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    *
    * @param playerCount number of players
    * @param nicknames list of nicknames of players
-   * @param controller controller instance
-   * @param model model instance
    */
-  public PlayingView(int playerCount, List<String> nicknames, Controller controller,
-      GameModel model) {
+  public PlayingView(int playerCount, List<String> nicknames) {
     this.playerCount = playerCount;
     List<String> unmodNameList = Collections.unmodifiableList(nicknames);
     this.nicknames = unmodNameList;
+    this.model = new GameModel();
     this.player = model.getPlayers();
-    this.controller = controller;
-    List<GameModel> gameModelList = new ArrayList<>();
-    gameModelList.add(model);
-    List<GameModel> unmodGameModelList = Collections.unmodifiableList(gameModelList);
-    this.model = unmodGameModelList.get(0);
+    this.controller = new GameController(model);
+
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);

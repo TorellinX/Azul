@@ -51,7 +51,7 @@ public class StartMenuView extends JFrame {
     setVisible(true);
 
     // Default action beim Klicken auf "X"
-    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
   }
 
@@ -64,9 +64,10 @@ public class StartMenuView extends JFrame {
     hotSeatButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        //view.showLocalMode();
-        HotSeatMenuView testView = new HotSeatMenuView();
+        HotseatMenuView hotseatMenuView = new HotseatMenuView();
+        thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+        // thisFrame.setVisible(false);
       }
     });
 
@@ -79,11 +80,19 @@ public class StartMenuView extends JFrame {
     multiPlayerButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        // TODO: view.showMultiplayer();
+        MultiplayerMenuView multiplayerMenuView = new MultiplayerMenuView();
+        thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+        // thisFrame.setVisible(false);
       }
     });
 
   }
+
+  public void showStartView() {
+    thisFrame.setVisible(true);
+  }
+
+
 
 }

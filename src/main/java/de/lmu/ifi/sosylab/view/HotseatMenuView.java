@@ -5,23 +5,15 @@ import static java.util.Objects.requireNonNull;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
-import de.lmu.ifi.sosylab.model.State;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,43 +22,28 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-public class HotSeatMenuView extends JFrame /*implements PropertyChangeListener*/ {
+public class HotseatMenuView extends JFrame {
 
-  private JPanel graphic;
-  private JPanel playerControlPanel;
-  private JPanel gameControlPanel;
-  private JPanel playerControlButtons;
-  private JPanel gameControlButtons;
-  private JButton addPlayerButton;
-  private JButton removePlayerButton;
-  private JButton startGameButton;
-  private JButton backGameButton;
-  private JPanel playerControlText;
-  private JLabel playerControlLabel;
-
+  private final JPanel playerControlPanel;
+  private final JPanel playerControlButtons;
+  private final JPanel gameControlButtons;
   private JTextField nicknameLocal;
-
-  private JFrame thisFrame;
-  private final GameModel model;
-  private final Controller controller;
-  private JTable localPlayers;
+  private final JFrame thisFrame;
+  private final JTable localPlayers;
   private int numberOfPlayers = 0;
 
-  public HotSeatMenuView() {
+
+  public HotseatMenuView() {
     super("Azul - New Local Game");
     thisFrame = this;
     setLayout(new BorderLayout());
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-    this.model = new GameModel();
-    this.controller = new GameController(model);
-
     // Logo einrichten und anzeigen
 
-    graphic = new JPanel();
+    JPanel graphic = new JPanel();
     add(graphic, BorderLayout.NORTH);
     GraphicAzul graphicAzul = new GraphicAzul();
     graphic.add(graphicAzul.azulPanel);
@@ -82,7 +59,7 @@ public class HotSeatMenuView extends JFrame /*implements PropertyChangeListener*
     // Player - Kontroll - Panel befüllen
     // Mit Namenseingabefeld
     addPlayerTextFieldView();
-      // Mit Buttons
+    // Mit Buttons
     playerControlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
     addPlayerButtonView();
     removePlayerButtonView();
@@ -96,7 +73,7 @@ public class HotSeatMenuView extends JFrame /*implements PropertyChangeListener*
     playerControlPanel.add(nickNames, BorderLayout.SOUTH);
 
     // Game - Kontroll - Panel
-    gameControlPanel = new JPanel(new BorderLayout());
+    JPanel gameControlPanel = new JPanel(new BorderLayout());
     gameControlPanel.setBackground(new Color(135, 206, 250));
     // Im Main Frame positionieren
     add(gameControlPanel, BorderLayout.SOUTH);
@@ -113,8 +90,8 @@ public class HotSeatMenuView extends JFrame /*implements PropertyChangeListener*
   }
 
   private void addPlayerTextFieldView() {
-    playerControlText = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    playerControlLabel = new JLabel("HIER BENUTZERNAME EINGEBEN: ");
+    JPanel playerControlText = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JLabel playerControlLabel = new JLabel("HIER BENUTZERNAME EINGEBEN: ");
     playerControlText.add(playerControlLabel);
     nicknameLocal = new JTextField("", 30);
     playerControlText.add(nicknameLocal);
@@ -130,7 +107,7 @@ public class HotSeatMenuView extends JFrame /*implements PropertyChangeListener*
   }
 
   private void addPlayerButtonView() {
-    addPlayerButton = new JButton("ADD PLAYER");
+    JButton addPlayerButton = new JButton("ADD PLAYER");
     playerControlButtons.add(addPlayerButton);
 
     addPlayerButton.addActionListener(new ActionListener() {
@@ -143,7 +120,7 @@ public class HotSeatMenuView extends JFrame /*implements PropertyChangeListener*
   }
 
   private void removePlayerButtonView() {
-    removePlayerButton = new JButton("REMOVE PLAYER");
+    JButton removePlayerButton = new JButton("REMOVE PLAYER");
     playerControlButtons.add(removePlayerButton);
 
     removePlayerButton.addActionListener(new ActionListener() {
@@ -161,19 +138,18 @@ public class HotSeatMenuView extends JFrame /*implements PropertyChangeListener*
   }
 
   private void startGameButtonView() {
-    startGameButton = new JButton("START GAME");
+    JButton startGameButton = new JButton("START GAME");
     gameControlButtons.add(startGameButton);
 
     startGameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (controller.startGame(getNicknames())) {
-          PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(),
-              controller, model);
-          // dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
-        } else {
+        if (getNicknames().size() < 2 || getNicknames().size() > 4) {
           JOptionPane.showMessageDialog(null,
               "It was not possible to create a Game, there can only be 2-4 players");
+        } else {
+          PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames());
+          // dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         }
       }
     });
@@ -181,7 +157,7 @@ public class HotSeatMenuView extends JFrame /*implements PropertyChangeListener*
   }
 
   private void backGameButtonView() {
-    backGameButton = new JButton("BACK GAME");
+    JButton backGameButton = new JButton("BACK GAME");
     gameControlButtons.add(backGameButton);
 
     backGameButton.addActionListener(new ActionListener() {

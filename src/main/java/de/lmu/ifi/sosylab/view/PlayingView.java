@@ -82,9 +82,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     };
 
-    this.player = model.getPlayers();
-
-
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);
     setSize(1300, 800);

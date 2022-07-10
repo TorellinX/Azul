@@ -206,8 +206,9 @@ public class HotseatMenuView extends JFrame {
     int row = localPlayers.getSelectedRow();
 
     DefaultTableModel model = (DefaultTableModel) localPlayers.getModel();
-
     model.removeRow(row);
+    numberOfPlayers--;
+
   }
 
 

@@ -55,8 +55,8 @@ public class DrawboardTableCenter extends JPanel {
     initialize();
     List<GameModel> gameModelList = new ArrayList<>();
     gameModelList.add(model);
-    List<GameModel> unmodGML = Collections.unmodifiableList(gameModelList);
-    this.model = unmodGML.get(0);
+    List<GameModel> unmodGameModelList = Collections.unmodifiableList(gameModelList);
+    this.model = unmodGameModelList.get(0);
     this.tableCenter = model.getTableCenter();
     this.listFactorys = model.getPlates();
   }
@@ -147,7 +147,7 @@ public class DrawboardTableCenter extends JPanel {
   /**
    * Draws the panels in the center of the table.
    *
-   * @param g
+   * @param g graphics object - kind of "internal reference"
    */
   private void drawFacotry(Graphics g) {
     for (int i = 0; i < positionOfFactory.length; i++) {
@@ -165,7 +165,7 @@ public class DrawboardTableCenter extends JPanel {
   /**
    * Draws the tiles on the Facotrys.
    *
-   * @param g
+   * @param g graphics object - kind of "internal reference"
    */
 
   private void drawTilesFactory(Graphics g) {
@@ -211,7 +211,7 @@ public class DrawboardTableCenter extends JPanel {
   /**
    * Draws the tiles in the center of the table.
    *
-   * @param g
+   * @param g graphics object - kind of "internal reference"
    */
 
 
@@ -257,15 +257,7 @@ public class DrawboardTableCenter extends JPanel {
   }
 
   /**
-   * Reads from a point which color of tiles is there.
-   *
-   * @param x X-Coordinate
-   * @param y Y-Coordinate
-   * @return Color of Tile
-   */
-
-  /**
-   * Getter for the color of a tile on a plate addresed by table center related coordinates.
+   * Getter for the color of a tile on a plate addressed by table center related coordinates.
    *
    * @param x x- coordinate
    * @param y y - coordinate
@@ -300,9 +292,9 @@ public class DrawboardTableCenter extends JPanel {
     de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
 
     for (int i = 0; i < positionTilesTableCenter.size(); i++) {
-      int x_Cache = positionTilesTableCenter.get(i).getX();
-      int y_Cache = positionTilesTableCenter.get(i).getY();
-      if (x == x_Cache && y == y_Cache) {
+      int horizontalCache = positionTilesTableCenter.get(i).getX();
+      int verticalCache = positionTilesTableCenter.get(i).getY();
+      if (x == horizontalCache && y == verticalCache) {
         toReturn = model.getTableCenter().getColorTiles().get(i - 1).getColor();
 
       }

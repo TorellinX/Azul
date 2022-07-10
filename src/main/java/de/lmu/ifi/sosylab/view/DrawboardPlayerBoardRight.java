@@ -12,10 +12,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Right Panel of the Game, carries the wall.
+ */
 public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
 
   private static final long serialVersionUID = 1L;
-  private Graphics2D g;
+  // A field "Graphics2D g" is not required, as always the current graphics object is referenced.
+  // private Graphics2D g;
   private Color playerboardcolor = new Color(204, 201, 199);
   private Color scorecolor = new Color(235, 79, 0);
   private int sizeOfPatternLineCell = 35;
@@ -54,13 +58,14 @@ public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
   /**
    * Calls the methods to draw the players.
    *
-   * @param g the <code>Graphics</code> object to protect
+   * @param g graphics object - kind of internal reference
    */
 
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    g = (Graphics2D) g;
+    // Self assignemet, as Graphics is superclass zu Graphics2G
+    // g = (Graphics2D) g;
     drawPlayerTwoPlayerBoard(g);
     drawPlayerTwo(g);
 
@@ -75,7 +80,7 @@ public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
   }
 
   /**
-   * Sets the coordinates for the individual objecte.
+   * Sets the coordinates for the individual objects.
    */
   private void initializePlayfieldRight() {
 
@@ -84,7 +89,7 @@ public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
     IntPair[] thirdPatternLinePlayerTwo = {new IntPair(75, 75), new IntPair(110, 75),
         new IntPair(145, 75)};
     IntPair[] fourthPatternLinePlayerTwo = {new IntPair(40, 110), new IntPair(75, 110),
-        new IntPair(110, 110), new IntPair(145, 110),};
+        new IntPair(110, 110), new IntPair(145, 110)};
     IntPair[] fifthPatternLinePlayerTwo = {new IntPair(05, 145), new IntPair(40, 145),
         new IntPair(75, 145), new IntPair(110, 145), new IntPair(145, 145)};
 
@@ -108,7 +113,7 @@ public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
     IntPair[] thirdPatternLinePlayerFour = {new IntPair(75, 375), new IntPair(110, 375),
         new IntPair(145, 375)};
     IntPair[] fourthPatternLinePlayerFour = {new IntPair(40, 410), new IntPair(75, 410),
-        new IntPair(110, 410), new IntPair(145, 410),};
+        new IntPair(110, 410), new IntPair(145, 410)};
     IntPair[] fifthPatternLinePlayerFour = {new IntPair(05, 445), new IntPair(40, 445),
         new IntPair(75, 445), new IntPair(110, 445), new IntPair(145, 445)};
 
@@ -131,7 +136,7 @@ public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
   /**
    * Player board of the second player is drawn.
    *
-   * @param g
+   * @param g graphics object - kind of "internal reference"
    */
   private void drawPlayerTwoPlayerBoard(Graphics g) {
     drawPatternLinesFrames(g, coordinatePatternLinesPlayerTwo);
@@ -143,7 +148,7 @@ public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
   /**
    * Player board of the fourth player is drawn.
    *
-   * @param g
+   * @param g graphics object - kind of "internal reference"
    */
   private void drawPlayerFourPlayerBoard(Graphics g, String nickname) {
     drawPatternLinesFrames(g, coordinatePatternLinesPlayerFour);
@@ -155,7 +160,7 @@ public class DrawboardPlayerBoardRight extends DrawboardPlayerBoard {
   /**
    * Draws player two according to the model.
    *
-   * @param g Graphics Element
+   * @param g graphics object - kind of "internal reference"
    */
 
   private void drawPlayerTwo(Graphics g) {

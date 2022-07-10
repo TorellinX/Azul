@@ -48,6 +48,11 @@ public class GameModel {
   private int startingPlayerIndex;
   private int playerToMoveIndex;
 
+  /**
+   * Getter for the player set as player to move.
+   *
+   * @return player instance
+   */
   public Player getPlayerToMove() {
     List<Player> ptmList = new ArrayList<>();
     ptmList.add(playerToMove);
@@ -67,6 +72,13 @@ public class GameModel {
     shuffleBag(); //shuffle Bag on Game Construction
   }
 
+  /**
+   * Creates list of players from list of nicknames, assigns a player to start, creates plates
+   * according to player number, links box to player, stets game stat to running and notifies
+   * listeners about model state change.
+   *
+   * @param playerNames list of player nicknames
+   */
   public void createPlayers(List<String> playerNames) {
     if (playerNames.size() < 2 || playerNames.size() > 4) {
       throw new IllegalArgumentException("Invalid number of players, needs to be from 2 to 4");
@@ -121,6 +133,13 @@ public class GameModel {
     notifyListeners(MODEL_CHANGED);
   }
 
+  /**
+   * Set tiles from selected tiles list to selected row.
+   *
+   * @param player  player to move
+   * @param row     row to set
+   * @return        true if success
+   */
   // (patternLines (0-4) or floorLine (-1)
   public synchronized boolean setTiles(Player player, int row) {
     if (roundState != RoundState.PICKED) {
@@ -661,6 +680,11 @@ public class GameModel {
     return counterCompleteColors;
   }
 
+  /**
+   * Getter for the table center object.
+   *
+   * @return table center instance
+   */
   public TableCenter getTableCenter() {
     List<TableCenter> tcList = new ArrayList<>();
     tcList.add(tableCenter);

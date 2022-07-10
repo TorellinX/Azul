@@ -21,6 +21,11 @@ public class GameController implements Controller {
   GameModel model;
   //View view;
 
+  /**
+   * Constructor of the game controller. Main access interface implementation to the model.
+   *
+   * @param model game model instance
+   */
   public GameController(GameModel model) {
     List<GameModel> gameModelList = new ArrayList<>();
     gameModelList.add(requireNonNull(model));
@@ -127,12 +132,17 @@ public class GameController implements Controller {
     //model.removePropertyChangeListener(view);
   }
 
-
+  /**
+   * Places tiles from "selectedtiels" - list to the selected row.
+   *
+   * @param player current Player.
+   * @param row    selected Row.
+   * @return       true if success
+   */
   public boolean placeTiles(Player player, int row) {
-    if(player == model.getPlayerToMove()) {
+    if (player == model.getPlayerToMove()) {
       return model.setTiles(player, row);
-    }
-    else {
+    } else {
       return false;
     }
   }

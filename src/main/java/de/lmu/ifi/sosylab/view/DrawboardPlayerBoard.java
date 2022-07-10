@@ -12,6 +12,9 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 import javax.swing.JPanel;
 
+/**
+ * DrawboardPLayerBoard parent class.
+ */
 public class DrawboardPlayerBoard extends JPanel {
 
   private final Color playerboardcolor = new Color(204, 201, 199);

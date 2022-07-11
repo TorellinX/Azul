@@ -21,14 +21,8 @@ public class GameModel {
 
   public static final int TILES_PER_COLOR = 20;
   public static final int TILES_PER_PLATE = 4;
-  private static final int POINTS_PRO_ROW = 2;
-  private static final int POINTS_PRO_COLUMN = 7;
-  private static final int POINTS_PRO_COLOR = 10;
-  private static final int[] PENALTY_POINTS = new int[]{0, -1, -2, -4, -6, -8, -11, -14};
   private static final String MODEL_CHANGED = "Model changed";
   private static final String MODEL_STATE_CHANGED = "GameState changed";
-
-
   private List<Player> players;
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
   private List<Plate> plates;
@@ -202,7 +196,6 @@ public class GameModel {
   }
 
 
-
   private void endGame() {
 
     score.calculateEndScore();
@@ -210,7 +203,6 @@ public class GameModel {
     state = State.FINISHED;
     notifyListeners(MODEL_STATE_CHANGED);
   }
-
 
 
   /**
@@ -437,7 +429,6 @@ public class GameModel {
   }
 
 
-
   public RoundState getRoundState() {
     return roundState;
   }
@@ -457,10 +448,6 @@ public class GameModel {
     support.addPropertyChangeListener(pcl);
   }
 
-  public void removePropertyChangeListener(PropertyChangeListener pcl) {
-    requireNonNull(pcl);
-    support.removePropertyChangeListener(pcl);
-  }
 
   /**
    * Invokes the model to fire a new event, such that any attached observer (i.e.,

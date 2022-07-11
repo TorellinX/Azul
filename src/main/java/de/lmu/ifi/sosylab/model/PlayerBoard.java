@@ -100,8 +100,6 @@ public class PlayerBoard {
 
 
   boolean isColorAlreadyOnWall(Color color, int row) {
-    //TODO: add validation
-    // TODO: tests
     int column = getColumnOnWall(color, row);
     return wall[row][column];
   }

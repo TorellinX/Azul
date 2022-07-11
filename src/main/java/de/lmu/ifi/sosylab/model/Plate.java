@@ -17,8 +17,7 @@ public class Plate {
    * @param selected  list of tiles of the selected color from this plate (factory)
    * @param remaining list of tiles of the other colors from this plate
    */
-  public record SelectedAndRemainingTiles(List<ColorTile> selected,
-                                          Optional<List<ColorTile>> remaining) {
+  public record SelectedAndRemainingTiles(List<ColorTile> selected, Optional<List<ColorTile>> remaining) {
 
     public SelectedAndRemainingTiles {
       selected = List.copyOf(selected);

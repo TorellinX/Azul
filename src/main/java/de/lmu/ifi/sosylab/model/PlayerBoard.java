@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Player board representing the game Azul. It contains the pattern lines where tiles can be placed,
@@ -42,6 +43,8 @@ public class PlayerBoard {
    * @param rowIndex pattern line index
    * @return number of free fields
    */
+
+
   public int countFreeFieldsInRow(int rowIndex) {
     if (rowIndex > WALL_SIZE) {
       throw new IllegalArgumentException("Row index must be within the wall size.");
@@ -49,14 +52,17 @@ public class PlayerBoard {
     if (rowIndex < 0) {
       throw new IllegalArgumentException("Row index must be positive");
     }
+
     ColorTile[] row = patternLines[rowIndex];
-    for (int i = row.length - 1; i >= 0; i--) {
-      if (row[i] == null) {
-        return i + 1;
-      }
-    }
-    return 0;
+        long freeFields = Arrays.asList(row)
+                .stream()
+                .filter(r -> r == null)
+                .count();
+        return Math.toIntExact(freeFields);
+
   }
+
+
 
   /**
    * Returns the next index of a pattern line indicated by row. (?)

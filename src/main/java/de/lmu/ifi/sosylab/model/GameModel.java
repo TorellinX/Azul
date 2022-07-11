@@ -22,7 +22,7 @@ public class GameModel {
   public static final int TILES_PER_COLOR = 20;
   public static final int TILES_PER_PLATE = 4;
   private static final String MODEL_CHANGED = "Model changed";
-  private static final String MODEL_STATE_CHANGED = "GameState changed";
+  private static final String MODEL_STATE_CHANGED = "Model state changed";
   private List<Player> players;
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
   private List<Plate> plates;
@@ -196,6 +196,7 @@ public class GameModel {
   }
 
 
+
   private void endGame() {
 
     score.calculateEndScore();
@@ -203,6 +204,7 @@ public class GameModel {
     state = State.FINISHED;
     notifyListeners(MODEL_STATE_CHANGED);
   }
+
 
 
   /**
@@ -427,6 +429,7 @@ public class GameModel {
     List<TableCenter> unmodTcList = Collections.unmodifiableList(tcList);
     return unmodTcList.get(0);
   }
+
 
 
   public RoundState getRoundState() {

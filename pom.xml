@@ -53,6 +53,13 @@
                 <configuration>
                     <configLocation>google_checks.xml</configLocation>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <phase>verify</phase>
+                        <goals><goal>check</goal></goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Spotbugs plugin to check for bugs -->

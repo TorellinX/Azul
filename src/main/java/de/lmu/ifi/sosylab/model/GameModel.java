@@ -62,7 +62,7 @@ public class GameModel {
   private Player playerToMove;
   private int round = 1;
   List<ColorTile> selectedTiles = new ArrayList<>();
-  Score score = new Score();
+  Score score;
 
   /**
    * Creates a new table with game components.
@@ -89,6 +89,7 @@ public class GameModel {
     chooseRandomStartingPlayer();
     linkBoxToPlayerBoard();
     this.state = State.RUNNING;
+    score = new Score(players, box);
     notifyListeners(MODEL_STATE_CHANGED);
   }
 

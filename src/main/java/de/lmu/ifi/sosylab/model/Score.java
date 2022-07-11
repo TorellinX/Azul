@@ -15,12 +15,10 @@ public class Score {
     private static final String MODEL_CHANGED = "Model changed";
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public List<Player> getPlayers() {
-        List<Player> unmodifiablePlayersList = Collections.unmodifiableList(players);
-        return unmodifiablePlayersList;
+    public Score(List<Player> players, List<ColorTile> box) {
+        this.players = players;
+        this.box = box;
     }
-
-
 
     /**
      * Moves all tiles except one from the specified complete patternLine to the box. One tile remains
@@ -74,7 +72,6 @@ public class Score {
      */
 
     public void calculateRoundScore() {
-        List<Player> players = getPlayers();
         for (Player player : players) {
             ColorTile[][] lines = player.playerBoard.patternLines;
             int scoreDifference = 0;
@@ -106,7 +103,7 @@ public class Score {
                 player.score = 0; // the score can never drop below 0 points.
             }
         }
-        for (Player player : getPlayers()) {
+        for (Player player : players) {
             System.out.println(Arrays.deepToString(player.playerBoard.wall));
         }
     }
@@ -197,7 +194,7 @@ public class Score {
      * wall. - gain 10 points for  each color of which the player has place 5 tiles on the wall.
      */
     public void calculateEndScore() {
-        for (Player player : getPlayers()) {
+        for (Player player : players) {
             int completedColumns = countCompleteColumns(player);
             int completedRows = countCompleteRows(player);
             int completedColors = countCompleteColors(player);

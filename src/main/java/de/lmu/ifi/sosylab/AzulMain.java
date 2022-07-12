@@ -7,16 +7,20 @@ import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.server.ServerApplication;
 import de.lmu.ifi.sosylab.view.MainMenuView;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 // TODO: refine JavaDoc
 
 /**
  * Starts the Azul Game.
  */
+@SpringBootApplication
 public class AzulMain {
 
   /**
@@ -26,20 +30,21 @@ public class AzulMain {
    */
   public static void main(String[] args) {
 
-    GameModel model = new GameModel();
-    Controller controller = new GameController(model);
-    MainMenuView view = new MainMenuView(controller, model);
+    //GameModel model = new GameModel();
+    //Controller controller = new GameController(model);
+    //MainMenuView view = new MainMenuView(controller, model);
 
     //controller.setView(menuView);
     //View view = GameView(model, controller);
     //controller.setView(view);
     //model.addPropertyChangeListener(view);
-    controller.start();
+    //controller.start();
 
     // TODO: start view.
 
     // testModel(model);
     //testControllerModel(model, controller);
+    SpringApplication.run(AzulMain.class, args);
 
   }
 

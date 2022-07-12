@@ -39,7 +39,7 @@ public class HotseatMenuView extends JFrame {
     super("Azul - New Local Game");
     thisFrame = this;
     setLayout(new BorderLayout());
-    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     // Logo einrichten und anzeigen
 
@@ -152,7 +152,7 @@ public class HotseatMenuView extends JFrame {
         } else {
 
           PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames());
-
+          // setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
           // dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         }
       }
@@ -167,6 +167,7 @@ public class HotseatMenuView extends JFrame {
     backGameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         StartMenuView startView = new StartMenuView();
       }

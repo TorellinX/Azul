@@ -1,5 +1,8 @@
 package de.lmu.ifi.sosylab.view;
 
+import static de.lmu.ifi.sosylab.model.PlayerBoard.WALL_SIZE;
+import static java.util.Objects.requireNonNull;
+
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerState;
 import java.awt.BasicStroke;
@@ -21,9 +24,19 @@ public class DrawboardPlayerBoard extends JPanel {
   private final Color patternLinesColorRight = Color.black;
   private final Color activePlayerColor = Color.green;
   private final Color inactivePlayerColor = Color.black;
+  private final Color tileBlue = Color.blue;
+  private final Color tileYellow = Color.yellow;
+  private final Color tileRed = Color.red;
+  private final Color tileBlack = Color.black;
+  private final Color tileGreen = Color.green;
+
+
   private final int sizeOfPatternLineCell = 35;
   private final int sizeOfWallCell = 31;
+  private final int wallBorder = 4;
   private final int sizeOfMinusCell = 35;
+  IntPair[] wallCoordinatesProPlayer = {new IntPair(205, 10), new IntPair(205, 10),
+      new IntPair(205, 307), new IntPair(205, 307)};
 
 
   void drawNickname(Graphics g, Player player, int x, int y) {
@@ -65,24 +78,46 @@ public class DrawboardPlayerBoard extends JPanel {
     g.fillRoundRect(x, y, 181, 181, 20, 20);
   }
 
-  void drawWallFrames(Graphics g, HashMap<Integer, IntPair[]> coordinateWallForPlayer) {
+  void drawWallFrames(Graphics g, int x, int y) {
     ((Graphics2D) g).setStroke(new BasicStroke(2));
-    for (int colorNumber = 1; colorNumber <= 5; colorNumber++) {
-      switch (colorNumber) {
-        case 1 -> g.setColor(Color.blue);
-        case 2 -> g.setColor(Color.yellow);
-        case 3 -> g.setColor(Color.red);
-        case 4 -> g.setColor(Color.black);
-        case 5 -> g.setColor(Color.green);
-        default -> throw new IllegalStateException("Unexpected value: " + colorNumber);
-      }
-      IntPair[] coordinatesOfColor = coordinateWallForPlayer.get(colorNumber);
-      for (int i = 0; i < coordinatesOfColor.length; i++) {
-        g.drawRect(coordinatesOfColor[i].getX(), coordinatesOfColor[i].getY(), sizeOfWallCell,
-            sizeOfWallCell);
+    for (int row = 0; row < WALL_SIZE; row++) {
+      for (int col = 0; col < WALL_SIZE; col++) {
+        de.lmu.ifi.sosylab.model.Color color = getColorOnWall(row, col);
+        switch (color) {
+          case BLUE -> g.setColor(tileBlue);
+          case YELLOW -> g.setColor(tileYellow);
+          case RED -> g.setColor(tileRed);
+          case BLACK -> g.setColor(tileBlack);
+          case WHITE -> g.setColor(tileGreen);
+          default -> throw new IllegalArgumentException("Color not recognised.");
+        }
+        g.drawRect(x + (sizeOfWallCell + wallBorder) * col,
+            y + (sizeOfWallCell + wallBorder) * row,
+            sizeOfWallCell, sizeOfWallCell);
       }
     }
     g.setColor(Color.black);
+  }
+
+  void drawWall(boolean[][] wall, int x, int y, Graphics g) {
+    requireNonNull(wall);
+    for (int row = 0; row < wall.length; row++) {
+      for (int col = 0; col < wall[0].length; col++) {
+        de.lmu.ifi.sosylab.model.Color color = getColorOnWall(row, col);
+        switch (color) {
+          case BLUE -> g.setColor(tileBlue);
+          case YELLOW -> g.setColor(tileYellow);
+          case RED -> g.setColor(tileRed);
+          case BLACK -> g.setColor(tileBlack);
+          case WHITE -> g.setColor(tileGreen);
+          default -> throw new IllegalArgumentException("Color not recognised.");
+        }
+        if (wall[row][col]) {
+          g.fillRect(x + (sizeOfWallCell + wallBorder) * col,
+              y + (sizeOfWallCell + wallBorder) * row, sizeOfWallCell, sizeOfWallCell);
+        }
+      }
+    }
   }
 
   void drawFloorLineFrames(Graphics g, IntPair[] coordinateMinusForPlayer, int x, int y) {
@@ -97,6 +132,9 @@ public class DrawboardPlayerBoard extends JPanel {
     }
   }
 
+
+
+
   /**
    * Getter for color of the tile, located on the specified row and column on the wall.
    *
@@ -105,7 +143,7 @@ public class DrawboardPlayerBoard extends JPanel {
    * @return de.lmu.ifi.sosylab.model.Color of tile
    */
   private de.lmu.ifi.sosylab.model.Color getColorOnWall(int row, int column) {
-    return de.lmu.ifi.sosylab.model.Color.values()[(de.lmu.ifi.sosylab.model.Color.values().length
-        + column - row) % de.lmu.ifi.sosylab.model.PlayerBoard.WALL_SIZE];
+    return de.lmu.ifi.sosylab.model.Color.values()[(de.lmu.ifi.sosylab.model.Color.values().length +
+        column - row) % WALL_SIZE];
   }
 }

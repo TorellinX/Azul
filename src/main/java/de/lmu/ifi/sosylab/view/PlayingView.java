@@ -84,13 +84,13 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);
-    setSize(1300, 800);
+    // setSize(1300, 800);
     setTitle("Azul");
     setLayout(new BorderLayout());
 
     createPlayingView();
 
-    startGame();
+    startGame();    // hier nur set visible = true
     addListeners();
 
     for (Player player : model.getPlayers()) {
@@ -100,6 +100,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
         System.out.println("Inactive Player: " + player);
       }
     }
+
+    pack();
 
   }
 

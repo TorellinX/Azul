@@ -13,6 +13,7 @@ public class DrawFloorline extends JPanel {
     public DrawFloorline() {
 
         this.size = 35;
+        setPreferredSize(new Dimension(7 * size + 10, 50));
 
     }
 

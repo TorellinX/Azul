@@ -11,11 +11,15 @@ public class DrawWall extends JPanel {
     public DrawWall() {
 
         this.size = 35;
-
+        setPreferredSize(new Dimension(getWallFrameSize(), getWallFrameSize()));
     }
 
     public int getWallCellSize() {
         return size;
+    }
+
+    public int getWallFrameSize() {
+        return (5 * size + 40);
     }
 
     public void setWallCellSize(int newSize) {
@@ -27,26 +31,30 @@ public class DrawWall extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Graphics2D g2D = (Graphics2D) g;
+        Graphics2D g2D = (Graphics2D) g;
 
-        g.setColor(playerboardcolor);
-        g.fillRoundRect(0, 0, 5 * size + 5, 5 * size + 5, 20, 20);
+        g2D.setColor(playerboardcolor);
+        g2D.fillRoundRect(0, 0, getWallFrameSize(), getWallFrameSize(), 20, 20);
+
+        g2D.setStroke(new BasicStroke(2));
 
         int colorNumber = 0;
         for (int col = 0; col < 5; col++) {
             for (int row = 0; row < 5; row++) {
-                colorNumber = (col + row) % 5;
+                colorNumber = (col + (4 - row)) % 5;
                 switch (colorNumber) {
-                    case 0 -> g.setColor(Color.blue);
-                    case 1 -> g.setColor(Color.green);
-                    case 2 -> g.setColor(Color.black);
-                    case 3 -> g.setColor(Color.red);
-                    case 4 -> g.setColor(Color.yellow);
+                    case 0 -> g2D.setColor(Color.yellow);
+                    case 1 -> g2D.setColor(Color.red);
+                    case 2 -> g2D.setColor(Color.black);
+                    case 3 -> g2D.setColor(Color.green);
+                    case 4 -> g2D.setColor(Color.blue);
                     default -> throw new IllegalStateException("Unexpected value: " + colorNumber);
                 }
-                g.drawRect(col * size, (5 - row) * size, size, size);
+
+                g2D.drawRect(10 + col * size + col * 5, 10 + row * size + row * 5, size, size);
+
             }
         }
-        g.setColor(Color.black);
+        g2D.setColor(Color.black);
     }
 }

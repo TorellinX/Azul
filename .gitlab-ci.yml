@@ -15,17 +15,17 @@ build:
   script:
     #- find $LIB_PATH -iname "*.jar" | tr '\n' ':' > libraries.txt
     #- find -name "*.java" > sources.txt
-   # - cat sources.txt
+    #- cat sources.txt
     #- mkdir $OUTPUT_PATH
-   # - javac -d $OUTPUT_PATH -Xlint:all -Werror -g -cp "$CLASSPATH:$(cat libraries.txt)" @sources.txt
+    #- javac -d $OUTPUT_PATH -Xlint:all -Werror -g -cp "$CLASSPATH:$(cat libraries.txt)" @sources.txt
   - 'mvn package'
   artifacts:
     paths:
     # Keep compiled java files and list of files
-      - $OUTPUT_PATH
-      - sources.txt
-      - libraries.txt
-      #- target/classes
+      #- $OUTPUT_PATH
+      #- sources.txt
+      #- libraries.txt
+      - target/classes
       - maven
 
 spotbugs:
@@ -49,10 +49,11 @@ unit-tests:
     #- java -jar $JUNIT5_PATH --class-path "$OUTPUT_PATH:$(cat libraries.txt)" --scan-class-path
     - 'mvn test'
 
-execute:
-  stage: execute
-  image: maven:latest
-  script:
+#execute:
+ # stage: execute
+  #image: maven:latest
+  #script:
     # SEP Teams: adjust the next line for your project
-    -  java -cp "$OUTPUT_PATH:$(cat libraries.txt)" de.lmu.ifi.sosylab.AzulMain
-
+  #- mvn exec:java
+  #  - export DISPLAY=:0.0 && mvn exec:java
+ # - mvn clean

@@ -1,5 +1,9 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.model.ColorTile;
+import de.lmu.ifi.sosylab.model.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,9 +11,13 @@ public class DrawWall extends JPanel {
 
     private int size;
     private final Color playerboardcolor = new Color(204, 201, 199);
+    private final Player player;
+    private final Controller controller;
+    private boolean[][] wall;
 
-    public DrawWall() {
-
+    public DrawWall(Player player, Controller controller) {
+        this.controller = controller;
+        this.player = player;
         this.size = 35;
         setPreferredSize(new Dimension(getWallFrameSize(), getWallFrameSize()));
     }
@@ -38,6 +46,8 @@ public class DrawWall extends JPanel {
 
         g2D.setStroke(new BasicStroke(2));
 
+        wall = player.getPlayerBoard().getWall();
+
         int colorNumber = 0;
         for (int col = 0; col < 5; col++) {
             for (int row = 0; row < 5; row++) {
@@ -52,6 +62,10 @@ public class DrawWall extends JPanel {
                 }
 
                 g2D.drawRect(10 + col * size + col * 5, 10 + row * size + row * 5, size, size);
+
+                if (wall[row][col]) {
+                    g2D.fillRect(10 + col * size + col * 5, 10 + row * size + row * 5, size, size);
+                }
 
             }
         }

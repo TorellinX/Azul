@@ -8,10 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 
-public class DrawPlayerBoard extends JPanel {
+public class DrawPlayerBoard extends JPanel /*implements PropertyChangeListener*/ {
 
     private final Color activePlayerColor = Color.green;
     private final Color inactivePlayerColor = new Color(204, 201, 199);
@@ -22,122 +24,52 @@ public class DrawPlayerBoard extends JPanel {
     private JButton floorlineButton;
     private JLabel playerNameLabel;
     private JPanel labelPanel;
-    private int count;
-
+    private JLabel scoreLabel;
+    private Player player;
 
     public DrawPlayerBoard(Player player, Controller controller) {
+        this.player = player;
         this.drawPattern = new DrawPattern(player, controller);
-        this.drawWall = new DrawWall();
-        this.drawFloorline = new DrawFloorline();
+        this.drawWall = new DrawWall(player, controller);
+        this.drawFloorline = new DrawFloorline(player, controller);
 //        Color backroundColor = new Color(255, 0, 0);
 //        setBackground(backroundColor);
         labelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         // North: Player nick mit background color change für active player
-        playerNameLabel = new JLabel("<html>" + "<font face=\"cursive,serif\" size=\"4\">" + player.getNickname()
-                + "</font face=\"cursive,serif\" size=\"4\">" + "</html>");
+        playerNameLabel = new JLabel("<html><font size=\"5\">" + player.getNickname() + "</font></html>");
         labelPanel.setPreferredSize(new Dimension(playerBoardPreferredWidth(), 30));
         labelPanel.add(playerNameLabel);
-        add(labelPanel, BorderLayout.NORTH);
         setPlayerLabelBackgroundColor(player);
+        add(labelPanel, BorderLayout.NORTH);
 
 
         // linke Seite: die pattern lines mit Buttons
-        // besser mit koordinaten?
-
         add(drawPattern, BorderLayout.EAST);
- /*       patternButtons = new ArrayList<>();
-        JButton firstRowButton = new JButton();
-        firstRowButton.setBounds(drawPattern.getPatternCellSize() * 4, 5, drawPattern.getPatternCellSize(),
-                drawPattern.getPatternCellSize());
-        patternButtons.add(firstRowButton);
-        add(firstRowButton, BorderLayout.EAST);
-        JButton secondRowButton = new JButton();
-        secondRowButton.setBounds(drawPattern.getPatternCellSize() * 3, 5 + drawPattern.getPatternCellSize(),
-                drawPattern.getPatternCellSize(), drawPattern.getPatternCellSize());
-        patternButtons.add(secondRowButton);
-        add(secondRowButton, BorderLayout.EAST);
-        JButton thirdRowButton = new JButton();
-        thirdRowButton.setBounds(drawPattern.getPatternCellSize() * 2, 5 + drawPattern.getPatternCellSize() * 2,
-                drawPattern.getPatternCellSize(), drawPattern.getPatternCellSize());
-        patternButtons.add(thirdRowButton);
-        add(thirdRowButton, BorderLayout.EAST);
-        JButton fourthRowButton = new JButton();
-        fourthRowButton.setBounds(drawPattern.getPatternCellSize(), 5 + drawPattern.getPatternCellSize() * 3,
-                drawPattern.getPatternCellSize(), drawPattern.getPatternCellSize());
-        patternButtons.add(fourthRowButton);
-        add(fourthRowButton, BorderLayout.EAST);
-        JButton fifthRowButton = new JButton();
-        fifthRowButton.setBounds(0, 5 + drawPattern.getPatternCellSize() * 4, drawPattern.getPatternCellSize(),
-                drawPattern.getPatternCellSize());
-        patternButtons.add(fifthRowButton);
-        add(fifthRowButton, BorderLayout.EAST);
 
-        addPatternLinesButtonsActionListeners(player, controller);
-*/
         // Mitte ggf ein gap?
-        //JPanel gapPanel = new JPanel();
-        //gapPanel.setPreferredSize(new Dimension(20, 150));
-        //add(gapPanel, BorderLayout.CENTER);
+        JPanel gapPanel = new JPanel();
+        gapPanel.setPreferredSize(new Dimension(20, 150));
+        add(gapPanel, BorderLayout.CENTER);
 
         // rechte Seite: die Wall
         add(drawWall, BorderLayout.WEST);
 
         // South: floor line mit score
         JPanel floorLinePanel = new JPanel((new BorderLayout()));
+        floorLinePanel.add(drawFloorline, BorderLayout.WEST);
+        scoreLabel = new JLabel("<html><font size=\"5\"> Score: " + Integer.toString(player.getScore())
+                + "</font></html>");
+        floorLinePanel.add(scoreLabel, BorderLayout.EAST);
+        // TODO: set score label color if desired
+
         add(floorLinePanel, BorderLayout.SOUTH);
 
-        floorLinePanel.add(drawFloorline, BorderLayout.EAST);
-        floorlineButton = new JButton();
-        floorlineButton.setBounds(0, 10, drawFloorline.getFloorlineCellSize() * 7,
-                drawFloorline.getFloorlineCellSize());
-        floorLinePanel.add(floorlineButton, BorderLayout.EAST);
-        floorlineButton.setOpaque(false);
-        floorlineButton.setContentAreaFilled(false);
-        floorlineButton.setBorderPainted(false);
-        addFloorlineButtonListener(player, controller);
-
-        JLabel scoreLabel = new JLabel("Score: " + Integer.toString(player.getScore()));
-        floorLinePanel.add(scoreLabel, BorderLayout.WEST);
-        // scoreLabel.setText("Score: " + Integer.toString(player.getScore()));
-        // TODO: set score color
-
-/*        // hide buttons
-        for (int i = 0; i < patternButtons.size(); i++) {
-            patternButtons.get(i).setOpaque(false);
-            patternButtons.get(i).setContentAreaFilled(false);
-            patternButtons.get(i).setBorderPainted(true);
-        }
-*/
-        setPreferredSize(playerBoardPreferredSize());
+        setPreferredSize(playerBoardPreferredSize(1));
         setVisible(true);
 
     }
 
-    private void addPatternLinesButtonsActionListeners(Player player, Controller controller) {
 
-        for (int i = 0; i < 5; i++) {
-            count = i;
-            patternButtons.get(i).addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("P1" + count);
-                    controller.placeTiles(player, count);
-                }
-            });
-        }
-
-    }
-
-    private void addFloorlineButtonListener(Player player, Controller controller) {
-
-        floorlineButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("P1" + 5);
-                controller.placeTiles(player, -1);
-            }
-        });
-    }
 
     public void setPlayerLabelBackgroundColor(Player player) {
 
@@ -149,11 +81,16 @@ public class DrawPlayerBoard extends JPanel {
 
     }
 
-    public Dimension playerBoardPreferredSize() {
+    public void setScoreLabel(int playerScore) {
+        scoreLabel.setText("<html><font size=\"5\"> Score: " + Integer.toString(playerScore)
+                    + "</font></html>");
+    }
+
+    public Dimension playerBoardPreferredSize(int playerNumber) {
         int horizontal = 0;
         int vertical = 0;
         horizontal = playerBoardPreferredWidth();
-        vertical = drawWall.getWallFrameSize() + 200;     // magic number to be refined....
+        vertical = playerNumber * drawWall.getWallFrameSize() + 200;     // magic number to be refined....
         return new Dimension(horizontal, vertical);
     }
 
@@ -162,4 +99,26 @@ public class DrawPlayerBoard extends JPanel {
     }
 
 
+    /**
+     * Will be informed when the model is updated.
+     */
+//    @Override
+//    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+//        SwingUtilities.invokeLater(() -> handleModelUpdate(propertyChangeEvent));
+//    }
+
+    /**
+     * Redraws the playing field.
+     *
+     * @param event property change event
+     */
+
+//    private void handleModelUpdate(PropertyChangeEvent event) {
+//        if (event.getPropertyName().equals("Model changed")) {
+//            repaint();
+//            System.out.println("Score for " + player.getNickname() +": " + player.getScore());
+//            scoreLabel.setText("<html><font size=\"5\"> Score: " + Integer.toString(player.getScore())
+//                    + "</font></html>");
+//        }
+//    }
 }

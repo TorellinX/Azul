@@ -27,8 +27,6 @@ public class GameModel {
   private static final int[] PENALTY_POINTS = new int[]{0, -1, -2, -4, -6, -8, -11, -14};
   private static final String MODEL_CHANGED = "Model changed";
   private static final String MODEL_STATE_CHANGED = "GameState changed";
-
-
   private List<Player> players;
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
   private List<Plate> plates;
@@ -38,15 +36,17 @@ public class GameModel {
       .collect(Collectors.toList());
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
-
   public State getState() {
     return state;
   }
-
   private State state;
   private RoundState roundState = RoundState.WAIT;
   private int startingPlayerIndex;
   private int playerToMoveIndex;
+  private Player playerToMove;
+  private int round = 1;
+  List<ColorTile> selectedTiles = new ArrayList<>();
+
 
   /**
    * Getter for the player set as player to move.
@@ -54,15 +54,10 @@ public class GameModel {
    * @return player instance
    */
   public Player getPlayerToMove() {
-    List<Player> ptmList = new ArrayList<>();
-    ptmList.add(playerToMove);
-    List<Player> unmodPtmList = Collections.unmodifiableList(ptmList);
-    return unmodPtmList.get(0);
+
+    return playerToMove;
   }
 
-  private Player playerToMove;
-  private int round = 1;
-  List<ColorTile> selectedTiles = new ArrayList<>();
 
   /**
    * Creates a new table with game components.

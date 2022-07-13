@@ -37,8 +37,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private JPanel menu;
   JComboBox<String> menuItems = new JComboBox<String>(
       new String[]{"- menu -", "restart", "leave", "end game"});
-  private DrawboardPlayerBoardLeft drawboardPlayerBoardLeft;
-  private DrawboardPlayerBoardRight drawboardPlayerBoardRight;
   private DrawboardTableCenter drawboardTableCenter;
 
   private ArrayList<JButton> buttonsFirstPlayer;
@@ -59,6 +57,10 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private List<Player> player;
   private Controller controller;
   private GameModel model;
+  private DrawPlayerBoard firstPlayerBoard;
+  private DrawPlayerBoard secondPlayerBoard;
+  private DrawPlayerBoard thirdPlayerBoard;
+  private DrawPlayerBoard fourthPlayerBoard;
 
   /**
    * Initializes the playing view.
@@ -82,18 +84,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
               "Internal Error!", JOptionPane.ERROR_MESSAGE);
       dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
-    ;
-
-    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    setResizable(false);
-    // setSize(1300, 800);
-    setTitle("Azul");
-    setLayout(new BorderLayout());
-
-    createPlayingView();
-
-    addListeners();
-
     for (Player player : model.getPlayers()) {
       if (player.getState() == PlayerState.TO_MOVE) {
         System.out.println("Active Player: " + player);
@@ -102,6 +92,13 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       }
     }
 
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    setResizable(false);
+    // setSize(1300, 800);
+    setTitle("Azul");
+    setLayout(new BorderLayout());
+    createPlayingView();
+    addListeners();
     pack();
     setVisible(true);
   }
@@ -122,62 +119,41 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     menu.add(menuItems);
     add(menu, BorderLayout.NORTH);
 
-
-    //Zeichenelemente werden übergeben.
-//    drawboardPlayerBoardLeft = new DrawboardPlayerBoardLeft(playerCount, nicknames, player);
-//    drawboardPlayerBoardRight = new DrawboardPlayerBoardRight(playerCount, nicknames, player);
-    drawboardTableCenter = new DrawboardTableCenter(model);
+    // Mittlere Zone wird befüllt
+    // Center definieren: table center
+    drawboardTableCenter = new DrawboardTableCenter(model, player.size());
     addButtonPlayboard();
-/*
-    addButtonsPlayerOne();
-    addActionListenerFirstPlayer();
-    addButtonPlayerTwo();
-    addActionListenerSecondPlayer();
-*/
     addActionListenerFactory();
     addActionListenerTableCenter();
-
-/*    if (player.size() == 3) {
-      addButtonPlayerThree();
-      addActionListenerThridPlayer();
-    }
-    if (player.size() == 4) {
-      addButtonPlayerThree();
-      addActionListenerThridPlayer();
-
-      addButtonPlayerFour();
-      addActionListenerFourthPlayer();
-    }
-*/
-    // drawboardPlayerBoardLeft.setLayout(null);
-    // drawboardPlayerBoardRight.setLayout(null);
-
-    //Mittleres Panel wird mit Buttons gefüllt:
-
     drawboardTableCenter.setLayout(null);
 
-    //Unteres Panel wird erzeugt.
-    JPanel panelSouth = new JPanel();
-    panelSouth.setBackground(backroundColor);
-    add(panelSouth, BorderLayout.SOUTH);
-
-    //Weitere Teile des Borderlayouts werden mit Panels und Graphikelementen gefüllt.
-    // Container c = getContentPane();
-
-
+    // Linkes und rechtes panel mit Playerboards belegen
     JPanel playingViewLeft = new JPanel(new BorderLayout());
-    DrawPlayerBoard firstPlayerBoard = new DrawPlayerBoard(player.get(0), controller);
-    playingViewLeft.setPreferredSize(firstPlayerBoard.playerBoardPreferredSize());
+    firstPlayerBoard = new DrawPlayerBoard(player.get(0), controller);
+    playingViewLeft.setPreferredSize(firstPlayerBoard.playerBoardPreferredSize(1));
     playingViewLeft.add(firstPlayerBoard, BorderLayout.NORTH);
-    add(playingViewLeft, BorderLayout.WEST);
 
     JPanel playingViewRight = new JPanel(new BorderLayout());
-    DrawPlayerBoard secondPlayerBoard = new DrawPlayerBoard(player.get(1), controller);
-    playingViewRight.setPreferredSize(secondPlayerBoard.playerBoardPreferredSize());
+    secondPlayerBoard = new DrawPlayerBoard(player.get(1), controller);
+    playingViewRight.setPreferredSize(secondPlayerBoard.playerBoardPreferredSize(1));
     playingViewRight.add(secondPlayerBoard, BorderLayout.NORTH);
-    add(playingViewRight, BorderLayout.EAST);
 
+    if (player.size() > 2) {
+      thirdPlayerBoard = new DrawPlayerBoard(player.get(2), controller);
+      playingViewLeft.setPreferredSize(thirdPlayerBoard.playerBoardPreferredSize(2));
+      playingViewLeft.add(thirdPlayerBoard, BorderLayout.SOUTH);
+    }
+
+    if (player.size() > 3) {
+      fourthPlayerBoard = new DrawPlayerBoard(player.get(3), controller);
+      playingViewRight.setPreferredSize(fourthPlayerBoard.playerBoardPreferredSize(2));
+      playingViewRight.add(fourthPlayerBoard, BorderLayout.SOUTH);
+    }
+
+    // Zuordnung ausführen.
+    add(playingViewLeft, BorderLayout.WEST);
     add(drawboardTableCenter, BorderLayout.CENTER);
+    add(playingViewRight, BorderLayout.EAST);
 
   }
 
@@ -370,6 +346,18 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private void handleModelUpdate(PropertyChangeEvent event) {
     if (event.getPropertyName().equals("Model changed")) {
       repaint();
+      firstPlayerBoard.setScoreLabel(player.get(0).getScore());
+      firstPlayerBoard.setPlayerLabelBackgroundColor(player.get(0));
+      secondPlayerBoard.setScoreLabel(player.get(1).getScore());
+      secondPlayerBoard.setPlayerLabelBackgroundColor(player.get(1));
+      if (player.size() > 2) {
+        thirdPlayerBoard.setScoreLabel(player.get(2).getScore());
+        thirdPlayerBoard.setPlayerLabelBackgroundColor(player.get(2));
+      }
+      if (player.size() > 3) {
+        fourthPlayerBoard.setScoreLabel(player.get(3).getScore());
+        fourthPlayerBoard.setPlayerLabelBackgroundColor(player.get(3));
+      }
     }
   }
 }

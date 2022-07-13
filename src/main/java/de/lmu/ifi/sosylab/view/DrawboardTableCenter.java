@@ -50,8 +50,12 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param model game model instance
    */
-  public DrawboardTableCenter(GameModel model) {
-    setPreferredSize(new Dimension(400, 600));
+  public DrawboardTableCenter(GameModel model, int playerNumber) {
+    if (playerNumber > 2) {
+      setPreferredSize(new Dimension(410, 900));
+    } else {
+      setPreferredSize(new Dimension(410, 700));
+    }
     initialize();
     List<GameModel> gameModelList = new ArrayList<>();
     gameModelList.add(model);

@@ -9,8 +9,6 @@ import de.lmu.ifi.sosylab.model.PlateState;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.RoundState;
 import de.lmu.ifi.sosylab.model.State;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,7 +16,7 @@ import java.util.List;
  */
 public class GameController implements Controller {
 
-  GameModel model;
+  private final GameModel model;
   //View view;
 
   /**
@@ -27,14 +25,13 @@ public class GameController implements Controller {
    * @param model game model instance
    */
   public GameController(GameModel model) {
-    List<GameModel> gameModelList = new ArrayList<>();
-    gameModelList.add(requireNonNull(model));
-    List<GameModel> immutableGameModelList = Collections.unmodifiableList(gameModelList);
-    this.model = immutableGameModelList.get(0);
+    this.model = model;
   }
 
   @Override
   public void start() {
+    // MainMenuView view = new MainMenuView(this, model);
+
     //view.showLobby;
   }
 

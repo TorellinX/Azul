@@ -11,8 +11,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * Class for network based mulitplayer mode - premature.
+ */
 public class RoomView extends JFrame {
 
+  /**
+   * Constructor - see class description.
+   */
   public RoomView() {
     super("Room View");
 
@@ -23,7 +29,7 @@ public class RoomView extends JFrame {
 
     JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     add(headerPanel, BorderLayout.NORTH);
-    JLabel header = new JLabel("Room Name:" );
+    JLabel header = new JLabel("Room Name:");
     headerPanel.add(header);
 
     JPanel textFieldPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

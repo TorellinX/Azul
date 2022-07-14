@@ -36,9 +36,6 @@ public class GameModel {
       .collect(Collectors.toList());
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
-  public State getState() {
-    return state;
-  }
   private State state;
   private RoundState roundState = RoundState.WAIT;
   private int startingPlayerIndex;
@@ -47,6 +44,10 @@ public class GameModel {
   private int round = 1;
   List<ColorTile> selectedTiles = new ArrayList<>();
 
+  public State getState() {
+
+    return state;
+  }
 
   /**
    * Getter for the player set as player to move.

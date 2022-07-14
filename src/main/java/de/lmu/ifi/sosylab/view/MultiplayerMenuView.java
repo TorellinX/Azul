@@ -164,7 +164,7 @@ public class MultiplayerMenuView extends JFrame /*implements PropertyChangeListe
 
   }
 
- /*
+  /*
   @Override
   public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
     SwingUtilities.invokeLater(() -> handleModelUpdate(propertyChangeEvent));
@@ -175,6 +175,5 @@ public class MultiplayerMenuView extends JFrame /*implements PropertyChangeListe
       // showGame();
     }
   }
-
   */
 }

@@ -1,10 +1,5 @@
 package de.lmu.ifi.sosylab.view;
 
-import static java.util.Objects.requireNonNull;
-
-import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.controller.GameController;
-import de.lmu.ifi.sosylab.model.GameModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,6 +19,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Displays the menu for hotseat mode with player name entry and start/back buttons.
+ */
 public class HotseatMenuView extends JFrame {
 
   private final JPanel playerControlPanel;
@@ -34,7 +32,9 @@ public class HotseatMenuView extends JFrame {
   private final JTable localPlayers;
   private int numberOfPlayers = 0;
 
-
+  /**
+   * Constructor - see class description.
+   */
   public HotseatMenuView() {
     super("Azul - New Local Game");
     thisFrame = this;
@@ -69,7 +69,7 @@ public class HotseatMenuView extends JFrame {
     tableModel.addColumn("Player Nickname");
     localPlayers = new JTable(tableModel);
     JScrollPane nickNames = new JScrollPane(localPlayers);
-    nickNames.setPreferredSize(new Dimension(400,90));
+    nickNames.setPreferredSize(new Dimension(400, 90));
     playerControlPanel.add(nickNames, BorderLayout.SOUTH);
 
     // Game - Kontroll - Panel

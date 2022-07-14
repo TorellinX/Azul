@@ -1,7 +1,5 @@
 package de.lmu.ifi.sosylab.view;
 
-import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.model.GameModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -12,6 +10,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+/**
+ * Displays the logo and allows for choice between hotseat and server based multiplayer.
+ */
 public class StartMenuView extends JFrame {
 
   private JPanel graphic;
@@ -24,6 +25,9 @@ public class StartMenuView extends JFrame {
   private static final String LOCAL_GAME = "localGame";
   private static final String MULTIPLAYER = "multiplayer";
 
+  /**
+   * Constructor - see class description.
+   */
   public StartMenuView() {
     super("Azul");
     thisFrame = this;

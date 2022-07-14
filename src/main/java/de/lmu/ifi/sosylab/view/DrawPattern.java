@@ -3,16 +3,21 @@ package de.lmu.ifi.sosylab.view;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.Player;
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.BasicStroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
-public class DrawPattern extends JPanel /*implements PropertyChangeListener*/ {
+/**
+ * Component drawing class for pattern lines including action listeners.
+ */
+public class DrawPattern extends JPanel {
 
     private int size;
     private final Color playerboardcolor = new Color(204, 201, 199);
@@ -22,6 +27,12 @@ public class DrawPattern extends JPanel /*implements PropertyChangeListener*/ {
     private final Controller controller;
     private ColorTile[][] patternLines;
 
+    /**
+     * Constructs the pattern lines and links it to player and controller.
+     *
+     * @param player      player related to the board containing these pattern lines
+     * @param controller  game controller
+     */
     public DrawPattern(Player player, Controller controller) {
         this.player = player;
         this.controller = controller;
@@ -63,9 +74,9 @@ public class DrawPattern extends JPanel /*implements PropertyChangeListener*/ {
             patternButtons.get(i).setBorderPainted(false);
         }
 
-/*        for (int i = 0; i < 5; i++) {
-            count = i;
-            patternButtons.get(i).addActionListener(new ActionListener() {
+        for (int i = 0; i < 5; i++) {
+            final int count = i;
+            patternButtons.get(count).addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     System.out.println(player.getNickname() + " - " + count);
@@ -73,42 +84,6 @@ public class DrawPattern extends JPanel /*implements PropertyChangeListener*/ {
                 }
             });
         }
-*/
-        firstRowButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(player.getNickname() + " - " + "firstRowButton");
-                controller.placeTiles(player, 0);
-            }
-        });
-        secondRowButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(player.getNickname() + " - " + "secondRowButton");
-                controller.placeTiles(player, 1);
-            }
-        });
-        thirdRowButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(player.getNickname() + " - " + "thirdRowButton");
-                controller.placeTiles(player, 2);
-            }
-        });
-        fourthRowButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(player.getNickname() + " - " + "fourthRowButton");
-                controller.placeTiles(player, 3);
-            }
-        });
-        fifthRowButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(player.getNickname() + " - " + "fifthRowButton");
-                controller.placeTiles(player, 4);
-            }
-        });
     }
 
     public int getPatternCellSize() {
@@ -172,40 +147,3 @@ public class DrawPattern extends JPanel /*implements PropertyChangeListener*/ {
         }
     }
 }
-
-/*
-for (int row = 0; row < 5; row++) {
-            for (int col = 4 - row; col < 5; col++) {
-                g2D.setColor(Color.BLACK);
-                g2D.drawRect(col * size, 10 + row * size + row * 5, size, size);
-
-                if (patternLines[row][4 - col] != null) {
-                    String customColor = patternLines[row][4 - col].toString();
-                    Color color;
-                    switch (customColor) {
-                        case "BLACK":
-                            color = Color.black;
-                            break;
-                        case "WHITE":
-                            color = Color.green;
-                            break;
-                        case "BLUE":
-                            color = Color.blue;
-                            break;
-                        case "YELLOW":
-                            color = Color.yellow;
-                            break;
-                        case "RED":
-                            color = Color.red;
-                            break;
-                        default:
-                            color = playerboardcolor;
-                    }
-
-                    g2D.setColor(color);
-
-                    g2D.fillRect(col * size, 10 + row * size + row * 5, size, size);
-                }
-            }
-        }
- */

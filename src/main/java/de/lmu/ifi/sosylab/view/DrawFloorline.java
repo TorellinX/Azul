@@ -4,13 +4,20 @@ import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.Tile;
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.BasicStroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * Component drawing class for floorline including action listener.
+ */
 public class DrawFloorline extends JPanel {
 
     private final Color playerboardcolor = new Color(204, 201, 199);
@@ -20,6 +27,12 @@ public class DrawFloorline extends JPanel {
     // private List<Tile> floorLine;
     private final Player player;
 
+    /**
+     * Constructs the floorline and links it to player and controller.
+     *
+     * @param player      player related to the board containing this floorline
+     * @param controller  game controller
+     */
     public DrawFloorline(Player player, Controller controller) {
         this.player = player;
         this.size = 35;

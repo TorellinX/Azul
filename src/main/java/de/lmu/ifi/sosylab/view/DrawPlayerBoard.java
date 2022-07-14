@@ -4,16 +4,15 @@ import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerState;
 
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
-
-public class DrawPlayerBoard extends JPanel /*implements PropertyChangeListener*/ {
+/**
+ * Class to draw a complete player board for a single player.
+ */
+public class DrawPlayerBoard extends JPanel {
 
     private final Color activePlayerColor = Color.green;
     private final Color inactivePlayerColor = new Color(204, 201, 199);
@@ -27,6 +26,12 @@ public class DrawPlayerBoard extends JPanel /*implements PropertyChangeListener*
     private JLabel scoreLabel;
     private Player player;
 
+    /**
+     * Constructs a complete player board panel in compound layout.
+     *
+     * @param player      player related to this board
+     * @param controller  game controller
+     */
     public DrawPlayerBoard(Player player, Controller controller) {
         this.player = player;
         this.drawPattern = new DrawPattern(player, controller);
@@ -70,7 +75,11 @@ public class DrawPlayerBoard extends JPanel /*implements PropertyChangeListener*
     }
 
 
-
+    /**
+     * Toggles the background color of the player label panel to highlight the player to move.
+     *
+     * @param player  player linked to ths board
+     */
     public void setPlayerLabelBackgroundColor(Player player) {
 
         if (player.getState().equals(PlayerState.TO_MOVE)) {
@@ -81,11 +90,22 @@ public class DrawPlayerBoard extends JPanel /*implements PropertyChangeListener*
 
     }
 
+    /**
+     * Setter for score label for update of the score during run of the game.
+     *
+     * @param playerScore as returned by model
+     */
     public void setScoreLabel(int playerScore) {
         scoreLabel.setText("<html><font size=\"5\"> Score: " + Integer.toString(playerScore)
                     + "</font></html>");
     }
 
+    /**
+     * Getter for the preferred size of the complete player board for pack method in playing view.
+     *
+     * @param playerNumber  number of players
+     * @return              preferred dimension
+     */
     public Dimension playerBoardPreferredSize(int playerNumber) {
         int horizontal = 0;
         int vertical = 0;
@@ -94,6 +114,12 @@ public class DrawPlayerBoard extends JPanel /*implements PropertyChangeListener*
         return new Dimension(horizontal, vertical);
     }
 
+    /**
+     * Getter for the preferred width of the complete player board for adaptations of neighboring panels.
+     * This is for convenience purposes, as could be extractet from dimension returned by preferred size getter.
+     *
+     * @return  preferred witdh in pixel
+     */
     public int playerBoardPreferredWidth() {
         return (5 * drawPattern.getPatternCellSize() + drawWall.getWallFrameSize() + 100);  // refine magic number ....
     }

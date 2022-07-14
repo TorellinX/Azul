@@ -1,12 +1,17 @@
 package de.lmu.ifi.sosylab.view;
 
 import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.Player;
+import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.BasicStroke;
 
-import javax.swing.*;
-import java.awt.*;
-
+/**
+ * Component drawing class for wall.
+ */
 public class DrawWall extends JPanel {
 
     private int size;
@@ -15,6 +20,12 @@ public class DrawWall extends JPanel {
     private final Controller controller;
     private boolean[][] wall;
 
+    /**
+     * Constructs the wall and links it to player and controller.
+     *
+     * @param player      player related to the board containing this wall
+     * @param controller  game controller
+     */
     public DrawWall(Player player, Controller controller) {
         this.controller = controller;
         this.player = player;
@@ -22,14 +33,29 @@ public class DrawWall extends JPanel {
         setPreferredSize(new Dimension(getWallFrameSize(), getWallFrameSize()));
     }
 
+    /**
+     * Get wall cell size.
+     *
+     * @return size in pixel
+     */
     public int getWallCellSize() {
         return size;
     }
 
+    /**
+     * Get wall background frame size.
+     *
+     * @return size in pixel
+     */
     public int getWallFrameSize() {
         return (5 * size + 40);
     }
 
+    /**
+     * Set wall cell size. Background frame size also depends on this setting.
+     *
+     * @param newSize in pixel
+     */
     public void setWallCellSize(int newSize) {
         this.size = newSize;
     }

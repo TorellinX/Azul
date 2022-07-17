@@ -38,20 +38,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   JComboBox<String> menuItems = new JComboBox<String>(
       new String[]{"- menu -", "restart", "leave", "end game"});
   private DrawboardTableCenter drawboardTableCenter;
-
-  private ArrayList<JButton> buttonsFirstPlayer;
-  private ArrayList<JButton> buttonsSecondPlayer;
-  private ArrayList<JButton> buttonsThridPlayer;
-  private ArrayList<JButton> buttonsFourthPlayer;
-
-  private ArrayList<JButton> buttonsFactory;
-  private ArrayList<JButton> buttonsTable;
-
-  private IntPair[] positionButtonsFactory;
-  private ArrayList<IntPair> positionButtonTable;
-  private int widthOfButtons = 35;
-  private int hightOfButtons = 35;
-
   private int playerCount;
   private List<String> nicknames;
   private List<Player> player;
@@ -93,8 +79,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     }
 
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    setResizable(false);
-    // setSize(1300, 800);
+    setResizable(true);
     setTitle("Azul");
     setLayout(new BorderLayout());
     createPlayingView();
@@ -121,11 +106,10 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
     // Mittlere Zone wird befüllt
     // Center definieren: table center
-    drawboardTableCenter = new DrawboardTableCenter(model, player.size());
-    addButtonPlayboard();
-    addActionListenerFactory();
-    addActionListenerTableCenter();
+    JPanel playingViewCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    drawboardTableCenter = new DrawboardTableCenter(model, controller, player.size());
     drawboardTableCenter.setLayout(null);
+    playingViewCenter.add(drawboardTableCenter);
 
     // Linkes und rechtes panel mit Playerboards belegen
     JPanel playingViewLeft = new JPanel(new BorderLayout());
@@ -152,168 +136,13 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
     // Zuordnung ausführen.
     add(playingViewLeft, BorderLayout.WEST);
-    add(drawboardTableCenter, BorderLayout.CENTER);
+    add(playingViewCenter, BorderLayout.CENTER);
     add(playingViewRight, BorderLayout.EAST);
 
   }
 
 
-  /**
-   * Adds the buttons for the Playbord.
-   */
-  private void addButtonPlayboard() {
-
-    positionButtonsFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17),
-        new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17),
-        new IntPair(208, 17),
-        new IntPair(167, 58), new IntPair(208, 58),
-        new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58),
-        new IntPair(358, 58),
-        new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158),
-        new IntPair(133, 158),
-        new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158),
-        new IntPair(283, 158),
-        new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283),
-        new IntPair(133, 283),
-        new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283),
-        new IntPair(283, 283),
-        new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408),
-        new IntPair(133, 408),
-        new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408),
-        new IntPair(283, 408)};
-
-    buttonsFactory = new ArrayList<>();
-    for (int i = 0; i < positionButtonsFactory.length; i++) {
-      buttonsFactory.add(new JButton());
-      buttonsFactory.get(i)
-          .setBounds(positionButtonsFactory[i].getX(), positionButtonsFactory[i].getY(),
-              widthOfButtons, hightOfButtons);
-      buttonsFactory.get(i).setOpaque(false);
-      buttonsFactory.get(i).setContentAreaFilled(false);
-      buttonsFactory.get(i).setBorderPainted(false);
-    }
-
-    for (int j = 0; j < buttonsFactory.size(); j++) {
-      drawboardTableCenter.add(buttonsFactory.get(j));
-    }
-
-    positionButtonTable = new ArrayList<>();
-
-    positionButtonTable.add(new IntPair(25, 505));
-
-    for (int i = 505; i <= 625; i += 40) {
-      for (int j = 105; j <= 345; j += 40) {
-        positionButtonTable.add(new IntPair(j, i));
-      }
-    }
-
-    buttonsTable = new ArrayList<>();
-    for (int count = 0; count < positionButtonTable.size(); count++) {
-      buttonsTable.add(new JButton());
-      buttonsTable.get(count)
-          .setBounds(positionButtonTable.get(count).getX(), positionButtonTable.get(count).getY(),
-              widthOfButtons, hightOfButtons);
-      buttonsTable.get(count).setOpaque(false);
-      buttonsTable.get(count).setContentAreaFilled(false);
-      buttonsTable.get(count).setBorderPainted(false);
-
-    }
-
-    for (int m = 0; m < buttonsTable.size(); m++) {
-      drawboardTableCenter.add(buttonsTable.get(m));
-    }
-  }
-
-
-  /**
-   * Adds ActionListeners for Factory buttons.
-   */
-  private void addActionListenerFactory() {
-    /*
-    for (int i = 0; i < buttonsFactory.size(); i++) {
-      coutnCach = i;
-      row = i;
-      buttonsFactory.get(i).addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(
-              buttonsFactory.get(coutnCach).getX(), buttonsFactory.get(coutnCach).getY());
-          System.out.println("ActionEvent from buttonsFactory #" + coutnCach + " X:"
-              + buttonsFactory.get(coutnCach).getX() + " Y:" + buttonsFactory.get(coutnCach).getY()
-              + ", color " + color);
-          System.out.println(buttonsFactory.indexOf(buttonsFactory.get(row)) + " "
-          +buttonsFactory.get(row).getX() + " " + buttonsFactory.get(row).getY());
-        if(controller.pickTilesFromPlate(color, model.getPlayers().get(
-        model.getPlayerToMoveIndex()), model.getPlates().get(
-              drawboardTableCenter.getPlate(buttonsFactory.get(coutnCach).getX(),
-              buttonsFactory.get(coutnCach).getY())))){
-          System.out.println("y");
-          } else {
-          System.out.println("N");
-        }
-
-
-          System.out.println("ActionEvent from buttonsFactory #");
-        }
-      });
-    }
-
-     */
-
-    for (int i = 0; i < buttonsFactory.size(); i++) {
-      final int final_i = i;
-      buttonsFactory.get(i).addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          System.out.println(
-              buttonsFactory.indexOf(buttonsFactory.get(final_i)) + " " + buttonsFactory.get(
-                  final_i).getX() + " " + buttonsFactory.get(final_i).getY());
-
-          de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileOnPlate(
-              buttonsFactory.get(final_i).getX(), buttonsFactory.get(final_i).getY());
-
-          if (controller.pickTilesFromPlate(color,
-              model.getPlayers().get(model.getPlayerToMoveIndex()),
-              model.getPlates().get(
-                  drawboardTableCenter.getPlate(buttonsFactory.get(final_i).getX(),
-                      buttonsFactory.get(final_i).getY())))) {
-            System.out.println("y");
-          } else {
-            System.out.println("N");
-          }
-        }
-      });
-    }
-  }
-
-  /**
-  * Adds ActionListeners for Table Center buttons.
-   */
-  private void addActionListenerTableCenter() {
-    for (int i = 0; i < buttonsTable.size(); i++) {
-      final int final_i = i;
-      buttonsTable.get(i).addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          System.out.println(
-              buttonsTable.indexOf(buttonsTable.get(final_i)) + " " + buttonsTable.get(final_i)
-                  .getX() + " " + buttonsTable.get(final_i).getY());
-
-          de.lmu.ifi.sosylab.model.Color color = drawboardTableCenter.getColorOfTileTableCenter(
-              buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
-
-          if (controller.pickTilesFromTableCenter(color,
-              model.getPlayers().get(model.getPlayerToMoveIndex()))) {
-            System.out.println("pickTilesFromTableCenter: Yes");
-          } else {
-            System.out.println("pickTilesFromTableCenter: No");
-          }
-        }
-      });
-    }
-  }
-
-  private void addListeners() {
+   private void addListeners() {
 
     model.addPropertyChangeListener(this);
     menuItems.addActionListener(new ActionListener() {
@@ -342,7 +171,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    *
    * @param event property change event
    */
-
   private void handleModelUpdate(PropertyChangeEvent event) {
     if (event.getPropertyName().equals("Model changed")) {
       repaint();

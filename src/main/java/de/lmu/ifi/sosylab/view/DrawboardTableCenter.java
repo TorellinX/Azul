@@ -1,5 +1,6 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
@@ -11,11 +12,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 /**
  * Center Panel of the Game. Shows the panels and the center of the table.
@@ -26,12 +29,9 @@ public class DrawboardTableCenter extends JPanel {
   private int widthOfCell = 35;
   private int hightOfFactory = 100;
   private int widthOfFactory = 100;
-
   private ArrayList<IntPair> positionTilesTableCenter;
   private HashMap<Integer, IntPair[]> mapFactorys;
-
   private IntPair[] positionOfFactory;
-
   private IntPair[] firstFactory;
   private IntPair[] secondFactory;
   private IntPair[] thirdFactory;
@@ -44,23 +44,29 @@ public class DrawboardTableCenter extends JPanel {
   private TableCenter tableCenter;
   private List<Plate> listFactorys;
   private GameModel model;
+  private Controller controller;
+  private ArrayList<JButton> buttonsFactory;
+  private ArrayList<JButton> buttonsTable;
+  private IntPair[] positionButtonsFactory;
+  private ArrayList<IntPair> positionButtonTable;
+  private int widthOfButtons = 35;
+  private int hightOfButtons = 35;
+
 
   /**
    * Initializes the table center.
    *
    * @param model game model instance
    */
-  public DrawboardTableCenter(GameModel model, int playerNumber) {
+  public DrawboardTableCenter(GameModel model, Controller controller, int playerNumber) {
     if (playerNumber > 2) {
       setPreferredSize(new Dimension(410, 900));
     } else {
       setPreferredSize(new Dimension(410, 700));
     }
     initialize();
-    List<GameModel> gameModelList = new ArrayList<>();
-    gameModelList.add(model);
-    List<GameModel> unmodGameModelList = Collections.unmodifiableList(gameModelList);
-    this.model = unmodGameModelList.get(0);
+    this.model = model;
+    this.controller = controller;
     this.tableCenter = model.getTableCenter();
     this.listFactorys = model.getPlates();
   }
@@ -69,86 +75,11 @@ public class DrawboardTableCenter extends JPanel {
    * Sets the coordinates for the individual objects.
    */
   private void initialize() {
-    firstFactory = new IntPair[]{
-        new IntPair(17, 17),
-        new IntPair(58, 17),
-        new IntPair(17, 58),
-        new IntPair(58, 58)};
-    secondFactory = new IntPair[]{
-        new IntPair(167, 17),
-        new IntPair(208, 17),
-        new IntPair(167, 58),
-        new IntPair(208, 58)};
-    thirdFactory = new IntPair[]{
-        new IntPair(317, 17),
-        new IntPair(358, 17),
-        new IntPair(317, 58),
-        new IntPair(358, 58)};
-    fourthFactory = new IntPair[]{
-        new IntPair(92, 117),
-        new IntPair(133, 117),
-        new IntPair(92, 158),
-        new IntPair(133, 158)};
-    fifthFactory = new IntPair[]{
-        new IntPair(242, 117),
-        new IntPair(283, 117),
-        new IntPair(242, 158),
-        new IntPair(283, 158)};
-    sixthFactory = new IntPair[]{
-        new IntPair(92, 242),
-        new IntPair(133, 242),
-        new IntPair(92, 283),
-        new IntPair(133, 283)};
-    seventhFactory = new IntPair[]{
-        new IntPair(242, 242),
-        new IntPair(283, 242),
-        new IntPair(242, 283),
-        new IntPair(283, 283)};
-    eighthFactory = new IntPair[]{
-        new IntPair(92, 367),
-        new IntPair(133, 367),
-        new IntPair(92, 408),
-        new IntPair(133, 408)};
-    ninthFactory = new IntPair[]{
-        new IntPair(242, 367),
-        new IntPair(283, 367),
-        new IntPair(242, 408),
-        new IntPair(283, 408)};
 
-    mapFactorys = new HashMap<>();
-    mapFactorys.put(0, firstFactory);
-    mapFactorys.put(1, secondFactory);
-    mapFactorys.put(2, thirdFactory);
-    mapFactorys.put(3, fourthFactory);
-    mapFactorys.put(4, fifthFactory);
-    mapFactorys.put(5, sixthFactory);
-    mapFactorys.put(6, seventhFactory);
-    mapFactorys.put(7, eighthFactory);
-    mapFactorys.put(8, ninthFactory);
-
-    positionOfFactory = new IntPair[]{
-        new IntPair(5, 5),
-        new IntPair(155, 5),
-        new IntPair(305, 5),
-        new IntPair(80, 105),
-        new IntPair(230, 105),
-        new IntPair(80, 230),
-        new IntPair(230, 230),
-        new IntPair(80, 355),
-        new IntPair(230, 355)};
-
-    // collect possible positions for stones in game location "table center"
-    positionTilesTableCenter = new ArrayList<>();
-
-    positionTilesTableCenter.add(new IntPair(25, 505));
-
-    for (int row = 505; row <= 625; row += 40) {                    // three rows
-      for (int col = 105; col <= 345; col += 40) {                  // six columns
-        positionTilesTableCenter.add(new IntPair(col, row));
-      }
-    }
-
-
+    addLocationsPlayboardCenter();
+    addButtonsPlayboardCenter();
+    addActionListenerFactory();
+    addActionListenerTableCenter();
   }
 
   /**
@@ -201,12 +132,6 @@ public class DrawboardTableCenter extends JPanel {
    * @param g2D graphics object - kind of "internal reference"
    */
   private void drawTilesFactory(Graphics2D g2D) {
-    // System.out.print("drawTilesFactory");
-    // System.out.print("Plates: ");
-    // for (Plate plate : listFactorys) {
-    //   System.out.print(plate.getTiles() + ", ");
-    // }
-    // System.out.println();
 
     for (int i = 0; i < listFactorys.size(); i++) {
 
@@ -229,8 +154,6 @@ public class DrawboardTableCenter extends JPanel {
       }
 
     }
-
-
   }
 
   /**
@@ -335,7 +258,209 @@ public class DrawboardTableCenter extends JPanel {
     return fac;
   }
 
-  private void updateTable() {
-    //this.tileListColor = tableCenter.getColorTiles();
+  /**
+   * Adds plates and game location "table center"
+   */
+  private void addLocationsPlayboardCenter() {
+    firstFactory = new IntPair[]{
+        new IntPair(17, 17),
+        new IntPair(58, 17),
+        new IntPair(17, 58),
+        new IntPair(58, 58)};
+    secondFactory = new IntPair[]{
+        new IntPair(167, 17),
+        new IntPair(208, 17),
+        new IntPair(167, 58),
+        new IntPair(208, 58)};
+    thirdFactory = new IntPair[]{
+        new IntPair(317, 17),
+        new IntPair(358, 17),
+        new IntPair(317, 58),
+        new IntPair(358, 58)};
+    fourthFactory = new IntPair[]{
+        new IntPair(92, 117),
+        new IntPair(133, 117),
+        new IntPair(92, 158),
+        new IntPair(133, 158)};
+    fifthFactory = new IntPair[]{
+        new IntPair(242, 117),
+        new IntPair(283, 117),
+        new IntPair(242, 158),
+        new IntPair(283, 158)};
+    sixthFactory = new IntPair[]{
+        new IntPair(92, 242),
+        new IntPair(133, 242),
+        new IntPair(92, 283),
+        new IntPair(133, 283)};
+    seventhFactory = new IntPair[]{
+        new IntPair(242, 242),
+        new IntPair(283, 242),
+        new IntPair(242, 283),
+        new IntPair(283, 283)};
+    eighthFactory = new IntPair[]{
+        new IntPair(92, 367),
+        new IntPair(133, 367),
+        new IntPair(92, 408),
+        new IntPair(133, 408)};
+    ninthFactory = new IntPair[]{
+        new IntPair(242, 367),
+        new IntPair(283, 367),
+        new IntPair(242, 408),
+        new IntPair(283, 408)};
+
+    mapFactorys = new HashMap<>();
+    mapFactorys.put(0, firstFactory);
+    mapFactorys.put(1, secondFactory);
+    mapFactorys.put(2, thirdFactory);
+    mapFactorys.put(3, fourthFactory);
+    mapFactorys.put(4, fifthFactory);
+    mapFactorys.put(5, sixthFactory);
+    mapFactorys.put(6, seventhFactory);
+    mapFactorys.put(7, eighthFactory);
+    mapFactorys.put(8, ninthFactory);
+
+    positionOfFactory = new IntPair[]{
+        new IntPair(5, 5),
+        new IntPair(155, 5),
+        new IntPair(305, 5),
+        new IntPair(80, 105),
+        new IntPair(230, 105),
+        new IntPair(80, 230),
+        new IntPair(230, 230),
+        new IntPair(80, 355),
+        new IntPair(230, 355)};
+
+    // collect possible positions for stones in game location "table center"
+    positionTilesTableCenter = new ArrayList<>();
+
+    positionTilesTableCenter.add(new IntPair(25, 505));
+
+    for (int row = 505; row <= 625; row += 40) {                    // three rows
+      for (int col = 105; col <= 345; col += 40) {                  // six columns
+        positionTilesTableCenter.add(new IntPair(col, row));
+      }
+    }
   }
+
+  /**
+   * Adds the buttons for the Playbord.
+   */
+  private void addButtonsPlayboardCenter() {
+    positionButtonsFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17),
+      new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17),
+      new IntPair(208, 17),
+      new IntPair(167, 58), new IntPair(208, 58),
+      new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58),
+      new IntPair(358, 58),
+      new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158),
+      new IntPair(133, 158),
+      new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158),
+      new IntPair(283, 158),
+      new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283),
+      new IntPair(133, 283),
+      new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283),
+      new IntPair(283, 283),
+      new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408),
+      new IntPair(133, 408),
+      new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408),
+      new IntPair(283, 408)};
+
+    buttonsFactory = new ArrayList<>();
+      for (int i = 0; i < positionButtonsFactory.length; i++) {
+      buttonsFactory.add(new JButton());
+      buttonsFactory.get(i)
+         .setBounds(positionButtonsFactory[i].getX(), positionButtonsFactory[i].getY(),
+             widthOfButtons, hightOfButtons);
+      buttonsFactory.get(i).setOpaque(false);
+      buttonsFactory.get(i).setContentAreaFilled(false);
+      buttonsFactory.get(i).setBorderPainted(false);
+    }
+
+    for (int j = 0; j < buttonsFactory.size(); j++) {
+      add(buttonsFactory.get(j));
+    }
+
+    positionButtonTable = new ArrayList<>();
+    positionButtonTable.add(new IntPair(25, 505));
+    for (int i = 505; i <= 625; i += 40) {
+      for (int j = 105; j <= 345; j += 40) {
+        positionButtonTable.add(new IntPair(j, i));
+      }
+    }
+
+    buttonsTable = new ArrayList<>();
+    for (int count = 0; count < positionButtonTable.size(); count++) {
+      buttonsTable.add(new JButton());
+      buttonsTable.get(count)
+          .setBounds(positionButtonTable.get(count).getX(), positionButtonTable.get(count).getY(),
+              widthOfButtons, hightOfButtons);
+    buttonsTable.get(count).setOpaque(false);
+    buttonsTable.get(count).setContentAreaFilled(false);
+    buttonsTable.get(count).setBorderPainted(false);
+    }
+
+    for (int m = 0; m < buttonsTable.size(); m++) {
+      add(buttonsTable.get(m));
+    }
+  }
+
+
+  /**
+   * Adds ActionListeners for Factory buttons.
+   */
+  private void addActionListenerFactory() {
+
+    for (int i = 0; i < buttonsFactory.size(); i++) {
+      final int final_i = i;
+      buttonsFactory.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          System.out.println(
+              buttonsFactory.indexOf(buttonsFactory.get(final_i)) + " " + buttonsFactory.get(
+                  final_i).getX() + " " + buttonsFactory.get(final_i).getY());
+
+          de.lmu.ifi.sosylab.model.Color color = getColorOfTileOnPlate(
+              buttonsFactory.get(final_i).getX(), buttonsFactory.get(final_i).getY());
+
+          if (controller.pickTilesFromPlate(color,
+              model.getPlayers().get(model.getPlayerToMoveIndex()),
+              model.getPlates().get(
+                  getPlate(buttonsFactory.get(final_i).getX(),
+                      buttonsFactory.get(final_i).getY())))) {
+            System.out.println("y");
+          } else {
+            System.out.println("N");
+          }
+        }
+      });
+    }
+  }
+
+  /**
+   * Adds ActionListeners for Table Center buttons.
+   */
+  private void addActionListenerTableCenter() {
+    for (int i = 0; i < buttonsTable.size(); i++) {
+      final int final_i = i;
+      buttonsTable.get(i).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          System.out.println(
+              buttonsTable.indexOf(buttonsTable.get(final_i)) + " " + buttonsTable.get(final_i)
+                  .getX() + " " + buttonsTable.get(final_i).getY());
+
+          de.lmu.ifi.sosylab.model.Color color = getColorOfTileTableCenter(
+              buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
+
+          if (controller.pickTilesFromTableCenter(color,
+              model.getPlayers().get(model.getPlayerToMoveIndex()))) {
+            System.out.println("pickTilesFromTableCenter: Yes");
+          } else {
+            System.out.println("pickTilesFromTableCenter: No");
+          }
+        }
+      });
+    }
+  }
+
 }

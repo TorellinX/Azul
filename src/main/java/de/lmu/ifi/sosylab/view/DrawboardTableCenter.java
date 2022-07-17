@@ -221,7 +221,7 @@ public class DrawboardTableCenter extends JPanel {
           case RED -> g2D.setColor(Color.red);
           case BLUE -> g2D.setColor(Color.blue);
           case BLACK -> g2D.setColor(Color.black);
-          case GREEN -> g2D.setColor(Color.green);
+          case WHITE -> g2D.setColor(Color.green);
           default -> throw new IllegalStateException("Unexpected value: " + color);
         }
         g2D.fillRect(cach[j].getX(), cach[j].getY(), widthOfCell, hightOfCell);
@@ -251,7 +251,7 @@ public class DrawboardTableCenter extends JPanel {
           case RED -> g2D.setColor(Color.red);
           case BLUE -> g2D.setColor(Color.blue);
           case BLACK -> g2D.setColor(Color.black);
-          case GREEN -> g2D.setColor(Color.green);
+          case WHITE -> g2D.setColor(Color.green);
           default -> throw new IllegalStateException("Unexpected value: " + colorOfTile);
         }
       }

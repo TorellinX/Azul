@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Player board representing the game Azul. It contains the pattern lines where tiles can be placed,
@@ -43,8 +42,6 @@ public class PlayerBoard {
    * @param rowIndex pattern line index
    * @return number of free fields
    */
-
-
   public int countFreeFieldsInRow(int rowIndex) {
     if (rowIndex > WALL_SIZE) {
       throw new IllegalArgumentException("Row index must be within the wall size.");
@@ -52,17 +49,14 @@ public class PlayerBoard {
     if (rowIndex < 0) {
       throw new IllegalArgumentException("Row index must be positive");
     }
-
     ColorTile[] row = patternLines[rowIndex];
-        long freeFields = Arrays.asList(row)
-                .stream()
-                .filter(r -> r == null)
-                .count();
-        return Math.toIntExact(freeFields);
-
+    for (int i = row.length - 1; i >= 0; i--) {
+      if (row[i] == null) {
+        return i + 1;
+      }
+    }
+    return 0;
   }
-
-
 
   /**
    * Returns the next index of a pattern line indicated by row. (?)
@@ -86,6 +80,8 @@ public class PlayerBoard {
    * @return color of already placed tiles. 'null' if line is empty
    */
   public Color getPatternLineColor(int row) {
+    // TODO: validation (Line must be not empty, etc.)
+    // TODO: tests
     if (patternLines[row][patternLines[row].length - 1] == null) {
       return null;
     }
@@ -100,12 +96,16 @@ public class PlayerBoard {
    * @param row   the specified line of the wall
    */
   void addTileToWall(Color color, int row) {
+    //TODO: add validation
+    // TODO: tests
     int column = (row + color.ordinal()) % WALL_SIZE;
     wall[row][column] = true;
   }
 
 
   boolean isColorAlreadyOnWall(Color color, int row) {
+    //TODO: add validation
+    // TODO: tests
     int column = getColumnOnWall(color, row);
     return wall[row][column];
   }

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
+// TODO: refine JavaDoc
+
 /**
  * Starts the Azul Game.
  */

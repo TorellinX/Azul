@@ -278,6 +278,11 @@ public class Score {
         return counterCompleteColors;
     }
 
+    /**
+     * Observer notification
+     *
+     * @param state state denominator
+     */
     private void notifyListeners(String state) {
         support.firePropertyChange(state, null, this);
     }

@@ -52,11 +52,11 @@ public class DrawboardTableCenter extends JPanel {
     } else {
       setPreferredSize(new Dimension(410, 700));
     }
-    initialize();
     this.model = model;
     this.controller = controller;
     this.tableCenter = model.getTableCenter();
     this.listPlates = model.getPlates();
+    initialize();
   }
 
   /**
@@ -100,13 +100,14 @@ public class DrawboardTableCenter extends JPanel {
    * @param g2D graphics object - kind of "internal reference"
    */
   private void drawPlates(Graphics2D g2D) {
-    for (IntPair positionOfPlate : positionOfPlates) {
+    int numberOfPlates = listPlates.size();
+    for (int i = 0; i < numberOfPlates; i++) {
       g2D.setColor(colorScheme.plateFill());
-      g2D.fillOval(positionOfPlate.getX(), positionOfPlate.getY(), plateSize,
+      g2D.fillOval(positionOfPlates[i].getX(), positionOfPlates[i].getY(), plateSize,
           plateSize);
       g2D.setColor(colorScheme.plateBorder());
       g2D.setStroke(new BasicStroke(2));
-      g2D.drawOval(positionOfPlate.getX(), positionOfPlate.getY(), plateSize,
+      g2D.drawOval(positionOfPlates[i].getX(), positionOfPlates[i].getY(), plateSize,
           plateSize);
     }
   }
@@ -241,6 +242,7 @@ public class DrawboardTableCenter extends JPanel {
 
   /**
    * Calculates coordinates of tiles for one plate.
+   *
    * @param plateX x-coordinate of left upper tile on plate
    * @param plateY y-coordinate of left upper tile on plate
    * @return coordinates of tiles for one plate
@@ -260,16 +262,47 @@ public class DrawboardTableCenter extends JPanel {
    * Adds plates and game location "table center"
    */
   private void addLocationsPlayboardCenter() {
-    List<IntPair> coordinatesOfFirstTilesOnPlates = new ArrayList<>();
     int platesCenterX = 167;
     int platesCenterY = 217;
-    int plateOffset = plateSize + 25;
+    int plateOffset = plateSize + 15;
+
+    IntPair[][] straightGrid = new IntPair[3][3];
     for (int row = 0; row < 3; row++) {
       for (int col = 0; col < 3; col++) {
-        coordinatesOfFirstTilesOnPlates.add(new IntPair(platesCenterX - plateOffset + row * plateOffset,
-            platesCenterY - plateOffset + col * plateOffset));
+        straightGrid[row][col] = new IntPair(platesCenterX - plateOffset + row * plateOffset,
+            platesCenterY - plateOffset + col * plateOffset);
       }
     }
+
+    IntPair[][] diagonalGrid = new IntPair[3][3];
+    for (int row = 0; row < 3; row++) {
+      for (int col = 0; col < 3; col++) {
+        diagonalGrid[row][col] = new IntPair((int) Math.round(
+            platesCenterX - plateOffset * Math.sqrt(2) + col * plateOffset / Math.sqrt(2) +
+                row * plateOffset / Math.sqrt(2)),
+            (int) Math.round(
+                platesCenterY - col * plateOffset / Math.sqrt(2) +
+                    row * plateOffset / Math.sqrt(2)));
+      }
+    }
+    IntPair[][] currentGrid;
+    int numberOfPlates = listPlates.size();
+    if (numberOfPlates < 9) {
+      currentGrid = diagonalGrid;
+    } else {
+      currentGrid = straightGrid;
+    }
+
+    List<IntPair> coordinatesOfFirstTilesOnPlates = new ArrayList<>();
+    coordinatesOfFirstTilesOnPlates.add(currentGrid[0][1]);
+    coordinatesOfFirstTilesOnPlates.add(currentGrid[1][0]);
+    coordinatesOfFirstTilesOnPlates.add(currentGrid[1][1]);
+    coordinatesOfFirstTilesOnPlates.add(currentGrid[1][2]);
+    coordinatesOfFirstTilesOnPlates.add(currentGrid[2][1]);
+    coordinatesOfFirstTilesOnPlates.add(currentGrid[0][2]);
+    coordinatesOfFirstTilesOnPlates.add(currentGrid[2][0]);
+    coordinatesOfFirstTilesOnPlates.add(currentGrid[0][0]);
+    coordinatesOfFirstTilesOnPlates.add(currentGrid[2][2]);
 
     tilesOnPlateCoordinates = new ArrayList<>();
     for (IntPair plate : coordinatesOfFirstTilesOnPlates) {
@@ -390,6 +423,7 @@ public class DrawboardTableCenter extends JPanel {
 
   /**
    * Setter for color scheme of the table center.
+   *
    * @param colorScheme current color scheme
    */
   public void setColorScheme(ColorScheme colorScheme) {

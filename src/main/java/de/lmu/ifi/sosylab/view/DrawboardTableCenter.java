@@ -8,6 +8,8 @@ import java.awt.Color;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +50,7 @@ public class DrawboardTableCenter extends JPanel {
   private int widthOfButtons = 35;
   private int hightOfButtons = 35;
   private JPanel GraphicTablePanel;
+  private BufferedImage backgroundTableCenter;
 
 
   /**
@@ -55,7 +58,7 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param model game model instance
    */
-  public DrawboardTableCenter(GameModel model, Controller controller, int playerNumber) {
+  public DrawboardTableCenter(GameModel model, Controller controller, int playerNumber) throws IOException {
     if (playerNumber > 2) {
       setPreferredSize(new Dimension(410, 900));
     } else {
@@ -93,7 +96,7 @@ public class DrawboardTableCenter extends JPanel {
 
 
 
-    Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
+   Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
 
 
     // draw the the game location "table center" as darkend field
@@ -101,22 +104,36 @@ public class DrawboardTableCenter extends JPanel {
     g2D.setColor(tableColor);
     g2D.fillRoundRect(5, 490, 395, 185, 20, 20);
 
+
     // updateTable();        // empty method
+    //drawBackground(g2D);
     // draw the plates
     drawFacotry(g2D);
     // draw the tiles on the factories
     drawTilesFactory(g2D);
     // draw game location "table center"
     drawTableCenter(g2D);
-    setOpaque(false);
 
   }
+
 
   /**
    * Draws the plate panels in the center of the table.
    *
    * @param g2D graphics object - kind of "internal reference"
    */
+
+
+ // private void drawBackground(Graphics2D g2D){
+
+   // URL resource = getClass().getResource("BackgroundTableCenter.jpg");
+    ///backgroundTableCenter = ImageIO.read(resource);
+    //} catch (IOException e) {
+     //e.printStackTrace();
+   // }
+    //g2D.drawImage(backgroundTableCenter,0, 0, 350, 600, this);
+  //}
+
 
 
   private void drawFacotry(Graphics2D g2D) {
@@ -127,7 +144,6 @@ public class DrawboardTableCenter extends JPanel {
       g2D.setStroke(new BasicStroke(2));
       g2D.drawOval(positionOfFactory[i].getX(), positionOfFactory[i].getY(), widthOfFactory,
           hightOfFactory);
-      setOpaque(false);
     }
   }
 
@@ -170,6 +186,7 @@ public class DrawboardTableCenter extends JPanel {
   private void drawTableCenter(Graphics2D g2D) {
     List<Tile> tileList = model.getTableCenter().getTiles();
     //System.out.println("TableCenter tiles: " + tileList);
+
     for (int i = 0; i < tileList.size(); i++) {
       if (tileList.get(i) instanceof PenaltyTile) {        // penaltiy tile can only be index 0
         g2D.setColor(Color.gray);

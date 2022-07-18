@@ -6,23 +6,23 @@ import java.awt.*;
 /**
  * Depicts the initial splash screen with picture for Azul.
  */
-public class GraphicTablePanel<graphicTablePanel> extends JPanel {
+public class GraphicTable<graphicTablePanel> extends JPanel {
 
   private Image image;
 
-  public GraphicTablePanel() {
+  public GraphicTable() {
     super();
   }
 
-  public GraphicTablePanel(boolean isDoubleBuffered) {
+  public GraphicTable(boolean isDoubleBuffered) {
     super(isDoubleBuffered);
   }
 
-  public GraphicTablePanel(LayoutManager layout) {
+  public GraphicTable(LayoutManager layout) {
     super(layout);
   }
 
-  public GraphicTablePanel(LayoutManager layout, boolean isDoubleBuffered) {
+  public GraphicTable(LayoutManager layout, boolean isDoubleBuffered) {
     super(layout, isDoubleBuffered);
   }
 
@@ -41,12 +41,12 @@ public class GraphicTablePanel<graphicTablePanel> extends JPanel {
 
     //Erzeugen des Bildes
     Image img = Toolkit.getDefaultToolkit().getImage(getClass()
-            .getResource("/BackroundTableCenter.jpg"));
+            .getResource("/BackgroundTableCenter.jpg"));
 
     //PicturePanel generieren, Hintergrundbild festlegen und in ein anderes Panel eindocken
 
-    GraphicTablePanel graphicTablePanel = new GraphicTablePanel(new BorderLayout());
-    graphicTablePanel.setBackgroundImage(img);
+    GraphicTable graphicTable = new GraphicTable(new BorderLayout());
+    graphicTable.setBackgroundImage(img);
   }
   }
 

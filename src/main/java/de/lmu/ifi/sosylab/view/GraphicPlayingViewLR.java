@@ -10,31 +10,31 @@ import java.util.Objects;
 /**
  * Depicts the initial splash screen with picture for Azul.
  */
-public class GraphicTablealt extends JPanel {
+public class GraphicPlayingViewLR extends JPanel {
 
   @Serial
   private static final long serialVersionUID = 1L;
 
-  public JPanel backroundTablePanel = new JPanel();
+  public JPanel playingViewPanel = new JPanel();
 
-  public GraphicTablealt() {
+  public GraphicPlayingViewLR() {
     init();
   }
 
   private void init() {
     try {
       JLabel label = new JLabel(showImg());
-      backroundTablePanel.add(label);
+      playingViewPanel.add(label);
     } catch (NullPointerException e) {
       JLabel label = new JLabel("Error! Splash picture not found.");
-      backroundTablePanel.add(label);
+      playingViewPanel.add(label);
     }
   }
 
   private ImageIcon showImg() {
     // BufferedImage img = null;
     try {
-      BufferedImage img = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/BackroundTableCenter.jpg")));
+      BufferedImage img = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/BackgroundTableCenter.jpg")));
       return new ImageIcon(img);
     } catch (IOException e) {
       e.printStackTrace();

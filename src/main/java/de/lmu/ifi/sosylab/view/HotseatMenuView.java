@@ -1,23 +1,14 @@
 package de.lmu.ifi.sosylab.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
 /**
  * Displays the menu for hotseat mode with player name entry and start/back buttons.
@@ -151,7 +142,11 @@ public class HotseatMenuView extends JFrame {
               "It was not possible to create a Game, there can only be 2-4 players");
         } else {
 
-          PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames());
+          try {
+            PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames());
+          } catch (IOException ex) {
+            ex.printStackTrace();
+          }
           // setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
           // dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         }

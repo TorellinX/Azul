@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.io.Serial;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +38,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private DrawPlayerBoard secondPlayerBoard;
   private DrawPlayerBoard thirdPlayerBoard;
   private DrawPlayerBoard fourthPlayerBoard;
-  private GraphicTablePanel graphicTablePanel;
+  private GraphicTable graphicTable;
 
   /**
    * Initializes the playing view.
@@ -45,7 +46,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    * @param playerCount number of players
    * @param nicknames list of nicknames of players
    */
-  public PlayingView(int playerCount, List<String> nicknames) {
+  public PlayingView(int playerCount, List<String> nicknames) throws IOException {
     super("Azul Playing View");
     this.playerCount = playerCount;
     List<String> unmodNameList = Collections.unmodifiableList(nicknames);
@@ -84,7 +85,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    * Creates the view. Adds the buttons and the associated ActionListeners.
    */
 
-  private void createPlayingView() {
+  private void createPlayingView() throws IOException {
 
     // Menu
     //Oberes Panel wird mit Combobox gefüllt.
@@ -99,11 +100,10 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     // Mittlere Zone wird befüllt
     // Center definieren: table center
     JPanel playingViewCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    graphicTablePanel = new GraphicTablePanel<>();
+
     drawboardTableCenter = new DrawboardTableCenter(model, controller, player.size());
     drawboardTableCenter.setLayout(null);
-    drawboardTableCenter.setOpaque(false);
-    playingViewCenter.add(graphicTablePanel);
+
     playingViewCenter.add(drawboardTableCenter);
 
 
@@ -117,6 +117,11 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
     // Linkes und rechtes panel mit Playerboards belegen
     JPanel playingViewLeft = new JPanel(new BorderLayout());
+
+
+    GraphicPlayingViewLR playingViewLR = new GraphicPlayingViewLR();
+    playingViewLeft.add(playingViewLR);
+
     firstPlayerBoard = new DrawPlayerBoard(player.get(0), controller);
     playingViewLeft.setPreferredSize(firstPlayerBoard.playerBoardPreferredSize(1));
     playingViewLeft.add(firstPlayerBoard, BorderLayout.NORTH);
@@ -140,7 +145,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
     // Zuordnung ausführen.
     add(playingViewLeft, BorderLayout.WEST);
-    add(graphicTablePanel,BorderLayout.CENTER);
+    //add(graphicTablePanel,BorderLayout.CENTER);
     add(playingViewCenter, BorderLayout.CENTER);
     add(playingViewRight, BorderLayout.EAST);
 

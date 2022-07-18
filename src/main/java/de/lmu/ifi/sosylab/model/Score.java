@@ -277,6 +277,7 @@ public class Score {
         }
         return counterCompleteColors;
     }
+
     private void notifyListeners(String state) {
         support.firePropertyChange(state, null, this);
     }

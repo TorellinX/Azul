@@ -1,14 +1,14 @@
 package de.lmu.ifi.sosylab.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
+import javax.sound.sampled.Clip;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.io.File;
+
+import static javax.sound.sampled.AudioSystem.getAudioInputStream;
 
 /**
  * Displays the logo and allows for choice between hotseat and server based multiplayer.
@@ -63,13 +63,25 @@ public class StartMenuView extends JFrame {
 
   private void hotSeatButtonView() {
     hotSeatButton = new JButton("HOTSEAT");
+
     buttons.add(hotSeatButton);
 
     hotSeatButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         HotseatMenuView hotseatMenuView = new HotseatMenuView();
+        try {
+          File soundStart = new File("SoundStart.wav");
+          getAudioInputStream(soundStart);
+          Clip clip = null;
+          clip.open(getAudioInputStream(soundStart));
+          clip.start();
+        } catch(Exception ex) {
+          System.out.println("Error");
+          ex.printStackTrace();
+        }
         thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         // thisFrame.setVisible(false);
       }

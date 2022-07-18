@@ -6,10 +6,8 @@ import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.model.PlayerState;
+import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,10 +15,9 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.JButton;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -40,19 +37,17 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private DrawboardTableCenter drawboardTableCenter;
   private int playerCount;
   private List<String> nicknames;
-  private List<Player> player;
+  private List<Player> players;
   private Controller controller;
   private GameModel model;
-  private DrawPlayerBoard firstPlayerBoard;
-  private DrawPlayerBoard secondPlayerBoard;
-  private DrawPlayerBoard thirdPlayerBoard;
-  private DrawPlayerBoard fourthPlayerBoard;
+  private DrawPlayerBoard[] playerBoards;
+  private ColorScheme colorScheme;
 
   /**
    * Initializes the playing view.
    *
    * @param playerCount number of players
-   * @param nicknames list of nicknames of players
+   * @param nicknames   list of nicknames of players
    */
   public PlayingView(int playerCount, List<String> nicknames) {
     super("Azul Playing View");
@@ -63,25 +58,22 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     this.controller = new GameController(model);
 
     if (controller.startGame(nicknames)) {
-      this.player = model.getPlayers();
+      this.players = model.getPlayers();
     } else {
       JOptionPane.showMessageDialog(null,
-              "Game could not be started!",
-              "Internal Error!", JOptionPane.ERROR_MESSAGE);
+          "Game could not be started!",
+          "Internal Error!", JOptionPane.ERROR_MESSAGE);
       dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
-    for (Player player : model.getPlayers()) {
-      if (player.getState() == PlayerState.TO_MOVE) {
-        System.out.println("Active Player: " + player);
-      } else {
-        System.out.println("Inactive Player: " + player);
-      }
-    }
-
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(true);
     setTitle("Azul");
     setLayout(new BorderLayout());
+    setColors(ColorSchemes.cosmic);
+    getContentPane().setBackground(colorScheme.playingView());  // TODO: replace with image
+    //TODO: implementieren setPlayingViewBackground()
+    setPlayingViewBackground();
+
     createPlayingView();
     addListeners();
     pack();
@@ -99,39 +91,43 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     menu = new JPanel();
     // menu.setSize(1200, 75);
     menu.setLayout(new FlowLayout(FlowLayout.CENTER));
-    Color backroundColor = new Color(135, 206, 250);
-    menu.setBackground(backroundColor);
+    menu.setBackground(colorScheme.menu());
     menu.add(menuItems);
     add(menu, BorderLayout.NORTH);
 
     // Mittlere Zone wird befüllt
     // Center definieren: table center
     JPanel playingViewCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    drawboardTableCenter = new DrawboardTableCenter(model, controller, player.size());
+    playingViewCenter.setOpaque(false);
+    drawboardTableCenter = new DrawboardTableCenter(model, controller, players.size());
+    drawboardTableCenter.setColorScheme(colorScheme);
     drawboardTableCenter.setLayout(null);
     playingViewCenter.add(drawboardTableCenter);
 
+    playerBoards = new DrawPlayerBoard[players.size()];
+    for (int i = 0; i < players.size(); i++) {
+      playerBoards[i] = new DrawPlayerBoard(players.get(i), controller, colorScheme);
+      playerBoards[i].setColorScheme(colorScheme);
+    }
     // Linkes und rechtes panel mit Playerboards belegen
     JPanel playingViewLeft = new JPanel(new BorderLayout());
-    firstPlayerBoard = new DrawPlayerBoard(player.get(0), controller);
-    playingViewLeft.setPreferredSize(firstPlayerBoard.playerBoardPreferredSize(1));
-    playingViewLeft.add(firstPlayerBoard, BorderLayout.NORTH);
+    playingViewLeft.setOpaque(false);
+    playingViewLeft.setPreferredSize(playerBoards[0].playerBoardPreferredSize(1));
+    playingViewLeft.add(playerBoards[0], BorderLayout.NORTH);
 
     JPanel playingViewRight = new JPanel(new BorderLayout());
-    secondPlayerBoard = new DrawPlayerBoard(player.get(1), controller);
-    playingViewRight.setPreferredSize(secondPlayerBoard.playerBoardPreferredSize(1));
-    playingViewRight.add(secondPlayerBoard, BorderLayout.NORTH);
+    playingViewRight.setOpaque(false);
+    playingViewRight.setPreferredSize(playerBoards[1].playerBoardPreferredSize(1));
+    playingViewRight.add(playerBoards[1], BorderLayout.NORTH);
 
-    if (player.size() > 2) {
-      thirdPlayerBoard = new DrawPlayerBoard(player.get(2), controller);
-      playingViewLeft.setPreferredSize(thirdPlayerBoard.playerBoardPreferredSize(2));
-      playingViewLeft.add(thirdPlayerBoard, BorderLayout.SOUTH);
+    if (players.size() > 2) {
+      playingViewLeft.setPreferredSize(playerBoards[2].playerBoardPreferredSize(2));
+      playingViewLeft.add(playerBoards[2], BorderLayout.SOUTH);
     }
 
-    if (player.size() > 3) {
-      fourthPlayerBoard = new DrawPlayerBoard(player.get(3), controller);
-      playingViewRight.setPreferredSize(fourthPlayerBoard.playerBoardPreferredSize(2));
-      playingViewRight.add(fourthPlayerBoard, BorderLayout.SOUTH);
+    if (players.size() > 3) {
+      playingViewRight.setPreferredSize(playerBoards[3].playerBoardPreferredSize(2));
+      playingViewRight.add(playerBoards[3], BorderLayout.SOUTH);
     }
 
     // Zuordnung ausführen.
@@ -142,7 +138,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   }
 
 
-   private void addListeners() {
+  private void addListeners() {
 
     model.addPropertyChangeListener(this);
     menuItems.addActionListener(new ActionListener() {
@@ -174,20 +170,32 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private void handleModelUpdate(PropertyChangeEvent event) {
     if (event.getPropertyName().equals("Model changed")) {
       repaint();
-      firstPlayerBoard.setScoreLabel(player.get(0).getScore());
-      firstPlayerBoard.setPlayerLabelBackgroundColor(player.get(0));
-      secondPlayerBoard.setScoreLabel(player.get(1).getScore());
-      secondPlayerBoard.setPlayerLabelBackgroundColor(player.get(1));
-      if (player.size() > 2) {
-        thirdPlayerBoard.setScoreLabel(player.get(2).getScore());
-        thirdPlayerBoard.setPlayerLabelBackgroundColor(player.get(2));
+      playerBoards[0].setScoreLabel(players.get(0).getScore());
+      playerBoards[0].setPlayerLabelBackgroundColor(players.get(0));
+      playerBoards[1].setScoreLabel(players.get(1).getScore());
+      playerBoards[1].setPlayerLabelBackgroundColor(players.get(1));
+      if (players.size() > 2) {
+        playerBoards[2].setScoreLabel(players.get(2).getScore());
+        playerBoards[2].setPlayerLabelBackgroundColor(players.get(2));
       }
-      if (player.size() > 3) {
-        fourthPlayerBoard.setScoreLabel(player.get(3).getScore());
-        fourthPlayerBoard.setPlayerLabelBackgroundColor(player.get(3));
+      if (players.size() > 3) {
+        playerBoards[3].setScoreLabel(players.get(3).getScore());
+        playerBoards[3].setPlayerLabelBackgroundColor(players.get(3));
       }
     }
   }
+
+  private void setColors(ColorScheme colorScheme) {
+    this.colorScheme = colorScheme;
+  }
+
+
+  private void setPlayingViewBackground() {
+    ImageIcon backgroundImage = new ImageIcon(
+        getClass().getResource(colorScheme.boardBackgroundImage()));
+
+  }
+
 }
 
 

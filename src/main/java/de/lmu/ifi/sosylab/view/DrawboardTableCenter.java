@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
+import static de.lmu.ifi.sosylab.model.GameModel.TILES_PER_PLATE;
+
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.GameModel;
@@ -7,16 +9,13 @@ import de.lmu.ifi.sosylab.model.PenaltyTile;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.TableCenter;
 import de.lmu.ifi.sosylab.model.Tile;
+import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import javax.swing.*;
 
@@ -25,32 +24,21 @@ import javax.swing.*;
  */
 public class DrawboardTableCenter extends JPanel {
 
-  private int hightOfCell = 35;
-  private int widthOfCell = 35;
-  private int hightOfFactory = 100;
-  private int widthOfFactory = 100;
+  private final int cellSize = 35;
+  private final int plateSize = 100;
+  private final int gapSize = 6;
+  private final int arcSize = 6;
   private ArrayList<IntPair> positionTilesTableCenter;
-  private HashMap<Integer, IntPair[]> mapFactorys;
-  private IntPair[] positionOfFactory;
-  private IntPair[] firstFactory;
-  private IntPair[] secondFactory;
-  private IntPair[] thirdFactory;
-  private IntPair[] fourthFactory;
-  private IntPair[] fifthFactory;
-  private IntPair[] sixthFactory;
-  private IntPair[] seventhFactory;
-  private IntPair[] eighthFactory;
-  private IntPair[] ninthFactory;
-  private TableCenter tableCenter;
-  private List<Plate> listFactorys;
-  private GameModel model;
-  private Controller controller;
+  private List<IntPair[]> tilesOnPlateCoordinates;
+  private IntPair[] positionOfPlates;
+  private final TableCenter tableCenter;
+  private final List<Plate> listPlates;
+  private final GameModel model;
+  private final Controller controller;
   private ArrayList<JButton> buttonsFactory;
   private ArrayList<JButton> buttonsTable;
-  private IntPair[] positionButtonsFactory;
-  private ArrayList<IntPair> positionButtonTable;
-  private int widthOfButtons = 35;
-  private int hightOfButtons = 35;
+  private final int buttonsSize = 35;
+  private ColorScheme colorScheme;
 
 
   /**
@@ -68,7 +56,7 @@ public class DrawboardTableCenter extends JPanel {
     this.model = model;
     this.controller = controller;
     this.tableCenter = model.getTableCenter();
-    this.listFactorys = model.getPlates();
+    this.listPlates = model.getPlates();
   }
 
   /**
@@ -92,17 +80,15 @@ public class DrawboardTableCenter extends JPanel {
     super.paintComponent(g);
 
     Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
-
-    // draw the the game location "table center" as darkend field
-    Color tableColor = new Color(234, 182, 118);
-    g2D.setColor(tableColor);
+    setOpaque(false);
+    // draw the game location "table center" as darkened field
+    g2D.setColor(colorScheme.table());
     g2D.fillRoundRect(5, 490, 395, 185, 20, 20);
 
-    // updateTable();        // empty method
     // draw the plates
-    drawFacotry(g2D);
+    drawPlates(g2D);
     // draw the tiles on the factories
-    drawTilesFactory(g2D);
+    drawTilesOnPlates(g2D);
     // draw game location "table center"
     drawTableCenter(g2D);
 
@@ -113,16 +99,15 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param g2D graphics object - kind of "internal reference"
    */
-  private void drawFacotry(Graphics2D g2D) {
-    for (int i = 0; i < positionOfFactory.length; i++) {
-      Color backroundColor = new Color(135, 206, 250);
-      g2D.setColor(backroundColor);
-      g2D.fillOval(positionOfFactory[i].getX(), positionOfFactory[i].getY(), widthOfFactory,
-          hightOfFactory);
-      g2D.setColor(Color.black);
+  private void drawPlates(Graphics2D g2D) {
+    for (IntPair positionOfPlate : positionOfPlates) {
+      g2D.setColor(colorScheme.plateFill());
+      g2D.fillOval(positionOfPlate.getX(), positionOfPlate.getY(), plateSize,
+          plateSize);
+      g2D.setColor(colorScheme.plateBorder());
       g2D.setStroke(new BasicStroke(2));
-      g2D.drawOval(positionOfFactory[i].getX(), positionOfFactory[i].getY(), widthOfFactory,
-          hightOfFactory);
+      g2D.drawOval(positionOfPlate.getX(), positionOfPlate.getY(), plateSize,
+          plateSize);
     }
   }
 
@@ -131,25 +116,23 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param g2D graphics object - kind of "internal reference"
    */
-  private void drawTilesFactory(Graphics2D g2D) {
+  private void drawTilesOnPlates(Graphics2D g2D) {
+    for (int i = 0; i < listPlates.size(); i++) {
+      List<ColorTile> colorTilesOnCurrentPlate = listPlates.get(i).getTiles();
+      IntPair[] tilesCoordinates = tilesOnPlateCoordinates.get(i);
 
-    for (int i = 0; i < listFactorys.size(); i++) {
-
-      Plate plate = listFactorys.get(i);
-      List<ColorTile> colorTilesOnFactory = plate.getTiles();
-      IntPair[] cach = mapFactorys.get(i);
-
-      for (int j = 0; j < colorTilesOnFactory.size(); j++) {
-        de.lmu.ifi.sosylab.model.Color color = colorTilesOnFactory.get(j).getColor();
+      for (int j = 0; j < colorTilesOnCurrentPlate.size(); j++) {
+        de.lmu.ifi.sosylab.model.Color color = colorTilesOnCurrentPlate.get(j).getColor();
         switch (color) {
-          case YELLOW -> g2D.setColor(Color.yellow);
-          case RED -> g2D.setColor(Color.red);
-          case BLUE -> g2D.setColor(Color.blue);
-          case BLACK -> g2D.setColor(Color.black);
-          case WHITE -> g2D.setColor(Color.green);
+          case YELLOW -> g2D.setColor(colorScheme.yellow());
+          case RED -> g2D.setColor(colorScheme.red());
+          case BLUE -> g2D.setColor(colorScheme.blue());
+          case BLACK -> g2D.setColor(colorScheme.black());
+          case WHITE -> g2D.setColor(colorScheme.green());
           default -> throw new IllegalStateException("Unexpected value: " + color);
         }
-        g2D.fillRect(cach[j].getX(), cach[j].getY(), widthOfCell, hightOfCell);
+        g2D.fillRoundRect(tilesCoordinates[j].getX(), tilesCoordinates[j].getY(), cellSize,
+            cellSize, arcSize, arcSize);
 
       }
 
@@ -163,32 +146,34 @@ public class DrawboardTableCenter extends JPanel {
    */
   private void drawTableCenter(Graphics2D g2D) {
     List<Tile> tileList = model.getTableCenter().getTiles();
-    //System.out.println("TableCenter tiles: " + tileList);
     for (int i = 0; i < tileList.size(); i++) {
       if (tileList.get(i) instanceof PenaltyTile) {        // penaltiy tile can only be index 0
-        g2D.setColor(Color.gray);
+        g2D.setColor(colorScheme.penalty());
       } else {
         de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tileList.get(i)).getColor();
         switch (colorOfTile) {
-          case YELLOW -> g2D.setColor(Color.yellow);
-          case RED -> g2D.setColor(Color.red);
-          case BLUE -> g2D.setColor(Color.blue);
-          case BLACK -> g2D.setColor(Color.black);
-          case WHITE -> g2D.setColor(Color.green);
+          case YELLOW -> g2D.setColor(colorScheme.yellow());
+          case RED -> g2D.setColor(colorScheme.red());
+          case BLUE -> g2D.setColor(colorScheme.blue());
+          case BLACK -> g2D.setColor(colorScheme.black());
+          case WHITE -> g2D.setColor(colorScheme.green());
           default -> throw new IllegalStateException("Unexpected value: " + colorOfTile);
         }
       }
       if (tileList.get(0) instanceof PenaltyTile) {
-        g2D.fillRect(positionTilesTableCenter.get(i).getX(), positionTilesTableCenter.get(i).getY(),
-            widthOfCell, hightOfCell);
+        g2D.fillRoundRect(positionTilesTableCenter.get(i).getX(),
+            positionTilesTableCenter.get(i).getY(),
+            cellSize, cellSize, arcSize, arcSize);
+        g2D.setColor(colorScheme.penaltyText());
+        g2D.setFont(this.getFont().deriveFont(Font.BOLD, 18));
+        g2D.drawString("1", positionTilesTableCenter.get(0).getX() + cellSize / 3,
+            positionTilesTableCenter.get(0).getY() + 2 * cellSize / 3);
       } else {
-        g2D.fillRect(positionTilesTableCenter.get(i + 1).getX(),
+        g2D.fillRoundRect(positionTilesTableCenter.get(i + 1).getX(),
             positionTilesTableCenter.get(i + 1).getY(),
-            widthOfCell, hightOfCell);
+            cellSize, cellSize, arcSize, arcSize);
       }
-
     }
-
   }
 
   /**
@@ -199,25 +184,24 @@ public class DrawboardTableCenter extends JPanel {
    * @return color of the addressed tile
    */
   public de.lmu.ifi.sosylab.model.Color getColorOfTileOnPlate(int x, int y) {
-    de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
-    for (int count = 0; count < listFactorys.size(); count++) {
-      IntPair[] cache = mapFactorys.get(count);
-      Plate plate = listFactorys.get(count);
-      List<ColorTile> colorTilesFacotry = plate.getTiles();
+    de.lmu.ifi.sosylab.model.Color colorOfTile = de.lmu.ifi.sosylab.model.Color.RED;
+    for (int count = 0; count < listPlates.size(); count++) {
+      IntPair[] tilesCoordinates = tilesOnPlateCoordinates.get(count);
+      Plate plate = listPlates.get(count);
+      List<ColorTile> colorTilesPlate = plate.getTiles();
 
-      for (int i = 0; i < cache.length; i++) {
-        if (x == cache[i].getX() && y == cache[i].getY()) {
-          toReturn = colorTilesFacotry.get(i).getColor();
+      for (int i = 0; i < tilesCoordinates.length; i++) {
+        if (x == tilesCoordinates[i].getX() && y == tilesCoordinates[i].getY()) {
+          colorOfTile = colorTilesPlate.get(i).getColor();
         }
       }
     }
-    return toReturn;
-
+    return colorOfTile;
   }
 
   /**
-   * Get the count number for a particular plate in table center addressed by table center
-   * related coordinates.
+   * Get the count number for a particular plate in table center addressed by table center related
+   * coordinates.
    *
    * @param x x-coordinate
    * @param y y-coordinate
@@ -243,96 +227,65 @@ public class DrawboardTableCenter extends JPanel {
    * @param y Y-Coordinate
    * @return Int of Plate
    */
-
-  public int getPlate(int x, int y) {
-    int fac = 0;
-
-    for (int i = 0; i < mapFactorys.size(); i++) {
-      IntPair[] cach = mapFactorys.get(i);
-      for (int j = 0; j < cach.length; j++) {
-        if (x == cach[j].getX() && y == cach[j].getY()) {
-          fac = i;
+  public int getPlateIndex(int x, int y) {
+    int plateIndex = 0;
+    for (IntPair[] tilesCoordinates : tilesOnPlateCoordinates) {
+      for (IntPair tilesCoordinate : tilesCoordinates) {
+        if (x == tilesCoordinate.getX() && y == tilesCoordinate.getY()) {
+          plateIndex = tilesOnPlateCoordinates.indexOf(tilesCoordinates);
         }
       }
     }
-    return fac;
+    return plateIndex;
+  }
+
+  /**
+   * Calculates coordinates of tiles for one plate.
+   * @param plateX x-coordinate of left upper tile on plate
+   * @param plateY y-coordinate of left upper tile on plate
+   * @return coordinates of tiles for one plate
+   */
+  private IntPair[] calculateTilesOnPlateCoordinates(int plateX, int plateY) {
+    List<IntPair> tilesOnPlateCoordinates = new ArrayList<>();
+    for (int row = 0; row < TILES_PER_PLATE / 2; row++) {
+      for (int col = 0; col < TILES_PER_PLATE / 2; col++) {
+        tilesOnPlateCoordinates.add(new IntPair(plateX + col * (cellSize + gapSize),
+            plateY + row * (cellSize + gapSize)));
+      }
+    }
+    return tilesOnPlateCoordinates.toArray(IntPair[]::new);
   }
 
   /**
    * Adds plates and game location "table center"
    */
   private void addLocationsPlayboardCenter() {
-    firstFactory = new IntPair[]{
-        new IntPair(17, 17),
-        new IntPair(58, 17),
-        new IntPair(17, 58),
-        new IntPair(58, 58)};
-    secondFactory = new IntPair[]{
-        new IntPair(167, 17),
-        new IntPair(208, 17),
-        new IntPair(167, 58),
-        new IntPair(208, 58)};
-    thirdFactory = new IntPair[]{
-        new IntPair(317, 17),
-        new IntPair(358, 17),
-        new IntPair(317, 58),
-        new IntPair(358, 58)};
-    fourthFactory = new IntPair[]{
-        new IntPair(92, 117),
-        new IntPair(133, 117),
-        new IntPair(92, 158),
-        new IntPair(133, 158)};
-    fifthFactory = new IntPair[]{
-        new IntPair(242, 117),
-        new IntPair(283, 117),
-        new IntPair(242, 158),
-        new IntPair(283, 158)};
-    sixthFactory = new IntPair[]{
-        new IntPair(92, 242),
-        new IntPair(133, 242),
-        new IntPair(92, 283),
-        new IntPair(133, 283)};
-    seventhFactory = new IntPair[]{
-        new IntPair(242, 242),
-        new IntPair(283, 242),
-        new IntPair(242, 283),
-        new IntPair(283, 283)};
-    eighthFactory = new IntPair[]{
-        new IntPair(92, 367),
-        new IntPair(133, 367),
-        new IntPair(92, 408),
-        new IntPair(133, 408)};
-    ninthFactory = new IntPair[]{
-        new IntPair(242, 367),
-        new IntPair(283, 367),
-        new IntPair(242, 408),
-        new IntPair(283, 408)};
+    List<IntPair> coordinatesOfFirstTilesOnPlates = new ArrayList<>();
+    int platesCenterX = 167;
+    int platesCenterY = 217;
+    int plateOffset = plateSize + 25;
+    for (int row = 0; row < 3; row++) {
+      for (int col = 0; col < 3; col++) {
+        coordinatesOfFirstTilesOnPlates.add(new IntPair(platesCenterX - plateOffset + row * plateOffset,
+            platesCenterY - plateOffset + col * plateOffset));
+      }
+    }
 
-    mapFactorys = new HashMap<>();
-    mapFactorys.put(0, firstFactory);
-    mapFactorys.put(1, secondFactory);
-    mapFactorys.put(2, thirdFactory);
-    mapFactorys.put(3, fourthFactory);
-    mapFactorys.put(4, fifthFactory);
-    mapFactorys.put(5, sixthFactory);
-    mapFactorys.put(6, seventhFactory);
-    mapFactorys.put(7, eighthFactory);
-    mapFactorys.put(8, ninthFactory);
+    tilesOnPlateCoordinates = new ArrayList<>();
+    for (IntPair plate : coordinatesOfFirstTilesOnPlates) {
+      tilesOnPlateCoordinates.add(calculateTilesOnPlateCoordinates(plate.getX(), plate.getY()));
+    }
 
-    positionOfFactory = new IntPair[]{
-        new IntPair(5, 5),
-        new IntPair(155, 5),
-        new IntPair(305, 5),
-        new IntPair(80, 105),
-        new IntPair(230, 105),
-        new IntPair(80, 230),
-        new IntPair(230, 230),
-        new IntPair(80, 355),
-        new IntPair(230, 355)};
+    int offsetPlatesToTiles = 12;
+    positionOfPlates = new IntPair[coordinatesOfFirstTilesOnPlates.size()];
+    for (int i = 0; i < coordinatesOfFirstTilesOnPlates.size(); i++) {
+      positionOfPlates[i] = new IntPair(
+          coordinatesOfFirstTilesOnPlates.get(i).getX() - offsetPlatesToTiles,
+          coordinatesOfFirstTilesOnPlates.get(i).getY() - offsetPlatesToTiles);
+    }
 
     // collect possible positions for stones in game location "table center"
     positionTilesTableCenter = new ArrayList<>();
-
     positionTilesTableCenter.add(new IntPair(25, 505));
 
     for (int row = 505; row <= 625; row += 40) {                    // three rows
@@ -346,41 +299,23 @@ public class DrawboardTableCenter extends JPanel {
    * Adds the buttons for the Playbord.
    */
   private void addButtonsPlayboardCenter() {
-    positionButtonsFactory = new IntPair[]{new IntPair(17, 17), new IntPair(58, 17),
-      new IntPair(17, 58), new IntPair(58, 58), new IntPair(167, 17),
-      new IntPair(208, 17),
-      new IntPair(167, 58), new IntPair(208, 58),
-      new IntPair(317, 17), new IntPair(358, 17), new IntPair(317, 58),
-      new IntPair(358, 58),
-      new IntPair(92, 117), new IntPair(133, 117), new IntPair(92, 158),
-      new IntPair(133, 158),
-      new IntPair(242, 117), new IntPair(283, 117), new IntPair(242, 158),
-      new IntPair(283, 158),
-      new IntPair(92, 242), new IntPair(133, 242), new IntPair(92, 283),
-      new IntPair(133, 283),
-      new IntPair(242, 242), new IntPair(283, 242), new IntPair(242, 283),
-      new IntPair(283, 283),
-      new IntPair(92, 367), new IntPair(133, 367), new IntPair(92, 408),
-      new IntPair(133, 408),
-      new IntPair(242, 367), new IntPair(283, 367), new IntPair(242, 408),
-      new IntPair(283, 408)};
-
     buttonsFactory = new ArrayList<>();
-      for (int i = 0; i < positionButtonsFactory.length; i++) {
-      buttonsFactory.add(new JButton());
-      buttonsFactory.get(i)
-         .setBounds(positionButtonsFactory[i].getX(), positionButtonsFactory[i].getY(),
-             widthOfButtons, hightOfButtons);
-      buttonsFactory.get(i).setOpaque(false);
-      buttonsFactory.get(i).setContentAreaFilled(false);
-      buttonsFactory.get(i).setBorderPainted(false);
+    for (IntPair[] tilesOnPlateCoordinate : tilesOnPlateCoordinates) {
+      for (int j = 0; j < TILES_PER_PLATE; j++) {
+        JButton currentButton = new JButton();
+        currentButton.setBounds(tilesOnPlateCoordinate[j].getX(),
+            tilesOnPlateCoordinate[j].getY(), buttonsSize, buttonsSize);
+        currentButton.setOpaque(false);
+        currentButton.setContentAreaFilled(false);
+        currentButton.setBorderPainted(false);
+        buttonsFactory.add(currentButton);
+      }
+    }
+    for (JButton button : buttonsFactory) {
+      add(button);
     }
 
-    for (int j = 0; j < buttonsFactory.size(); j++) {
-      add(buttonsFactory.get(j));
-    }
-
-    positionButtonTable = new ArrayList<>();
+    ArrayList<IntPair> positionButtonTable = new ArrayList<>();
     positionButtonTable.add(new IntPair(25, 505));
     for (int i = 505; i <= 625; i += 40) {
       for (int j = 105; j <= 345; j += 40) {
@@ -393,14 +328,14 @@ public class DrawboardTableCenter extends JPanel {
       buttonsTable.add(new JButton());
       buttonsTable.get(count)
           .setBounds(positionButtonTable.get(count).getX(), positionButtonTable.get(count).getY(),
-              widthOfButtons, hightOfButtons);
-    buttonsTable.get(count).setOpaque(false);
-    buttonsTable.get(count).setContentAreaFilled(false);
-    buttonsTable.get(count).setBorderPainted(false);
+              buttonsSize, buttonsSize);
+      buttonsTable.get(count).setOpaque(false);
+      buttonsTable.get(count).setContentAreaFilled(false);
+      buttonsTable.get(count).setBorderPainted(false);
     }
 
-    for (int m = 0; m < buttonsTable.size(); m++) {
-      add(buttonsTable.get(m));
+    for (JButton jButton : buttonsTable) {
+      add(jButton);
     }
   }
 
@@ -412,25 +347,22 @@ public class DrawboardTableCenter extends JPanel {
 
     for (int i = 0; i < buttonsFactory.size(); i++) {
       final int final_i = i;
-      buttonsFactory.get(i).addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          System.out.println(
-              buttonsFactory.indexOf(buttonsFactory.get(final_i)) + " " + buttonsFactory.get(
-                  final_i).getX() + " " + buttonsFactory.get(final_i).getY());
+      buttonsFactory.get(i).addActionListener(e -> {
+        System.out.println(
+            buttonsFactory.indexOf(buttonsFactory.get(final_i)) + " " + buttonsFactory.get(
+                final_i).getX() + " " + buttonsFactory.get(final_i).getY());
 
-          de.lmu.ifi.sosylab.model.Color color = getColorOfTileOnPlate(
-              buttonsFactory.get(final_i).getX(), buttonsFactory.get(final_i).getY());
+        de.lmu.ifi.sosylab.model.Color color = getColorOfTileOnPlate(
+            buttonsFactory.get(final_i).getX(), buttonsFactory.get(final_i).getY());
 
-          if (controller.pickTilesFromPlate(color,
-              model.getPlayers().get(model.getPlayerToMoveIndex()),
-              model.getPlates().get(
-                  getPlate(buttonsFactory.get(final_i).getX(),
-                      buttonsFactory.get(final_i).getY())))) {
-            System.out.println("y");
-          } else {
-            System.out.println("N");
-          }
+        if (controller.pickTilesFromPlate(color,
+            model.getPlayers().get(model.getPlayerToMoveIndex()),
+            model.getPlates().get(
+                getPlateIndex(buttonsFactory.get(final_i).getX(),
+                    buttonsFactory.get(final_i).getY())))) {
+          System.out.println("y");
+        } else {
+          System.out.println("N");
         }
       });
     }
@@ -442,25 +374,26 @@ public class DrawboardTableCenter extends JPanel {
   private void addActionListenerTableCenter() {
     for (int i = 0; i < buttonsTable.size(); i++) {
       final int final_i = i;
-      buttonsTable.get(i).addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          System.out.println(
-              buttonsTable.indexOf(buttonsTable.get(final_i)) + " " + buttonsTable.get(final_i)
-                  .getX() + " " + buttonsTable.get(final_i).getY());
+      buttonsTable.get(i).addActionListener(e -> {
+        System.out.println(
+            buttonsTable.indexOf(buttonsTable.get(final_i)) + " " + buttonsTable.get(final_i)
+                .getX() + " " + buttonsTable.get(final_i).getY());
 
-          de.lmu.ifi.sosylab.model.Color color = getColorOfTileTableCenter(
-              buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
+        de.lmu.ifi.sosylab.model.Color color = getColorOfTileTableCenter(
+            buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
 
-          if (controller.pickTilesFromTableCenter(color,
-              model.getPlayers().get(model.getPlayerToMoveIndex()))) {
-            System.out.println("pickTilesFromTableCenter: Yes");
-          } else {
-            System.out.println("pickTilesFromTableCenter: No");
-          }
-        }
+        controller.pickTilesFromTableCenter(color,
+            model.getPlayers().get(model.getPlayerToMoveIndex()));
       });
     }
+  }
+
+  /**
+   * Setter for color scheme of the table center.
+   * @param colorScheme current color scheme
+   */
+  public void setColorScheme(ColorScheme colorScheme) {
+    this.colorScheme = colorScheme;
   }
 
 }

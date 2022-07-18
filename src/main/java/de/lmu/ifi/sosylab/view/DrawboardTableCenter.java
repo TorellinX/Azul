@@ -1,29 +1,25 @@
 package de.lmu.ifi.sosylab.view;
 
 import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.model.ColorTile;
-import de.lmu.ifi.sosylab.model.GameModel;
-import de.lmu.ifi.sosylab.model.PenaltyTile;
-import de.lmu.ifi.sosylab.model.Plate;
-import de.lmu.ifi.sosylab.model.TableCenter;
-import de.lmu.ifi.sosylab.model.Tile;
-import java.awt.BasicStroke;
+import de.lmu.ifi.sosylab.model.*;
+
+import javax.swing.*;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import javax.swing.*;
 
 /**
  * Center Panel of the Game. Shows the panels and the center of the table.
  */
 public class DrawboardTableCenter extends JPanel {
+
+  public JPanel getGraphicTablePanel() {
+    return GraphicTablePanel;
+  }
 
   private int hightOfCell = 35;
   private int widthOfCell = 35;
@@ -51,6 +47,7 @@ public class DrawboardTableCenter extends JPanel {
   private ArrayList<IntPair> positionButtonTable;
   private int widthOfButtons = 35;
   private int hightOfButtons = 35;
+  private JPanel GraphicTablePanel;
 
 
   /**
@@ -64,11 +61,14 @@ public class DrawboardTableCenter extends JPanel {
     } else {
       setPreferredSize(new Dimension(410, 700));
     }
+    setOpaque(false);
+
     initialize();
     this.model = model;
     this.controller = controller;
     this.tableCenter = model.getTableCenter();
     this.listFactorys = model.getPlates();
+
   }
 
   /**
@@ -91,7 +91,10 @@ public class DrawboardTableCenter extends JPanel {
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
+
+
     Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
+
 
     // draw the the game location "table center" as darkend field
     Color tableColor = new Color(234, 182, 118);
@@ -105,6 +108,7 @@ public class DrawboardTableCenter extends JPanel {
     drawTilesFactory(g2D);
     // draw game location "table center"
     drawTableCenter(g2D);
+    setOpaque(false);
 
   }
 
@@ -113,16 +117,17 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param g2D graphics object - kind of "internal reference"
    */
+
+
   private void drawFacotry(Graphics2D g2D) {
     for (int i = 0; i < positionOfFactory.length; i++) {
-      Color backroundColor = new Color(135, 206, 250);
-      g2D.setColor(backroundColor);
       g2D.fillOval(positionOfFactory[i].getX(), positionOfFactory[i].getY(), widthOfFactory,
           hightOfFactory);
       g2D.setColor(Color.black);
       g2D.setStroke(new BasicStroke(2));
       g2D.drawOval(positionOfFactory[i].getX(), positionOfFactory[i].getY(), widthOfFactory,
           hightOfFactory);
+      setOpaque(false);
     }
   }
 
@@ -150,6 +155,7 @@ public class DrawboardTableCenter extends JPanel {
           default -> throw new IllegalStateException("Unexpected value: " + color);
         }
         g2D.fillRect(cach[j].getX(), cach[j].getY(), widthOfCell, hightOfCell);
+
 
       }
 
@@ -190,6 +196,8 @@ public class DrawboardTableCenter extends JPanel {
     }
 
   }
+
+
 
   /**
    * Getter for the color of a tile on a plate addressed by table center related coordinates.

@@ -1,31 +1,21 @@
 package de.lmu.ifi.sosylab.view;
 
-import static java.util.Objects.requireNonNull;
-
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerState;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 /**
  * Graphic display of the playing view.
@@ -47,6 +37,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private DrawPlayerBoard secondPlayerBoard;
   private DrawPlayerBoard thirdPlayerBoard;
   private DrawPlayerBoard fourthPlayerBoard;
+  private GraphicTablePanel graphicTablePanel;
 
   /**
    * Initializes the playing view.
@@ -85,6 +76,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     createPlayingView();
     addListeners();
     pack();
+
     setVisible(true);
   }
 
@@ -107,9 +99,21 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     // Mittlere Zone wird befüllt
     // Center definieren: table center
     JPanel playingViewCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    graphicTablePanel = new GraphicTablePanel<>();
     drawboardTableCenter = new DrawboardTableCenter(model, controller, player.size());
     drawboardTableCenter.setLayout(null);
+    drawboardTableCenter.setOpaque(false);
+    playingViewCenter.add(graphicTablePanel);
     playingViewCenter.add(drawboardTableCenter);
+
+
+
+    //graphic = new JPanel(new BorderLayout());
+    //graphic.setLayout(null);
+    //add(graphic, BorderLayout.CENTER);
+    //GraphicTable graphicTable = new GraphicTable();
+    //graphic.add(graphicTable.backroundTablePanel);
+    //graphic.setVisible(true);
 
     // Linkes und rechtes panel mit Playerboards belegen
     JPanel playingViewLeft = new JPanel(new BorderLayout());
@@ -136,6 +140,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
     // Zuordnung ausführen.
     add(playingViewLeft, BorderLayout.WEST);
+    add(graphicTablePanel,BorderLayout.CENTER);
     add(playingViewCenter, BorderLayout.CENTER);
     add(playingViewRight, BorderLayout.EAST);
 

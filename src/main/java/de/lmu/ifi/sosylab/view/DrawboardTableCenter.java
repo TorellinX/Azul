@@ -7,6 +7,7 @@ import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
 import de.lmu.ifi.sosylab.model.Plate;
+import de.lmu.ifi.sosylab.model.State;
 import de.lmu.ifi.sosylab.model.TableCenter;
 import de.lmu.ifi.sosylab.model.Tile;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
@@ -26,12 +27,15 @@ public class DrawboardTableCenter extends JPanel {
 
   private final int cellSize = 35;
   private final int plateSize = 100;
+  private final int tableWidth = 395;
+  private final int tableHeight = 185;
   private final int gapSize = 6;
   private final int arcSize = 6;
   private ArrayList<IntPair> positionTilesTableCenter;
-  private List<IntPair[]> tilesOnPlateCoordinates;
+  private List<IntPair[]> tilesOnAllPlatesCoordinates;
   private IntPair[] positionOfPlates;
   private final TableCenter tableCenter;
+  private final IntPair tableCoordinates = new IntPair(5, 490);
   private final List<Plate> listPlates;
   private final GameModel model;
   private final Controller controller;
@@ -63,8 +67,8 @@ public class DrawboardTableCenter extends JPanel {
    * Sets the coordinates for the individual objects.
    */
   private void initialize() {
-
-    addLocationsPlayboardCenter();
+    addPlatesLocations();
+    addLocationsTableCenter();
     addButtonsPlayboardCenter();
     addActionListenerFactory();
     addActionListenerTableCenter();
@@ -81,25 +85,20 @@ public class DrawboardTableCenter extends JPanel {
 
     Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
     setOpaque(false);
-    // draw the game location "table center" as darkened field
-    g2D.setColor(colorScheme.table());
-    g2D.fillRoundRect(5, 490, 395, 185, 20, 20);
 
-    // draw the plates
     drawPlates(g2D);
-    // draw the tiles on the factories
-    drawTilesOnPlates(g2D);
-    // draw game location "table center"
     drawTableCenter(g2D);
-
   }
 
   /**
-   * Draws the plate panels in the center of the table.
+   * Draws the plate panels with tiles on the table.
    *
    * @param g2D graphics object - kind of "internal reference"
    */
   private void drawPlates(Graphics2D g2D) {
+    if (model.getState() == State.FINISHED) {
+      return;
+    }
     int numberOfPlates = listPlates.size();
     for (int i = 0; i < numberOfPlates; i++) {
       g2D.setColor(colorScheme.plateFill());
@@ -110,6 +109,7 @@ public class DrawboardTableCenter extends JPanel {
       g2D.drawOval(positionOfPlates[i].getX(), positionOfPlates[i].getY(), plateSize,
           plateSize);
     }
+    drawTilesOnPlates(g2D);
   }
 
   /**
@@ -120,7 +120,7 @@ public class DrawboardTableCenter extends JPanel {
   private void drawTilesOnPlates(Graphics2D g2D) {
     for (int i = 0; i < listPlates.size(); i++) {
       List<ColorTile> colorTilesOnCurrentPlate = listPlates.get(i).getTiles();
-      IntPair[] tilesCoordinates = tilesOnPlateCoordinates.get(i);
+      IntPair[] tilesCoordinates = tilesOnAllPlatesCoordinates.get(i);
 
       for (int j = 0; j < colorTilesOnCurrentPlate.size(); j++) {
         de.lmu.ifi.sosylab.model.Color color = colorTilesOnCurrentPlate.get(j).getColor();
@@ -134,10 +134,23 @@ public class DrawboardTableCenter extends JPanel {
         }
         g2D.fillRoundRect(tilesCoordinates[j].getX(), tilesCoordinates[j].getY(), cellSize,
             cellSize, arcSize, arcSize);
-
       }
-
     }
+  }
+
+  /**
+   * Draws the location "table center" with tiles.
+   *
+   * @param g2D graphics object
+   */
+  private void drawTableCenter(Graphics2D g2D) {
+    if (model.getState() == State.FINISHED) {
+      return;
+    }
+    g2D.setColor(colorScheme.table());
+    g2D.fillRoundRect(tableCoordinates.getX(), tableCoordinates.getY(), tableWidth, tableHeight, 20,
+        20);
+    drawTableCenterTiles(g2D);
   }
 
   /**
@@ -145,36 +158,57 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param g2D graphics object - kind of "internal reference"
    */
-  private void drawTableCenter(Graphics2D g2D) {
-    List<Tile> tileList = model.getTableCenter().getTiles();
-    for (int i = 0; i < tileList.size(); i++) {
-      if (tileList.get(i) instanceof PenaltyTile) {        // penaltiy tile can only be index 0
-        g2D.setColor(colorScheme.penalty());
+  private void drawTableCenterTiles(Graphics2D g2D) {
+    List<Tile> tableCenterTiles = model.getTableCenter().getTiles();
+    if (model.getState() == State.FINISHED) {
+      return;
+    }
+    for (int i = 0; i < tableCenterTiles.size(); i++) {
+      if (tableCenterTiles.get(i) instanceof PenaltyTile) {
+        drawPenaltyTileOnTableCenter(g2D, i);
       } else {
-        de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tileList.get(i)).getColor();
-        switch (colorOfTile) {
-          case YELLOW -> g2D.setColor(colorScheme.yellow());
-          case RED -> g2D.setColor(colorScheme.red());
-          case BLUE -> g2D.setColor(colorScheme.blue());
-          case BLACK -> g2D.setColor(colorScheme.black());
-          case WHITE -> g2D.setColor(colorScheme.green());
-          default -> throw new IllegalStateException("Unexpected value: " + colorOfTile);
-        }
-      }
-      if (tileList.get(0) instanceof PenaltyTile) {
-        g2D.fillRoundRect(positionTilesTableCenter.get(i).getX(),
-            positionTilesTableCenter.get(i).getY(),
-            cellSize, cellSize, arcSize, arcSize);
-        g2D.setColor(colorScheme.penaltyText());
-        g2D.setFont(this.getFont().deriveFont(Font.BOLD, 18));
-        g2D.drawString("1", positionTilesTableCenter.get(0).getX() + cellSize / 3,
-            positionTilesTableCenter.get(0).getY() + 2 * cellSize / 3);
-      } else {
-        g2D.fillRoundRect(positionTilesTableCenter.get(i + 1).getX(),
-            positionTilesTableCenter.get(i + 1).getY(),
-            cellSize, cellSize, arcSize, arcSize);
+        drawColorTileOnTableCenter(g2D, tableCenterTiles.get(i), i);
       }
     }
+  }
+
+  /**
+   * Draws a penalty tile on the table center.
+   *
+   * @param g2D graphics object
+   * @param i   index of the tile
+   */
+  private void drawPenaltyTileOnTableCenter(Graphics2D g2D, int i) {
+    g2D.setColor(colorScheme.penalty());
+    g2D.fillRoundRect(positionTilesTableCenter.get(i).getX(),
+        positionTilesTableCenter.get(i).getY(),
+        cellSize, cellSize, arcSize, arcSize);
+    g2D.setColor(colorScheme.penaltyText());
+    g2D.setFont(this.getFont().deriveFont(Font.BOLD, 18));
+    g2D.drawString("1", positionTilesTableCenter.get(i).getX() + cellSize / 3,
+        positionTilesTableCenter.get(0).getY() + 2 * cellSize / 3);
+  }
+
+  /**
+   * Draws a color tile on the table center.
+   *
+   * @param g2D  graphics object
+   * @param tile color tile
+   * @param i    index of the tile
+   */
+  private void drawColorTileOnTableCenter(Graphics2D g2D, Tile tile, int i) {
+    de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tile).getColor();
+    switch (colorOfTile) {
+      case YELLOW -> g2D.setColor(colorScheme.yellow());
+      case RED -> g2D.setColor(colorScheme.red());
+      case BLUE -> g2D.setColor(colorScheme.blue());
+      case BLACK -> g2D.setColor(colorScheme.black());
+      case WHITE -> g2D.setColor(colorScheme.green());
+      default -> throw new IllegalStateException("Unexpected value: " + colorOfTile);
+    }
+    g2D.fillRoundRect(positionTilesTableCenter.get(i).getX(),
+        positionTilesTableCenter.get(i).getY(),
+        cellSize, cellSize, arcSize, arcSize);
   }
 
   /**
@@ -187,7 +221,7 @@ public class DrawboardTableCenter extends JPanel {
   public de.lmu.ifi.sosylab.model.Color getColorOfTileOnPlate(int x, int y) {
     de.lmu.ifi.sosylab.model.Color colorOfTile = de.lmu.ifi.sosylab.model.Color.RED;
     for (int count = 0; count < listPlates.size(); count++) {
-      IntPair[] tilesCoordinates = tilesOnPlateCoordinates.get(count);
+      IntPair[] tilesCoordinates = tilesOnAllPlatesCoordinates.get(count);
       Plate plate = listPlates.get(count);
       List<ColorTile> colorTilesPlate = plate.getTiles();
 
@@ -209,16 +243,26 @@ public class DrawboardTableCenter extends JPanel {
    * @return number of the plate
    */
   public de.lmu.ifi.sosylab.model.Color getColorOfTileTableCenter(int x, int y) {
-    de.lmu.ifi.sosylab.model.Color toReturn = de.lmu.ifi.sosylab.model.Color.RED;
+    if (model.getTableCenter().getColorTiles().size() == 0) {
+      return null;
+    }
+    de.lmu.ifi.sosylab.model.Color tileColor = null;
 
     for (int i = 0; i < positionTilesTableCenter.size(); i++) {
       int horizontalCache = positionTilesTableCenter.get(i).getX();
       int verticalCache = positionTilesTableCenter.get(i).getY();
       if (x == horizontalCache && y == verticalCache) {
-        toReturn = model.getTableCenter().getColorTiles().get(i - 1).getColor();
+        if (model.getTableCenter().getTiles().get(i) instanceof PenaltyTile) {
+          return null; // try to pick the penalty tile
+        }
+        int colorTileIndex = i;
+        if (model.getTableCenter().getTiles().get(0) instanceof PenaltyTile) {
+          colorTileIndex--; // minus penalty tile
+        }
+        tileColor = model.getTableCenter().getColorTiles().get(colorTileIndex).getColor();
       }
     }
-    return toReturn;
+    return tileColor;
   }
 
   /**
@@ -230,14 +274,134 @@ public class DrawboardTableCenter extends JPanel {
    */
   public int getPlateIndex(int x, int y) {
     int plateIndex = 0;
-    for (IntPair[] tilesCoordinates : tilesOnPlateCoordinates) {
+    for (IntPair[] tilesCoordinates : tilesOnAllPlatesCoordinates) {
       for (IntPair tilesCoordinate : tilesCoordinates) {
         if (x == tilesCoordinate.getX() && y == tilesCoordinate.getY()) {
-          plateIndex = tilesOnPlateCoordinates.indexOf(tilesCoordinates);
+          plateIndex = tilesOnAllPlatesCoordinates.indexOf(tilesCoordinates);
         }
       }
     }
     return plateIndex;
+  }
+
+  /**
+   * Calculates plates-specific coordinates.
+   */
+  private void addPlatesLocations() {
+    int platesCenterX = 167;
+    int platesCenterY = 217;
+    int numberOfPlates = listPlates.size();
+    IntPair[][] currentGrid;
+
+    if (numberOfPlates < 9) {
+      currentGrid = calculateDiagonalGrid(platesCenterX, platesCenterY);
+    } else {
+      currentGrid = calculateStraightGrid(platesCenterX, platesCenterY);
+    }
+
+    List<IntPair> firstTileOnPlatesCoordinates = calculateFirstTileOnPlates(currentGrid);
+    tilesOnAllPlatesCoordinates = calculateTilesOnAllPlates(firstTileOnPlatesCoordinates);
+
+    positionOfPlates = calculatePositionsOfPlates(firstTileOnPlatesCoordinates);
+  }
+
+  /**
+   * Adds game location "table center".
+   */
+  private void addLocationsTableCenter() {
+    // collect possible positions for stones in game location "table center"
+    positionTilesTableCenter = new ArrayList<>();
+    int tableTilesX = tableCoordinates.getX() + 20;
+    int tableTilesY = tableCoordinates.getY() + 15;
+    int tileAreaHeight = tableHeight - 65;
+    int tileAreaWidth = tableWidth - 75;
+    int gap = 5;
+    for (int row = tableTilesY; row <= tableTilesY + tileAreaHeight; row += cellSize + gap) {
+      for (int col = tableTilesX; col <= tableTilesX + tileAreaWidth; col += cellSize + gap) {
+        positionTilesTableCenter.add(new IntPair(col, row));
+      }
+    }
+  }
+
+  /**
+   * Calculates straight grid for plates with left upper tile coordinates.
+   *
+   * @param platesCenterX X-coordinate of the center of the plates grid
+   * @param platesCenterY Y-coordinate of the center of the plates grid
+   * @return straight grid for plates with left upper tile coordinates
+   */
+  private IntPair[][] calculateStraightGrid(int platesCenterX, int platesCenterY) {
+    int gap = 20;
+    int plateOffset = plateSize + gap;
+    IntPair[][] straightGrid = new IntPair[3][3];
+    for (int row = 0; row < 3; row++) {
+      for (int col = 0; col < 3; col++) {
+        straightGrid[row][col] = new IntPair(platesCenterX - plateOffset + row * plateOffset,
+            platesCenterY - plateOffset + col * plateOffset);
+      }
+    }
+    return straightGrid;
+  }
+
+  /**
+   * Calculates diagonal grid for plates with left upper tile coordinates.
+   *
+   * @param platesCenterX X-coordinate of the center of the plates grid
+   * @param platesCenterY Y-coordinate of the center of the plates grid
+   * @return diagonal grid for plates with left upper tile coordinates
+   */
+  private IntPair[][] calculateDiagonalGrid(int platesCenterX, int platesCenterY) {
+    int gap = 15;
+    int plateOffset = plateSize + gap;
+    IntPair[][] diagonalGrid = new IntPair[3][3];
+
+    for (int row = 0; row < 3; row++) {
+      for (int col = 0; col < 3; col++) {
+        diagonalGrid[row][col] = new IntPair(
+            (int) Math.round(
+                platesCenterX - plateOffset * Math.sqrt(2) + col * plateOffset / Math.sqrt(2) +
+                    row * plateOffset / Math.sqrt(2)),
+            (int) Math.round(
+                platesCenterY - col * plateOffset / Math.sqrt(2) +
+                    row * plateOffset / Math.sqrt(2)));
+      }
+    }
+    return diagonalGrid;
+  }
+
+  /**
+   * Gives coordinates of the left upper tile for every plate in the specified grid, taking into
+   * account the order of filling the plates.
+   *
+   * @param grid specified grid
+   * @return positions of the plates in diagonal grid
+   */
+  private List<IntPair> calculateFirstTileOnPlates(IntPair[][] grid) {
+    List<IntPair> firstTileOnPlatesCoordinates = new ArrayList<>();
+    firstTileOnPlatesCoordinates.add(grid[0][1]);
+    firstTileOnPlatesCoordinates.add(grid[1][0]);
+    firstTileOnPlatesCoordinates.add(grid[1][1]);
+    firstTileOnPlatesCoordinates.add(grid[1][2]);
+    firstTileOnPlatesCoordinates.add(grid[2][1]);
+    firstTileOnPlatesCoordinates.add(grid[0][2]);
+    firstTileOnPlatesCoordinates.add(grid[2][0]);
+    firstTileOnPlatesCoordinates.add(grid[0][0]);
+    firstTileOnPlatesCoordinates.add(grid[2][2]);
+    return firstTileOnPlatesCoordinates;
+  }
+
+  /**
+   * Calculates coordinates of all tiles for every plate.
+   *
+   * @param firstTileOnPlatesCoordinates coordinates of the left upper tile for every plate
+   * @return coordinates of all tiles for every plate
+   */
+  private List<IntPair[]> calculateTilesOnAllPlates(List<IntPair> firstTileOnPlatesCoordinates) {
+    tilesOnAllPlatesCoordinates = new ArrayList<>();
+    for (IntPair plate : firstTileOnPlatesCoordinates) {
+      tilesOnAllPlatesCoordinates.add(calculateTilesForOnePlate(plate.getX(), plate.getY()));
+    }
+    return tilesOnAllPlatesCoordinates;
   }
 
   /**
@@ -247,85 +411,32 @@ public class DrawboardTableCenter extends JPanel {
    * @param plateY y-coordinate of left upper tile on plate
    * @return coordinates of tiles for one plate
    */
-  private IntPair[] calculateTilesOnPlateCoordinates(int plateX, int plateY) {
-    List<IntPair> tilesOnPlateCoordinates = new ArrayList<>();
+  private IntPair[] calculateTilesForOnePlate(int plateX, int plateY) {
+    List<IntPair> tilesForOnePlateCoordinates = new ArrayList<>();
     for (int row = 0; row < TILES_PER_PLATE / 2; row++) {
       for (int col = 0; col < TILES_PER_PLATE / 2; col++) {
-        tilesOnPlateCoordinates.add(new IntPair(plateX + col * (cellSize + gapSize),
+        tilesForOnePlateCoordinates.add(new IntPair(plateX + col * (cellSize + gapSize),
             plateY + row * (cellSize + gapSize)));
       }
     }
-    return tilesOnPlateCoordinates.toArray(IntPair[]::new);
+    return tilesForOnePlateCoordinates.toArray(IntPair[]::new);
   }
 
   /**
-   * Adds plates and game location "table center"
+   * Calculates coordinates of plates using coordinates of the left upper tile for every plate.
+   *
+   * @param firstTileOnPlatesCoordinates coordinates of the left upper tile for every plate
+   * @return coordinates of plates
    */
-  private void addLocationsPlayboardCenter() {
-    int platesCenterX = 167;
-    int platesCenterY = 217;
-    int plateOffset = plateSize + 15;
-
-    IntPair[][] straightGrid = new IntPair[3][3];
-    for (int row = 0; row < 3; row++) {
-      for (int col = 0; col < 3; col++) {
-        straightGrid[row][col] = new IntPair(platesCenterX - plateOffset + row * plateOffset,
-            platesCenterY - plateOffset + col * plateOffset);
-      }
-    }
-
-    IntPair[][] diagonalGrid = new IntPair[3][3];
-    for (int row = 0; row < 3; row++) {
-      for (int col = 0; col < 3; col++) {
-        diagonalGrid[row][col] = new IntPair((int) Math.round(
-            platesCenterX - plateOffset * Math.sqrt(2) + col * plateOffset / Math.sqrt(2) +
-                row * plateOffset / Math.sqrt(2)),
-            (int) Math.round(
-                platesCenterY - col * plateOffset / Math.sqrt(2) +
-                    row * plateOffset / Math.sqrt(2)));
-      }
-    }
-    IntPair[][] currentGrid;
-    int numberOfPlates = listPlates.size();
-    if (numberOfPlates < 9) {
-      currentGrid = diagonalGrid;
-    } else {
-      currentGrid = straightGrid;
-    }
-
-    List<IntPair> coordinatesOfFirstTilesOnPlates = new ArrayList<>();
-    coordinatesOfFirstTilesOnPlates.add(currentGrid[0][1]);
-    coordinatesOfFirstTilesOnPlates.add(currentGrid[1][0]);
-    coordinatesOfFirstTilesOnPlates.add(currentGrid[1][1]);
-    coordinatesOfFirstTilesOnPlates.add(currentGrid[1][2]);
-    coordinatesOfFirstTilesOnPlates.add(currentGrid[2][1]);
-    coordinatesOfFirstTilesOnPlates.add(currentGrid[0][2]);
-    coordinatesOfFirstTilesOnPlates.add(currentGrid[2][0]);
-    coordinatesOfFirstTilesOnPlates.add(currentGrid[0][0]);
-    coordinatesOfFirstTilesOnPlates.add(currentGrid[2][2]);
-
-    tilesOnPlateCoordinates = new ArrayList<>();
-    for (IntPair plate : coordinatesOfFirstTilesOnPlates) {
-      tilesOnPlateCoordinates.add(calculateTilesOnPlateCoordinates(plate.getX(), plate.getY()));
-    }
-
+  private IntPair[] calculatePositionsOfPlates(List<IntPair> firstTileOnPlatesCoordinates) {
     int offsetPlatesToTiles = 12;
-    positionOfPlates = new IntPair[coordinatesOfFirstTilesOnPlates.size()];
-    for (int i = 0; i < coordinatesOfFirstTilesOnPlates.size(); i++) {
-      positionOfPlates[i] = new IntPair(
-          coordinatesOfFirstTilesOnPlates.get(i).getX() - offsetPlatesToTiles,
-          coordinatesOfFirstTilesOnPlates.get(i).getY() - offsetPlatesToTiles);
+    IntPair[] positionsOfPlates = new IntPair[firstTileOnPlatesCoordinates.size()];
+    for (int i = 0; i < firstTileOnPlatesCoordinates.size(); i++) {
+      positionsOfPlates[i] = new IntPair(
+          firstTileOnPlatesCoordinates.get(i).getX() - offsetPlatesToTiles,
+          firstTileOnPlatesCoordinates.get(i).getY() - offsetPlatesToTiles);
     }
-
-    // collect possible positions for stones in game location "table center"
-    positionTilesTableCenter = new ArrayList<>();
-    positionTilesTableCenter.add(new IntPair(25, 505));
-
-    for (int row = 505; row <= 625; row += 40) {                    // three rows
-      for (int col = 105; col <= 345; col += 40) {                  // six columns
-        positionTilesTableCenter.add(new IntPair(col, row));
-      }
-    }
+    return positionsOfPlates;
   }
 
   /**
@@ -333,7 +444,7 @@ public class DrawboardTableCenter extends JPanel {
    */
   private void addButtonsPlayboardCenter() {
     buttonsFactory = new ArrayList<>();
-    for (IntPair[] tilesOnPlateCoordinate : tilesOnPlateCoordinates) {
+    for (IntPair[] tilesOnPlateCoordinate : tilesOnAllPlatesCoordinates) {
       for (int j = 0; j < TILES_PER_PLATE; j++) {
         JButton currentButton = new JButton();
         currentButton.setBounds(tilesOnPlateCoordinate[j].getX(),
@@ -348,19 +459,12 @@ public class DrawboardTableCenter extends JPanel {
       add(button);
     }
 
-    ArrayList<IntPair> positionButtonTable = new ArrayList<>();
-    positionButtonTable.add(new IntPair(25, 505));
-    for (int i = 505; i <= 625; i += 40) {
-      for (int j = 105; j <= 345; j += 40) {
-        positionButtonTable.add(new IntPair(j, i));
-      }
-    }
-
     buttonsTable = new ArrayList<>();
-    for (int count = 0; count < positionButtonTable.size(); count++) {
+    for (int count = 0; count < positionTilesTableCenter.size(); count++) {
       buttonsTable.add(new JButton());
       buttonsTable.get(count)
-          .setBounds(positionButtonTable.get(count).getX(), positionButtonTable.get(count).getY(),
+          .setBounds(positionTilesTableCenter.get(count).getX(),
+              positionTilesTableCenter.get(count).getY(),
               buttonsSize, buttonsSize);
       buttonsTable.get(count).setOpaque(false);
       buttonsTable.get(count).setContentAreaFilled(false);
@@ -408,13 +512,14 @@ public class DrawboardTableCenter extends JPanel {
     for (int i = 0; i < buttonsTable.size(); i++) {
       final int final_i = i;
       buttonsTable.get(i).addActionListener(e -> {
-        System.out.println(
-            buttonsTable.indexOf(buttonsTable.get(final_i)) + " " + buttonsTable.get(final_i)
-                .getX() + " " + buttonsTable.get(final_i).getY());
-
+        System.out.println("Button index: " +
+            buttonsTable.indexOf(buttonsTable.get(final_i)) + " , X: " + buttonsTable.get(final_i)
+            .getX() + " , Y: " + buttonsTable.get(final_i).getY());
         de.lmu.ifi.sosylab.model.Color color = getColorOfTileTableCenter(
             buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
-
+        if (color == null) {  // tried to pick the penalty tile
+          return;
+        }
         controller.pickTilesFromTableCenter(color,
             model.getPlayers().get(model.getPlayerToMoveIndex()));
       });

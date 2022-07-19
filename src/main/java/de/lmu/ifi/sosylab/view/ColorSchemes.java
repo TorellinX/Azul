@@ -84,7 +84,7 @@ public final class ColorSchemes {
       Color.black,
       new Color(255, 216, 0),
       new Color(189, 179, 194),
-      new Color(224, 224, 224),
+      Color.WHITE,
       new Color(155, 175, 255),
       new Color(255, 204, 204),
       new Color(189, 179, 194),

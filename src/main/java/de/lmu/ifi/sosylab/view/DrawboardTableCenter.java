@@ -3,6 +3,7 @@ package de.lmu.ifi.sosylab.view;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.*;
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,7 +108,7 @@ public class DrawboardTableCenter extends JPanel {
 
 
     // updateTable();        // empty method
-    //drawBackground(g2D);
+    drawBackground(g2D);
     // draw the plates
     drawFacotry(g2D);
     // draw the tiles on the factories
@@ -124,15 +126,25 @@ public class DrawboardTableCenter extends JPanel {
    */
 
 
- // private void drawBackground(Graphics2D g2D){
+ private void drawBackground(Graphics2D g2D){
 
-   // URL resource = getClass().getResource("BackgroundTableCenter.jpg");
-    ///backgroundTableCenter = ImageIO.read(resource);
-    //} catch (IOException e) {
-     //e.printStackTrace();
-   // }
-    //g2D.drawImage(backgroundTableCenter,0, 0, 350, 600, this);
-  //}
+
+  //URL resource = getClass().getResource("BackgroundTableCenter.jpg");
+   ClassLoader classLoader = null; //Name dieser klasse
+   try {
+     classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawboardTableCenter").getClassLoader();
+   } catch (ClassNotFoundException e) {
+     throw new RuntimeException(e);
+   }
+
+   var stream = (classLoader.getResourceAsStream("BackgroundTableCenter.jpg"));
+
+   try {backgroundTableCenter = ImageIO.read(stream);
+    } catch (IOException e) {
+    e.printStackTrace();
+    }
+ g2D.drawImage(backgroundTableCenter,0, 0, 350, 600, this);
+ }
 
 
 

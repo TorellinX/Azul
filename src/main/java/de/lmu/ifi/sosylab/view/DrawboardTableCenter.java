@@ -101,6 +101,7 @@ public class DrawboardTableCenter extends JPanel {
    Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
 
 
+
     // draw the the game location "table center" as darkend field
     Color tableColor = new Color(234, 182, 118);
     g2D.setColor(tableColor);
@@ -127,23 +128,18 @@ public class DrawboardTableCenter extends JPanel {
 
 
  private void drawBackground(Graphics2D g2D){
-
-
-  //URL resource = getClass().getResource("BackgroundTableCenter.jpg");
    ClassLoader classLoader = null; //Name dieser klasse
    try {
      classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawboardTableCenter").getClassLoader();
    } catch (ClassNotFoundException e) {
      throw new RuntimeException(e);
    }
-
    var stream = (classLoader.getResourceAsStream("BackgroundTableCenter.jpg"));
-
    try {backgroundTableCenter = ImageIO.read(stream);
     } catch (IOException e) {
     e.printStackTrace();
     }
- g2D.drawImage(backgroundTableCenter,0, 0, 350, 600, this);
+    g2D.drawImage(backgroundTableCenter,0, 0, 350, 600, this);
  }
 
 

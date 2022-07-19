@@ -227,6 +227,9 @@ public class DrawboardTableCenter extends JPanel {
 
       for (int i = 0; i < tilesCoordinates.length; i++) {
         if (x == tilesCoordinates[i].getX() && y == tilesCoordinates[i].getY()) {
+          if (colorTilesPlate.size() == 0) {
+            continue;
+          }
           colorOfTile = colorTilesPlate.get(i).getColor();
         }
       }
@@ -491,12 +494,15 @@ public class DrawboardTableCenter extends JPanel {
 
         de.lmu.ifi.sosylab.model.Color color = getColorOfTileOnPlate(
             buttonsFactory.get(final_i).getX(), buttonsFactory.get(final_i).getY());
-
+        /*if (color == null) {
+          return;
+        }*/
         if (controller.pickTilesFromPlate(color,
             model.getPlayers().get(model.getPlayerToMoveIndex()),
             model.getPlates().get(
                 getPlateIndex(buttonsFactory.get(final_i).getX(),
                     buttonsFactory.get(final_i).getY())))) {
+
           System.out.println("y");
         } else {
           System.out.println("N");

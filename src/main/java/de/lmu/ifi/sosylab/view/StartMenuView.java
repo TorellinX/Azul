@@ -71,7 +71,7 @@ public class StartMenuView extends JFrame {
       public void actionPerformed(ActionEvent e) {
         HotseatMenuView hotseatMenuView = new HotseatMenuView();
         try {
-          File soundStart = new File("SoundStart.wav");
+          File soundStart = new File("SoundStart2.wav");
           getAudioInputStream(soundStart);
           Clip clip = null;
           clip.open(getAudioInputStream(soundStart));

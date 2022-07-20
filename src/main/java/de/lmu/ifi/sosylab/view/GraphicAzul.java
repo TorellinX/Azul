@@ -1,12 +1,10 @@
 package de.lmu.ifi.sosylab.view;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serial;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  * Depicts the initial splash screen with picture for Azul.

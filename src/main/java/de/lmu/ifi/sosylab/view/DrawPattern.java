@@ -3,6 +3,7 @@ package de.lmu.ifi.sosylab.view;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -19,9 +20,12 @@ import javax.swing.JPanel;
  */
 public class DrawPattern extends JPanel {
 
-  private int size;
-  private final Color playerboardcolor = new Color(204, 201, 199);
-  private ArrayList<JButton> patternButtons;
+  private int slotSize = 35;
+  private final int borderSize = 1;
+  private final int tileSize = slotSize - borderSize * 2;
+  private final int arcSize = 6;
+  private ColorScheme colorScheme;
+  private final ArrayList<JButton> patternButtons;
   int count;
   private final Player player;
   private final Controller controller;
@@ -30,40 +34,39 @@ public class DrawPattern extends JPanel {
   /**
    * Constructs the pattern lines and links it to player and controller.
    *
-   * @param player      player related to the board containing these pattern lines
-   * @param controller  game controller
+   * @param player     player related to the board containing these pattern lines
+   * @param controller game controller
    */
   public DrawPattern(Player player, Controller controller) {
     this.player = player;
     this.controller = controller;
-    this.size = 35;
-    setPreferredSize(new Dimension(5 * size + 5, 5 * size + 40));
+    setPreferredSize(new Dimension(5 * slotSize + 5, 5 * slotSize + 40));
     setLayout(null);
 
     patternButtons = new ArrayList<>();
     JButton firstRowButton = new JButton();
-    firstRowButton.setBounds(getPatternCellSize() * 4, 10, getPatternCellSize(),
-           getPatternCellSize());
+    firstRowButton.setBounds(slotSize * 4, 10, slotSize,
+        slotSize);
     patternButtons.add(firstRowButton);
     add(firstRowButton);
     JButton secondRowButton = new JButton();
-    secondRowButton.setBounds(getPatternCellSize() * 3, 15 + getPatternCellSize(),
-            getPatternCellSize() * 2, getPatternCellSize());
+    secondRowButton.setBounds(slotSize * 3, 15 + slotSize,
+        slotSize * 2, slotSize);
     patternButtons.add(secondRowButton);
     add(secondRowButton);
     JButton thirdRowButton = new JButton();
-    thirdRowButton.setBounds(getPatternCellSize() * 2, 20 + getPatternCellSize() * 2,
-            getPatternCellSize() * 3, getPatternCellSize());
+    thirdRowButton.setBounds(slotSize * 2, 20 + slotSize * 2,
+        slotSize * 3, slotSize);
     patternButtons.add(thirdRowButton);
     add(thirdRowButton);
     JButton fourthRowButton = new JButton();
-    fourthRowButton.setBounds(getPatternCellSize(), 25 + getPatternCellSize() * 3,
-            getPatternCellSize() * 4, getPatternCellSize());
+    fourthRowButton.setBounds(slotSize, 25 + slotSize * 3,
+        slotSize * 4, slotSize);
     patternButtons.add(fourthRowButton);
     add(fourthRowButton);
     JButton fifthRowButton = new JButton();
-    fifthRowButton.setBounds(0, 30 + getPatternCellSize() * 4, getPatternCellSize() * 5,
-            getPatternCellSize());
+    fifthRowButton.setBounds(0, 30 + slotSize * 4, slotSize * 5,
+        slotSize);
     patternButtons.add(fifthRowButton);
     add(fifthRowButton);
 
@@ -87,20 +90,21 @@ public class DrawPattern extends JPanel {
   }
 
   public int getPatternCellSize() {
-    return size;
+    return slotSize;
   }
 
-  public void setPatternCellSize(int newSize) {
-    this.size = newSize;
+  public void setPatternSlotSize(int newSize) {
+    this.slotSize = newSize;
   }
 
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
+    setBackground(colorScheme.playerboard());
     Graphics2D g2D = (Graphics2D) g;
 
-    g2D.setColor(playerboardcolor);
+    g2D.setColor(colorScheme.playerboard());
     g2D.setStroke(new BasicStroke(1));
 
     ColorTile[][] invPatternLines = player.getPlayerBoard().getPatternLines();
@@ -111,39 +115,37 @@ public class DrawPattern extends JPanel {
       }
     }
 
-
     for (int row = 0; row < 5; row++) {
       for (int col = 4 - row; col < 5; col++) {
-        g2D.setColor(Color.BLACK);
-        g2D.drawRect(col * size, 10 + row * size + row * 5, size, size);
+        g2D.setColor(colorScheme.patternlineFrame());
+        g2D.drawRect(col * slotSize, 10 + row * slotSize + row * 5, slotSize, slotSize);
 
         if (patternLines[row][4 - col] != null) {
           String customColor = patternLines[row][4 - col].toString();
-          Color color;
-          switch (customColor) {
-            case "BLACK":
-              color = Color.black;
-              break;
-            case "WHITE":
-              color = Color.green;
-              break;
-            case "BLUE":
-              color = Color.blue;
-              break;
-            case "YELLOW":
-              color = Color.yellow;
-              break;
-            case "RED":
-              color = Color.red;
-              break;
-            default:
-              color = playerboardcolor;
-          }
+          Color tileColor = switch (customColor) {
+            case "BLACK" -> colorScheme.black();
+            case "WHITE" -> colorScheme.green();
+            case "BLUE" -> colorScheme.blue();
+            case "YELLOW" -> colorScheme.yellow();
+            case "RED" -> colorScheme.red();
+            default -> colorScheme.playerboard();
+          };
 
-          g2D.setColor(color);
-          g2D.fillRect(col * size, 10 + row * size + row * 5, size, size);
+          g2D.setColor(tileColor);
+          g2D.fillRoundRect(col * slotSize + borderSize,
+              10 + row * slotSize + row * 5 + borderSize,
+              tileSize, tileSize, arcSize, arcSize);
         }
       }
     }
+  }
+
+  /**
+   * Setter for color scheme of the pattern lines.
+   *
+   * @param colorScheme current color scheme
+   */
+  public void setColorScheme(ColorScheme colorScheme) {
+    this.colorScheme = colorScheme;
   }
 }

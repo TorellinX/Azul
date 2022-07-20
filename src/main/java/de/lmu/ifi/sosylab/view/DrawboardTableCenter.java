@@ -37,7 +37,7 @@ public class DrawboardTableCenter extends JPanel {
   private ArrayList<JButton> buttonsTable;
   private final int buttonsSize = 35;
   private ColorScheme colorScheme;
-  private BufferedImage backgroundTableCenter;
+  private BufferedImage backgroundIMG;
 
 
   /**
@@ -96,16 +96,16 @@ public class DrawboardTableCenter extends JPanel {
     try {
       classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawboardTableCenter").getClassLoader();
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
+    throw new RuntimeException(e);
     }
-    var stream = (classLoader.getResourceAsStream("back_sky.png"));
-    try {backgroundTableCenter = ImageIO.read(stream);
+    var stream = (classLoader.getResourceAsStream("back_classic.png"));
+    try {
+    backgroundIMG = ImageIO.read(stream);
     } catch (IOException e) {
-      e.printStackTrace();
+    e.printStackTrace();
     }
-    g2D.drawImage(backgroundTableCenter,0, 0,this);
+    g2D.drawImage(backgroundIMG,0, 0,this);
   }
-
 
 
   private void drawPlates(Graphics2D g2D) {

@@ -4,11 +4,9 @@ import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerState;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+
+import javax.swing.*;
+import java.awt.*;
 
 
 /**
@@ -25,6 +23,7 @@ public class DrawPlayerBoard extends JPanel {
   private Player player;
   private ColorScheme colorScheme;
 
+
   /**
    * Constructs a complete player board panel in compound layout.
    *
@@ -39,6 +38,8 @@ public class DrawPlayerBoard extends JPanel {
     this.colorScheme = colorScheme;
     setBackground(colorScheme.playerboard());
 
+
+
     // North: Player nick mit background color change für active player
     labelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     playerNameLabel = new JLabel("<html><font size=\"5\">"
@@ -46,6 +47,7 @@ public class DrawPlayerBoard extends JPanel {
     labelPanel.setPreferredSize(new Dimension(playerBoardPreferredWidth(), 30));
     labelPanel.add(playerNameLabel);
     setPlayerLabelBackgroundColor(player);
+
     add(labelPanel, BorderLayout.NORTH);
 
     // linke Seite: die pattern lines mit Buttons
@@ -88,6 +90,8 @@ public class DrawPlayerBoard extends JPanel {
     }
 
   }
+
+
 
   /**
    * Setter for score label for update of the score during run of the game.

@@ -1,14 +1,13 @@
 package de.lmu.ifi.sosylab.view;
 
-import static java.util.Objects.requireNonNull;
-
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -17,12 +16,6 @@ import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 /**
  * Graphic display of the playing view.
@@ -42,6 +35,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private GameModel model;
   private DrawPlayerBoard[] playerBoards;
   private ColorScheme colorScheme;
+  private DrawBackground drawBackground;
 
   /**
    * Initializes the playing view.
@@ -99,10 +93,13 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     // Center definieren: table center
     JPanel playingViewCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
     playingViewCenter.setOpaque(false);
+    //drawBackground = new DrawBackground();
     drawboardTableCenter = new DrawboardTableCenter(model, controller, players.size());
     drawboardTableCenter.setColorScheme(colorScheme);
     drawboardTableCenter.setLayout(null);
+    //playingViewCenter.add(drawBackground);
     playingViewCenter.add(drawboardTableCenter);
+
 
     playerBoards = new DrawPlayerBoard[players.size()];
     for (int i = 0; i < players.size(); i++) {
@@ -110,14 +107,18 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       playerBoards[i].setColorScheme(colorScheme);
     }
     // Linkes und rechtes panel mit Playerboards belegen
+    drawBackground = new DrawBackground();
     JPanel playingViewLeft = new JPanel(new BorderLayout());
     playingViewLeft.setOpaque(false);
     playingViewLeft.setPreferredSize(playerBoards[0].playerBoardPreferredSize(1));
+    playingViewLeft.add(drawBackground);
     playingViewLeft.add(playerBoards[0], BorderLayout.NORTH);
 
+    drawBackground = new DrawBackground();
     JPanel playingViewRight = new JPanel(new BorderLayout());
     playingViewRight.setOpaque(false);
     playingViewRight.setPreferredSize(playerBoards[1].playerBoardPreferredSize(1));
+    playingViewRight.add(drawBackground);
     playingViewRight.add(playerBoards[1], BorderLayout.NORTH);
 
     if (players.size() == 3) {
@@ -193,9 +194,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
 
   private void setPlayingViewBackground() {
-    ImageIcon backgroundImage = new ImageIcon(
-        getClass().getResource(colorScheme.boardBackgroundImage()));
-
   }
 
 }

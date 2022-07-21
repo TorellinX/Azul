@@ -1,7 +1,6 @@
 package de.lmu.ifi.sosylab.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,11 +66,13 @@ public class Player {
    * @return player board instance
    */
   public PlayerBoard getPlayerBoard() {
-
-    return playerBoard;
+    List<PlayerBoard> boards = new ArrayList<>();
+    boards.add(playerBoard);
+    List<PlayerBoard> unmodifiableBoards = Collections.unmodifiableList(boards);
+    return unmodifiableBoards.get(0);
   }
 
-  public PlayerState getPlayerState() {
+  public PlayerState getState() {
     return playerState;
   }
 
@@ -96,7 +97,7 @@ public class Player {
     return Objects.hash(nickname);
   }
 
-  public void setPlayerState(PlayerState playerState) {
+  public void setState(PlayerState playerState) {
     this.playerState = playerState;
   }
 

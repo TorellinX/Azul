@@ -28,8 +28,8 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
   public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
     session.subscribe("/topic/messages", this);
     session.send("/app/game/model", "test");
-    //session.send("/app/game/newUser", "Player1-Test");
-    //session.send("/app/game/newUser", "Player2-Test");
+    session.send("/app/game/newUser", "Player1-Test");
+    session.send("/app/game/newUser", "Player2-Test");
     log.info("New session: {}", session.getSessionId());
   }
 
@@ -53,7 +53,7 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     System.out.println(payload);
     GameModel model = (GameModel) payload;
     Controller controller = new GameController(model);
-    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(), controller, model);
+    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames());
     playingView.setVisible(true);
     Thread.sleep(1000);
 

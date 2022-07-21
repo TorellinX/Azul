@@ -18,7 +18,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
 
 /**
  * Center Panel of the Game. Shows the panels and the center of the table.
@@ -49,6 +51,8 @@ public class DrawboardTableCenter extends JPanel {
    * Initializes the table center.
    *
    * @param model game model instance
+   * @param controller controller instance
+   * @param playerNumber number of players
    */
   public DrawboardTableCenter(GameModel model, Controller controller, int playerNumber) {
     if (playerNumber > 2) {
@@ -83,7 +87,7 @@ public class DrawboardTableCenter extends JPanel {
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
-    Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
+    Graphics2D g2D = (Graphics2D) g;    // g2D required for stroke methods - use unified
     setOpaque(false);
 
     drawPlates(g2D);
@@ -148,8 +152,8 @@ public class DrawboardTableCenter extends JPanel {
       return;
     }
     g2D.setColor(colorScheme.table());
-    g2D.fillRoundRect(tableCoordinates.getX(), tableCoordinates.getY(), tableWidth, tableHeight, 20,
-        20);
+    g2D.fillRoundRect(tableCoordinates.getX(), tableCoordinates.getY(), tableWidth,
+        tableHeight, 20, 20);
     drawTableCenterTiles(g2D);
   }
 
@@ -362,11 +366,11 @@ public class DrawboardTableCenter extends JPanel {
       for (int col = 0; col < 3; col++) {
         diagonalGrid[row][col] = new IntPair(
             (int) Math.round(
-                platesCenterX - plateOffset * Math.sqrt(2) + col * plateOffset / Math.sqrt(2) +
-                    row * plateOffset / Math.sqrt(2)),
+                platesCenterX - plateOffset * Math.sqrt(2) + col * plateOffset / Math.sqrt(2)
+                    + row * plateOffset / Math.sqrt(2)),
             (int) Math.round(
-                platesCenterY - col * plateOffset / Math.sqrt(2) +
-                    row * plateOffset / Math.sqrt(2)));
+                platesCenterY - col * plateOffset / Math.sqrt(2)
+                    + row * plateOffset / Math.sqrt(2)));
       }
     }
     return diagonalGrid;
@@ -474,8 +478,8 @@ public class DrawboardTableCenter extends JPanel {
       buttonsTable.get(count).setBorderPainted(false);
     }
 
-    for (JButton jButton : buttonsTable) {
-      add(jButton);
+    for (JButton button : buttonsTable) {
+      add(button);
     }
   }
 
@@ -518,9 +522,9 @@ public class DrawboardTableCenter extends JPanel {
     for (int i = 0; i < buttonsTable.size(); i++) {
       final int final_i = i;
       buttonsTable.get(i).addActionListener(e -> {
-        System.out.println("Button index: " +
-            buttonsTable.indexOf(buttonsTable.get(final_i)) + " , X: " + buttonsTable.get(final_i)
-            .getX() + " , Y: " + buttonsTable.get(final_i).getY());
+        System.out.println("Button index: "
+            + buttonsTable.indexOf(buttonsTable.get(final_i)) + " , X: "
+            + buttonsTable.get(final_i).getX() + " , Y: " + buttonsTable.get(final_i).getY());
         de.lmu.ifi.sosylab.model.Color color = getColorOfTileTableCenter(
             buttonsTable.get(final_i).getX(), buttonsTable.get(final_i).getY());
         if (color == null) {  // tried to pick the penalty tile

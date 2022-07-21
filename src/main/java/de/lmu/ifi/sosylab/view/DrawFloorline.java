@@ -111,6 +111,7 @@ public class DrawFloorline extends JPanel {
 
   /**
    * Setter for color scheme of the floor line.
+   *
    * @param colorScheme current color scheme
    */
   public void setColorScheme(ColorScheme colorScheme) {

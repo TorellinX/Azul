@@ -14,20 +14,36 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
+/**
+ * Http client application for multiplayer game.
+ */
 public class ClientApplication {
 
   String user;
   String pwd = "empty";
+
+  /**
+   * Constructor for http client.
+   *
+   * @param nickname player nickname
+   */
   public ClientApplication(String nickname) {
     this.user = nickname;
   }
 
+  /**
+   * Authentication of player for http client.
+   *
+   * @param nickname  player nickname
+   * @param passwd    password
+   * @return          http client object
+   */
   private CloseableHttpClient authenticate(String nickname, String passwd) {
 
     CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
     AuthScope scope = new AuthScope("http://localhost/", 8080);
     Credentials credentials = new UsernamePasswordCredentials(nickname, passwd);
-    credentialsProvider.setCredentials(scope,credentials);
+    credentialsProvider.setCredentials(scope, credentials);
     HttpClientBuilder clientBuilder = HttpClients.custom();
     clientBuilder = clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
     CloseableHttpClient httpClient = clientBuilder.build();
@@ -36,6 +52,11 @@ public class ClientApplication {
 
   }
 
+  /**
+   * http request for server (currently hardcoded, as there is only one, yet).
+   *
+   * @return  server response
+   */
   public String serverRequest() {
     // noch ohne auth: replace in try -> authenticate(user, pwd)
     try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
@@ -61,6 +82,12 @@ public class ClientApplication {
     }
   }
 
+  /**
+   * Http post to server.
+   *
+   * @param input  input for server
+   * @return       true if success
+   */
   public boolean serverPost(String input) {
     // noch ohne auth: replace in try -> authenticate(user, pwd)
     try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {

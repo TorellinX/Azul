@@ -69,7 +69,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     setResizable(true);
     setTitle("Azul");
     setLayout(new BorderLayout());
-    setColors(ColorSchemes.cosmic); // TODO: the ability to choose the color scheme in the menu (ComboBox)
+    setColors(ColorSchemes.cosmic); // TODO: ability to choose the color scheme in menu (ComboBox)
     getContentPane().setBackground(colorScheme.playingView());  // TODO: replace with image
     //TODO: implementieren setPlayingViewBackground()
     setPlayingViewBackground();

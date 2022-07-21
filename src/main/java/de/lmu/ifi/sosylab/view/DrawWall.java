@@ -107,6 +107,7 @@ public class DrawWall extends JPanel {
 
   /**
    * Setter for color scheme of the wall.
+   *
    * @param colorScheme current color scheme
    */
   public void setColorScheme(ColorScheme colorScheme) {

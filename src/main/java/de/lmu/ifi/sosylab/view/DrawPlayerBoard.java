@@ -127,6 +127,7 @@ public class DrawPlayerBoard extends JPanel {
 
   /**
    * Setter for color scheme of the player board.
+   *
    * @param colorScheme current color scheme
    */
   public void setColorScheme(ColorScheme colorScheme) {

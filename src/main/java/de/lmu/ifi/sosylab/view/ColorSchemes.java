@@ -2,11 +2,38 @@ package de.lmu.ifi.sosylab.view;
 
 import java.awt.Color;
 
+/**
+ * Variable color schemes for Azul client.
+ */
 public final class ColorSchemes {
 
   private ColorSchemes() {
   }
 
+  /**
+   * Color schemes.
+   *
+   * @param yellow                  assignement -> self evident
+   * @param red                     assignement -> self evident
+   * @param black                   assignement -> self evident
+   * @param green                   assignement -> self evident
+   * @param blue                    assignement -> self evident
+   * @param penalty                 assignement -> self evident
+   * @param penaltyText             assignement -> self evident
+   * @param activePlayer            assignement -> self evident
+   * @param inactivePlayer          assignement -> self evident
+   * @param wallBackground          assignement -> self evident
+   * @param menu                    assignement -> self evident
+   * @param table                   assignement -> self evident
+   * @param plateFill               assignement -> self evident
+   * @param plateBorder             assignement -> self evident
+   * @param floorlineFrame          assignement -> self evident
+   * @param scoreText               assignement -> self evident
+   * @param patternlineFrame        assignement -> self evident
+   * @param playerboard             assignement -> self evident
+   * @param playingView             assignement -> self evident
+   * @param boardBackgroundImage    assignement -> self evident
+   */
   public record ColorScheme(Color yellow,
                             Color red,
                             Color black,

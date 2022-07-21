@@ -34,7 +34,8 @@ public class RoomView extends JFrame {
 
     JPanel textFieldPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     add(textFieldPanel, BorderLayout.NORTH);
-    JTextField textField = new JFormattedTextField("Display server response. EXIT on close window.");
+    JTextField textField = new JFormattedTextField("Display server response. "
+        + "EXIT on close window.");
     textFieldPanel.add(textField);
 
     JPanel textAreaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

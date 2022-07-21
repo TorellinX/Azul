@@ -53,7 +53,7 @@ public class RoomView extends JFrame {
     testButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        textArea.setText(client.serverRequest());
+        textArea.setText(client.serverPost(""));
         // thisFrame.setVisible(false);
       }
     });

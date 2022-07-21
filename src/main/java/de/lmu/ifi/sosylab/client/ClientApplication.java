@@ -9,10 +9,12 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.json.JSONArray;
 
 /**
  * Http client application for multiplayer game.
@@ -88,11 +90,20 @@ public class ClientApplication {
    * @param input  input for server
    * @return       true if success
    */
-  public boolean serverPost(String input) {
+  public String serverPost(String input) {
     // noch ohne auth: replace in try -> authenticate(user, pwd)
     try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+      // Build json array
+      JSONArray names = new JSONArray();
+      names.put("test1");
+      names.put("test2");
+      System.out.println(names.toString());
+      StringEntity namesArray = new StringEntity(names.toString(), "UTF-8");
       // send request
       HttpPost post = new HttpPost("http://localhost:8080/api/start");
+      post.setHeader("Accept", "application/json");
+      post.setHeader("Content-type", "application/json");
+      post.setEntity(namesArray);
       // debug: print method
       System.out.println("Request: " + post.getMethod());
 
@@ -106,13 +117,13 @@ public class ClientApplication {
       Scanner scan = new Scanner(getResponse.getEntity().getContent());
       String response = "";
       while (scan.hasNext()) {
-        System.out.println(scan.nextLine());
+        response += (scan.nextLine() + "\n");
       }
-      return true;
+      return response;
 
     } catch (IOException e) {
       e.printStackTrace();
-      return false;
+      return null;
     }
 
   }

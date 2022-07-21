@@ -37,7 +37,10 @@ public class DrawboardTableCenter extends JPanel {
   private ArrayList<JButton> buttonsTable;
   private final int buttonsSize = 35;
   private ColorScheme colorScheme;
-  private BufferedImage backgroundIMG;
+  private BufferedImage backgroundIMGClassic;
+  private BufferedImage backgroundIMGCosmic;
+  private PlayingView themesItems;
+  private PlayingView themeSelected;
 
 
   /**
@@ -67,6 +70,8 @@ public class DrawboardTableCenter extends JPanel {
     addButtonsPlayboardCenter();
     addActionListenerFactory();
     addActionListenerTableCenter();
+
+
   }
 
   /**
@@ -81,9 +86,10 @@ public class DrawboardTableCenter extends JPanel {
     Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
     setOpaque(false);
 
-    drawBackground(g2D);
+    drawClassicBackground(g2D);
     drawPlates(g2D);
     drawTableCenter(g2D);
+    //addThemesActionListener(g2D);
   }
 
   /**
@@ -91,20 +97,37 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param g2D graphics object - kind of "internal reference"
    */
-  private void drawBackground(Graphics2D g2D){
+  public void drawClassicBackground(Graphics2D g2D){
     ClassLoader classLoader = null; //Name dieser klasse
     try {
-      classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawboardTableCenter").getClassLoader();
+      classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawBackground").getClassLoader();
     } catch (ClassNotFoundException e) {
-    throw new RuntimeException(e);
+      throw new RuntimeException(e);
     }
-    var stream = (classLoader.getResourceAsStream("back_classic.png"));
+    var stream = (classLoader.getResourceAsStream("back_beach.png"));
     try {
-    backgroundIMG = ImageIO.read(stream);
+      backgroundIMGClassic = ImageIO.read(stream);
     } catch (IOException e) {
-    e.printStackTrace();
+      e.printStackTrace();
     }
-    g2D.drawImage(backgroundIMG,0, 0,this);
+    g2D.drawImage(backgroundIMGClassic,0, 0,410, 900,this);
+  }
+
+  public void drawCosmicBackground(Graphics2D g2D){
+    ClassLoader classLoader2 = null; //Name dieser klasse
+    try {
+      classLoader2 = Class.forName("de.lmu.ifi.sosylab.view.DrawBackground").getClassLoader();
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    var stream = (classLoader2.getResourceAsStream("back_cosmic.png"));
+    try {
+      backgroundIMGCosmic = ImageIO.read(stream);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    g2D.drawImage(backgroundIMGCosmic,0, 0,410, 900,this);
+
   }
 
 
@@ -552,6 +575,26 @@ public class DrawboardTableCenter extends JPanel {
    */
   public void setColorScheme(ColorScheme colorScheme) {
     this.colorScheme = colorScheme;
+  }
+
+  public PlayingView getThemesItems() {
+    return themesItems;
+  }
+
+  public PlayingView getThemeSelected(){
+    return themeSelected;
+  }
+
+  public void addThemesActionListener(Graphics2D g2D){
+    getThemesItems().addActionlistener(e -> {
+      String themeSelected = String.valueOf(getThemeSelected());
+      if (themeSelected == "Cosmic"){
+        drawCosmicBackground(g2D);
+        drawPlates(g2D);
+        drawTableCenter(g2D);
+        repaint();
+      }
+    });
   }
 
 }

@@ -24,6 +24,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   @Serial
   private static final long serialVersionUID = 1L;
+  public Object addActionlistener;
   private JPanel menu;
   JComboBox<String> menuItems = new JComboBox<String>(
       new String[]{"- menu -", "restart", "leave", "end game"});
@@ -36,6 +37,9 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private DrawPlayerBoard[] playerBoards;
   private ColorScheme colorScheme;
   private DrawBackground drawBackground;
+  JComboBox<String> themesItems = new JComboBox<String>(
+          new String[]{"- themes -", "Classic", "Cosmic"});
+
 
   /**
    * Initializes the playing view.
@@ -87,17 +91,18 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     menu.setLayout(new FlowLayout(FlowLayout.CENTER));
     menu.setBackground(colorScheme.menu());
     menu.add(menuItems);
+    menu.add(themesItems);
     add(menu, BorderLayout.NORTH);
 
     // Mittlere Zone wird befüllt
     // Center definieren: table center
     JPanel playingViewCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
     playingViewCenter.setOpaque(false);
-    //drawBackground = new DrawBackground();
+    //drawClassicBackground = new DrawBackground();
     drawboardTableCenter = new DrawboardTableCenter(model, controller, players.size());
     drawboardTableCenter.setColorScheme(colorScheme);
     drawboardTableCenter.setLayout(null);
-    //playingViewCenter.add(drawBackground);
+    //playingViewCenter.add(drawClassicBackground);
     playingViewCenter.add(drawboardTableCenter);
 
 
@@ -111,14 +116,14 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     JPanel playingViewLeft = new JPanel(new BorderLayout());
     playingViewLeft.setOpaque(false);
     playingViewLeft.setPreferredSize(playerBoards[0].playerBoardPreferredSize(1));
-    playingViewLeft.add(drawBackground);
+    //playingViewLeft.add(drawBackground);
     playingViewLeft.add(playerBoards[0], BorderLayout.NORTH);
 
     drawBackground = new DrawBackground();
     JPanel playingViewRight = new JPanel(new BorderLayout());
     playingViewRight.setOpaque(false);
     playingViewRight.setPreferredSize(playerBoards[1].playerBoardPreferredSize(1));
-    playingViewRight.add(drawBackground);
+    //playingViewRight.add(drawBackground);
     playingViewRight.add(playerBoards[1], BorderLayout.NORTH);
 
     if (players.size() == 3) {
@@ -195,6 +200,15 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   private void setPlayingViewBackground() {
   }
+
+  public void addActionlistener(ActionListener actionListener) {
+  }
+
+  public void getSelectedItem(){
+    String themeSelected;
+    themeSelected = (String) themesItems.getSelectedItem();
+  }
+
 
 }
 

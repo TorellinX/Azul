@@ -1,5 +1,9 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.controller.GameController;
+import de.lmu.ifi.sosylab.model.GameModel;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -150,8 +154,9 @@ public class HotseatMenuView extends JFrame {
           JOptionPane.showMessageDialog(null,
               "It was not possible to create a Game, there can only be 2-4 players");
         } else {
-
-          PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames());
+          GameModel model = new GameModel();
+          Controller controller = new GameController(model);
+          PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(), controller, model);
           // setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
           // dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         }

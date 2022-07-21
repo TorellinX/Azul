@@ -49,7 +49,7 @@ public class RoomView extends JFrame {
     testButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        textArea.setText();
+
         // thisFrame.setVisible(false);
       }
     });

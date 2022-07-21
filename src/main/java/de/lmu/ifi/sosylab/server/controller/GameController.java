@@ -40,7 +40,7 @@ public class GameController {
   @MessageMapping("/game/plates")
   @SendTo("/topic/messages")
   public List<Plate> greeting(String message) throws Exception {
-    System.out.println(message);
+    System.out.println("greetings: " + message);
     Thread.sleep(1000); // simulated delay
     List<String> players = List.of("Player1", "Player2", "Player3", "Player4");
     GameModel model = new GameModel();
@@ -53,7 +53,7 @@ public class GameController {
   @MessageMapping("/game/model")
   @SendTo("/topic/messages")
   public GameModel model(String message) throws Exception {
-    System.out.println(message);
+    System.out.println("model: " + message);
     Thread.sleep(1000); // simulated delay
     List<String> players = List.of("Player1", "Player2", "Player3", "Player4");
     GameModel model = new GameModel();
@@ -80,7 +80,7 @@ public class GameController {
   @MessageMapping("/game/player")
   @SendTo("/topic/messages")
   public Player getPlayer(String message) throws Exception {
-    System.out.println(message);
+    System.out.println("getPlayer :"+ message);
     Thread.sleep(500); // simulated delay
     List<String> players = List.of("Player1", "Player2", "Player3", "Player4");
     GameModel model = new GameModel();
@@ -92,7 +92,7 @@ public class GameController {
   @MessageMapping("/game/playerboard")
   @SendTo("/topic/messages")
   public PlayerBoard getPlayerBoard(String message) throws Exception {
-    System.out.println(message);
+    System.out.println("getPlayerBoard: " + message);
     Thread.sleep(500); // simulated delay
     List<String> players = List.of("Player1", "Player2", "Player3", "Player4");
     GameModel model = new GameModel();

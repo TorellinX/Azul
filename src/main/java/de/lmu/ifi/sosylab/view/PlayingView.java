@@ -51,7 +51,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    * @param playerCount number of players
    * @param nicknames   list of nicknames of players
    */
-  public PlayingView(int playerCount, List<String> nicknames) {
+  public PlayingView(int playerCount, List<String> nicknames, Controller controller, GameModel model) {
     super("Azul Playing View");
 
     stateFinishedprocessed = 0;
@@ -59,8 +59,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     this.playerCount = playerCount;
     List<String> unmodNameList = Collections.unmodifiableList(nicknames);
     this.nicknames = unmodNameList;
-    this.model = new GameModel();
-    this.controller = new GameController(model);
+    this.model = model;
+    this.controller = controller;
 
     if (controller.startGame(nicknames)) {
       this.players = model.getPlayers();

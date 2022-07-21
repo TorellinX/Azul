@@ -8,9 +8,11 @@ import java.util.Objects;
  */
 public class PenaltyTile extends Tile {
 
+  final static String STRING_REPRESENTATION = "(-1)";
+
   @Override
   public String toString() {
-    return "(-1)";
+    return STRING_REPRESENTATION;
   }
 
   @Override

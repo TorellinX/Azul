@@ -40,7 +40,7 @@ public class DrawboardPlayerBoard extends JPanel {
 
 
   void drawNickname(Graphics g, Player player, int x, int y) {
-    if (player.getState().equals(PlayerState.TO_MOVE)) {
+    if (player.getPlayerState().equals(PlayerState.TO_MOVE)) {
       g.setColor(activePlayerColor);
       //g.setFont(new Font("default", Font.BOLD, 12));
       g.setFont(g.getFont().deriveFont(Font.BOLD));

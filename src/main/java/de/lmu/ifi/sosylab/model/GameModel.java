@@ -2,6 +2,7 @@ package de.lmu.ifi.sosylab.model;
 
 import static java.util.Objects.requireNonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
 import java.beans.PropertyChangeListener;
@@ -53,14 +54,11 @@ public class GameModel {
    *
    * @return player instance
    */
+  @JsonIgnore
   public Player getPlayerToMove() {
-    List<Player> ptmList = new ArrayList<>();
-    ptmList.add(playerToMove);
-    List<Player> unmodPtmList = Collections.unmodifiableList(ptmList);
-    return unmodPtmList.get(0);
+    return players.get(playerToMoveIndex);
   }
 
-  private Player playerToMove;
   private int round = 1;
   List<ColorTile> selectedTiles = new ArrayList<>();
 
@@ -83,8 +81,7 @@ public class GameModel {
     if (playerNames.size() < 2 || playerNames.size() > 4) {
       throw new IllegalArgumentException("Invalid number of players, needs to be from 2 to 4");
     }
-    this.players = playerNames.stream().map(p -> new Player(p, PlayerState.READY))
-        .collect(Collectors.toUnmodifiableList());
+    this.players = playerNames.stream().map(Player::new).toList();
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
     linkBoxToPlayerBoard();
@@ -107,8 +104,7 @@ public class GameModel {
    */
   private void chooseRandomStartingPlayer() {
     startingPlayerIndex = playerToMoveIndex = random.nextInt(players.size());
-    playerToMove = players.get(playerToMoveIndex);
-    playerToMove.setState(PlayerState.TO_MOVE);
+    players.get(playerToMoveIndex).setPlayerState(PlayerState.TO_MOVE);
   }
 
   /**
@@ -145,7 +141,7 @@ public class GameModel {
     if (roundState != RoundState.PICKED) {
       return false;
     }
-    if (player.getState() != PlayerState.TO_MOVE) {
+    if (player.getPlayerState() != PlayerState.TO_MOVE) {
       throw new IllegalArgumentException("\"set to row\" event from non-active player");
     }
     System.out.println("    Setting tiles to row " + row + "...");
@@ -158,17 +154,16 @@ public class GameModel {
       return true;
     }
     System.out.println(
-        "Active Player: " + getPlayerToMoveIndex() + " State: " + playerToMove.getState());
+        "Active Player: " + playerToMoveIndex + " State: " + players.get(playerToMoveIndex).getPlayerState());
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
     return true;
   }
 
   private void setPlayerToMove(int newPlayerToMoveIndex) {
-    playerToMove.setState(PlayerState.READY);
+    players.get(playerToMoveIndex).setPlayerState(PlayerState.READY);
     playerToMoveIndex = newPlayerToMoveIndex;
-    playerToMove = players.get(playerToMoveIndex);
-    playerToMove.setState(PlayerState.TO_MOVE);
+    players.get(playerToMoveIndex).setPlayerState(PlayerState.TO_MOVE);
     notifyListeners(MODEL_CHANGED);
   }
 

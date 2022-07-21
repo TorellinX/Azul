@@ -27,7 +27,7 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
   @Override
   public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
     session.subscribe("/topic/messages", this);
-    // session.send("/app/game/model", "test");
+    session.send("/app/game/model", "test");
     // session.send("/app/game/newUser", "Player1-Test");
     // session.send("/app/game/newUser", "Player2-Test");
     log.info("New session: {}", session.getSessionId());

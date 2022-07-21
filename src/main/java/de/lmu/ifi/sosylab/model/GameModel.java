@@ -2,6 +2,7 @@ package de.lmu.ifi.sosylab.model;
 
 import static java.util.Objects.requireNonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
 import java.beans.PropertyChangeListener;
@@ -54,11 +55,10 @@ public class GameModel {
    *
    * @return player instance
    */
+  @JsonIgnore
   public Player getPlayerToMove() {
-
-    return playerToMove;
+    return players.get(playerToMoveIndex);
   }
-
 
   /**
    * Creates a new table with game components.
@@ -103,8 +103,7 @@ public class GameModel {
    */
   private void chooseRandomStartingPlayer() {
     startingPlayerIndex = playerToMoveIndex = random.nextInt(players.size());
-    playerToMove = players.get(playerToMoveIndex);
-    playerToMove.setState(PlayerState.TO_MOVE);
+    players.get(playerToMoveIndex).setPlayerState(PlayerState.TO_MOVE);
   }
 
   /**
@@ -141,7 +140,7 @@ public class GameModel {
     if (roundState != RoundState.PICKED) {
       return false;
     }
-    if (player.getState() != PlayerState.TO_MOVE) {
+    if (player.getPlayerState() != PlayerState.TO_MOVE) {
       throw new IllegalArgumentException("\"set to row\" event from non-active player");
     }
     System.out.println("    Setting tiles to row " + row + "...");
@@ -154,17 +153,16 @@ public class GameModel {
       return true;
     }
     System.out.println(
-        "Active Player: " + getPlayerToMoveIndex() + " State: " + playerToMove.getState());
+        "Active Player: " + getPlayerToMoveIndex() + " State: " + playerToMove.getPlayerState());
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
     return true;
   }
 
   private void setPlayerToMove(int newPlayerToMoveIndex) {
-    playerToMove.setState(PlayerState.READY);
+    players.get(playerToMoveIndex).setPlayerState(PlayerState.READY);
     playerToMoveIndex = newPlayerToMoveIndex;
-    playerToMove = players.get(playerToMoveIndex);
-    playerToMove.setState(PlayerState.TO_MOVE);
+    players.get(playerToMoveIndex).setPlayerState(PlayerState.TO_MOVE);
     notifyListeners(MODEL_CHANGED);
   }
 

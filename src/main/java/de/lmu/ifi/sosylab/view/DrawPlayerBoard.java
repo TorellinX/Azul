@@ -81,7 +81,7 @@ public class DrawPlayerBoard extends JPanel {
    */
   public void setPlayerLabelBackgroundColor(Player player) {
 
-    if (player.getState().equals(PlayerState.TO_MOVE)) {
+    if (player.getPlayerState().equals(PlayerState.TO_MOVE)) {
       labelPanel.setBackground(colorScheme.activePlayer());
     } else {
       labelPanel.setBackground(colorScheme.inactivePlayer());

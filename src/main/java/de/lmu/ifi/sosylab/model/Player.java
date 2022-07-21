@@ -72,7 +72,7 @@ public class Player {
     return unmodifiableBoards.get(0);
   }
 
-  public PlayerState getState() {
+  public PlayerState getPlayerState() {
     return playerState;
   }
 
@@ -97,7 +97,7 @@ public class Player {
     return Objects.hash(nickname);
   }
 
-  public void setState(PlayerState playerState) {
+  public void setPlayerState(PlayerState playerState) {
     this.playerState = playerState;
   }
 

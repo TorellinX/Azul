@@ -104,7 +104,7 @@ public class DrawboardTableCenter extends JPanel {
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
-    var stream = (classLoader.getResourceAsStream("back_beach.png"));
+    var stream = (classLoader.getResourceAsStream("back_classic.png"));
     try {
       backgroundIMGClassic = ImageIO.read(stream);
     } catch (IOException e) {
@@ -127,7 +127,22 @@ public class DrawboardTableCenter extends JPanel {
       e.printStackTrace();
     }
     g2D.drawImage(backgroundIMGCosmic,0, 0,410, 900,this);
+  }
 
+  public void drawBeachBackground(Graphics2D g2D){
+    ClassLoader classLoader = null; //Name dieser klasse
+    try {
+      classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawBackground").getClassLoader();
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    var stream = (classLoader.getResourceAsStream("back_beach.png"));
+    try {
+      backgroundIMGClassic = ImageIO.read(stream);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    g2D.drawImage(backgroundIMGClassic,0, 0,410, 900,this);
   }
 
 
@@ -590,6 +605,12 @@ public class DrawboardTableCenter extends JPanel {
       String themeSelected = String.valueOf(getThemeSelected());
       if (themeSelected == "Cosmic"){
         drawCosmicBackground(g2D);
+        drawPlates(g2D);
+        drawTableCenter(g2D);
+        repaint();
+      }
+      if (themeSelected == "Beach"){
+        drawBeachBackground(g2D);
         drawPlates(g2D);
         drawTableCenter(g2D);
         repaint();

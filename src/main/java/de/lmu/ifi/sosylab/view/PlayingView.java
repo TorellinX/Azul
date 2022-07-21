@@ -36,9 +36,9 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private GameModel model;
   private DrawPlayerBoard[] playerBoards;
   private ColorScheme colorScheme;
-  private DrawBackground drawBackground;
+  //private DrawBackground drawBackground;
   JComboBox<String> themesItems = new JComboBox<String>(
-          new String[]{"- themes -", "Classic", "Cosmic"});
+          new String[]{"- themes -", "Classic", "Beach", "Cosmic"});
 
 
   /**
@@ -67,7 +67,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     setResizable(true);
     setTitle("Azul");
     setLayout(new BorderLayout());
-    setColors(ColorSchemes.cosmic); // TODO: the ability to choose the color scheme in the menu (ComboBox)
+    setColors(ColorSchemes.classic); // TODO: the ability to choose the color scheme in the menu (ComboBox)
     getContentPane().setBackground(colorScheme.playingView());  // TODO: replace with image
     //TODO: implementieren setPlayingViewBackground()
     setPlayingViewBackground();
@@ -112,14 +112,14 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       playerBoards[i].setColorScheme(colorScheme);
     }
     // Linkes und rechtes panel mit Playerboards belegen
-    drawBackground = new DrawBackground();
+    //drawBackground = new DrawBackground();
     JPanel playingViewLeft = new JPanel(new BorderLayout());
     playingViewLeft.setOpaque(false);
     playingViewLeft.setPreferredSize(playerBoards[0].playerBoardPreferredSize(1));
     //playingViewLeft.add(drawBackground);
     playingViewLeft.add(playerBoards[0], BorderLayout.NORTH);
 
-    drawBackground = new DrawBackground();
+    //drawBackground = new DrawBackground();
     JPanel playingViewRight = new JPanel(new BorderLayout());
     playingViewRight.setOpaque(false);
     playingViewRight.setPreferredSize(playerBoards[1].playerBoardPreferredSize(1));

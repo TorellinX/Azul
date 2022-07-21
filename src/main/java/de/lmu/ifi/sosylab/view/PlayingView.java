@@ -6,6 +6,7 @@ import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.model.State;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -42,6 +43,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private GameModel model;
   private DrawPlayerBoard[] playerBoards;
   private ColorScheme colorScheme;
+  int stateFinishedprocessed;
 
   /**
    * Initializes the playing view.
@@ -51,6 +53,9 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    */
   public PlayingView(int playerCount, List<String> nicknames) {
     super("Azul Playing View");
+
+    stateFinishedprocessed = 0;
+
     this.playerCount = playerCount;
     List<String> unmodNameList = Collections.unmodifiableList(nicknames);
     this.nicknames = unmodNameList;
@@ -172,20 +177,43 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private void handleModelUpdate(PropertyChangeEvent event) {
     if (event.getPropertyName().equals("Model changed")) {
       repaint();
-      playerBoards[0].setScoreLabel(players.get(0).getScore());
-      playerBoards[0].setPlayerLabelBackgroundColor(players.get(0));
-      playerBoards[1].setScoreLabel(players.get(1).getScore());
-      playerBoards[1].setPlayerLabelBackgroundColor(players.get(1));
-      if (players.size() > 2) {
-        playerBoards[2].setScoreLabel(players.get(2).getScore());
-        playerBoards[2].setPlayerLabelBackgroundColor(players.get(2));
+      for (int i = 0; i < players.size(); i++) {
+      playerBoards[i].setScoreLabel(players.get(i).getScore());
+      playerBoards[i].setPlayerLabelBackgroundColor(players.get(i));
       }
-      if (players.size() > 3) {
-        playerBoards[3].setScoreLabel(players.get(3).getScore());
-        playerBoards[3].setPlayerLabelBackgroundColor(players.get(3));
+      if (model.getState() == State.FINISHED && stateFinishedprocessed == 0) {
+        stateFinishedprocessed = 1;
+        String winText = "The winner is:\n";
+        String winners = "";
+        String allPlayers = "";
+        int highScore = 0;
+        for (int i = 0; i < players.size(); i++) {
+          if (highScore <= players.get(i).getScore()) {
+            highScore = players.get(i).getScore();
+          }
+        }
+        int count = 0;
+        for (int i = 0; i < players.size(); i++) {
+          if (players.get(i).getScore() == highScore) {
+            winners += players.get(i).getNickname() + "\n";
+            count++;
+            if (count > 1) {
+              winText = "The winners are:\n";
+            }
+          }
+        }
+        int option = JOptionPane.showOptionDialog(null, winText + winners + "\n\n" + "Restart game?",
+              "Game End.", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,null, JOptionPane.NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) {
+          dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        } else {
+          setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+          dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        }
       }
     }
   }
+
 
   private void setColors(ColorScheme colorScheme) {
     this.colorScheme = colorScheme;

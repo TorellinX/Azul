@@ -156,7 +156,7 @@ public class DrawboardTableCenter extends JPanel {
   /**
    * Draws the tiles in the center of the table.
    *
-   * @param g2D graphics object - kind of "internal reference"
+   * @param g2D graphics object
    */
   private void drawTableCenterTiles(Graphics2D g2D) {
     List<Tile> tableCenterTiles = model.getTableCenter().getTiles();

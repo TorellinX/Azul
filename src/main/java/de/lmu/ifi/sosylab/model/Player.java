@@ -1,5 +1,8 @@
 package de.lmu.ifi.sosylab.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,14 +11,21 @@ import java.util.Objects;
 /**
  * Player class holding information about a player.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "nickname")
 public class Player {
 
-  private final String nickname;
-  private PlayerState state;
+
+  public String nickname;
+
+
+  public PlayerState playerState = PlayerState.READY;
+
   int score = 0;
   //private boolean isHost;
+
   PlayerBoard playerBoard;
 
+  /**
   /**
    * Builds a player with state defined by argument.
    *
@@ -24,9 +34,14 @@ public class Player {
    */
   public Player(String nickname, PlayerState state) {
     this.nickname = nickname;
-    this.state = state;
+    this.playerState = state;
     this.playerBoard = new PlayerBoard();
   }
+
+  public Player() {
+
+  }
+
 
   /**
    * Builds a player with predefined state "ready".
@@ -35,7 +50,7 @@ public class Player {
    */
   public Player(String nickname) {
     this.nickname = nickname;
-    this.state = PlayerState.READY;
+    //this.state = PlayerState.READY;
     this.playerBoard = new PlayerBoard();
   }
 
@@ -43,6 +58,7 @@ public class Player {
   public String getNickname() {
     return nickname;
   }
+
 
 
   /**
@@ -57,8 +73,8 @@ public class Player {
     return unmodifiableBoards.get(0);
   }
 
-  public PlayerState getState() {
-    return state;
+  public PlayerState getPlayerState() {
+    return playerState;
   }
 
   public int getScore() {
@@ -82,8 +98,8 @@ public class Player {
     return Objects.hash(nickname);
   }
 
-  public void setState(PlayerState state) {
-    this.state = state;
+  public void setPlayerState(PlayerState playerState) {
+    this.playerState = playerState;
   }
 
 

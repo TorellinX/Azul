@@ -2,7 +2,6 @@ package de.lmu.ifi.sosylab.model;
 
 import static java.util.Objects.requireNonNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
 import java.beans.PropertyChangeListener;
@@ -28,8 +27,6 @@ public class GameModel {
   private static final int[] PENALTY_POINTS = new int[]{0, -1, -2, -4, -6, -8, -11, -14};
   private static final String MODEL_CHANGED = "Model changed";
   private static final String MODEL_STATE_CHANGED = "GameState changed";
-
-
   private List<Player> players;
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
   private List<Plate> plates;
@@ -39,28 +36,29 @@ public class GameModel {
       .collect(Collectors.toList());
   private final Random random = new Random();
   List<ColorTile> box = new ArrayList<>();
-
-  public State getState() {
-    return state;
-  }
-
   private State state;
   private RoundState roundState = RoundState.WAIT;
   private int startingPlayerIndex;
   private int playerToMoveIndex;
+  private Player playerToMove;
+  private int round = 1;
+  List<ColorTile> selectedTiles = new ArrayList<>();
+
+  public State getState() {
+
+    return state;
+  }
 
   /**
    * Getter for the player set as player to move.
    *
    * @return player instance
    */
-  @JsonIgnore
   public Player getPlayerToMove() {
-    return players.get(playerToMoveIndex);
+
+    return playerToMove;
   }
 
-  private int round = 1;
-  List<ColorTile> selectedTiles = new ArrayList<>();
 
   /**
    * Creates a new table with game components.
@@ -81,7 +79,8 @@ public class GameModel {
     if (playerNames.size() < 2 || playerNames.size() > 4) {
       throw new IllegalArgumentException("Invalid number of players, needs to be from 2 to 4");
     }
-    this.players = playerNames.stream().map(Player::new).toList();
+    this.players = playerNames.stream().map(p -> new Player(p, PlayerState.READY))
+        .collect(Collectors.toUnmodifiableList());
     plates = createAndFillPlates();
     chooseRandomStartingPlayer();
     linkBoxToPlayerBoard();
@@ -104,7 +103,8 @@ public class GameModel {
    */
   private void chooseRandomStartingPlayer() {
     startingPlayerIndex = playerToMoveIndex = random.nextInt(players.size());
-    players.get(playerToMoveIndex).setPlayerState(PlayerState.TO_MOVE);
+    playerToMove = players.get(playerToMoveIndex);
+    playerToMove.setState(PlayerState.TO_MOVE);
   }
 
   /**
@@ -141,7 +141,7 @@ public class GameModel {
     if (roundState != RoundState.PICKED) {
       return false;
     }
-    if (player.getPlayerState() != PlayerState.TO_MOVE) {
+    if (player.getState() != PlayerState.TO_MOVE) {
       throw new IllegalArgumentException("\"set to row\" event from non-active player");
     }
     System.out.println("    Setting tiles to row " + row + "...");
@@ -154,16 +154,17 @@ public class GameModel {
       return true;
     }
     System.out.println(
-        "Active Player: " + playerToMoveIndex + " State: " + players.get(playerToMoveIndex).getPlayerState());
+        "Active Player: " + getPlayerToMoveIndex() + " State: " + playerToMove.getState());
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
     return true;
   }
 
   private void setPlayerToMove(int newPlayerToMoveIndex) {
-    players.get(playerToMoveIndex).setPlayerState(PlayerState.READY);
+    playerToMove.setState(PlayerState.READY);
     playerToMoveIndex = newPlayerToMoveIndex;
-    players.get(playerToMoveIndex).setPlayerState(PlayerState.TO_MOVE);
+    playerToMove = players.get(playerToMoveIndex);
+    playerToMove.setState(PlayerState.TO_MOVE);
     notifyListeners(MODEL_CHANGED);
   }
 

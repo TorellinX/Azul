@@ -67,10 +67,8 @@ public class Player {
    * @return player board instance
    */
   public PlayerBoard getPlayerBoard() {
-    List<PlayerBoard> boards = new ArrayList<>();
-    boards.add(playerBoard);
-    List<PlayerBoard> unmodifiableBoards = Collections.unmodifiableList(boards);
-    return unmodifiableBoards.get(0);
+
+    return playerBoard;
   }
 
   public PlayerState getPlayerState() {

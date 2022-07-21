@@ -120,14 +120,16 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     playingViewRight.setPreferredSize(playerBoards[1].playerBoardPreferredSize(1));
     playingViewRight.add(playerBoards[1], BorderLayout.NORTH);
 
-    if (players.size() > 2) {
+    if (players.size() == 3) {
       playingViewLeft.setPreferredSize(playerBoards[2].playerBoardPreferredSize(2));
       playingViewLeft.add(playerBoards[2], BorderLayout.SOUTH);
     }
 
     if (players.size() > 3) {
-      playingViewRight.setPreferredSize(playerBoards[3].playerBoardPreferredSize(2));
-      playingViewRight.add(playerBoards[3], BorderLayout.SOUTH);
+      playingViewRight.setPreferredSize(playerBoards[2].playerBoardPreferredSize(2));
+      playingViewRight.add(playerBoards[2], BorderLayout.SOUTH);
+      playingViewLeft.setPreferredSize(playerBoards[3].playerBoardPreferredSize(2));
+      playingViewLeft.add(playerBoards[3], BorderLayout.SOUTH);
     }
 
     // Zuordnung ausführen.

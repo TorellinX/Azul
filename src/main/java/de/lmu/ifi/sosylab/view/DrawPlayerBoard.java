@@ -103,14 +103,14 @@ public class DrawPlayerBoard extends JPanel {
   /**
    * Getter for the preferred size of the complete player board for pack method in playing view.
    *
-   * @param playerNumber number of players
-   * @return preferred dimension
+   * @param playerNumberScaling number of players scaling factor for table center (1/2: 1; 3/4: 2)
+   * @return                    preferred dimension
    */
-  public Dimension playerBoardPreferredSize(int playerNumber) {
+  public Dimension playerBoardPreferredSize(int playerNumberScaling) {
     int horizontal = 0;
     int vertical = 0;
     horizontal = playerBoardPreferredWidth();
-    vertical = playerNumber * drawWall.getWallFrameSize() + 125;   // magic number to be refined....
+    vertical = playerNumberScaling * drawWall.getWallFrameSize() + 125;   // magic number ....
     return new Dimension(horizontal, vertical);
   }
 

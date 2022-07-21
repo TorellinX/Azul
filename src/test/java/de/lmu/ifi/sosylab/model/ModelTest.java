@@ -177,7 +177,7 @@ public class ModelTest {
     ColorTile[] expectedRow = new ColorTile[rowIndex + 1];
 
     //Act test
-    model.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
+    model.score.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
 
     //Assert test
     assertArrayEquals(expectedRow, testingPlayer.playerBoard.patternLines[rowIndex]);
@@ -200,7 +200,7 @@ public class ModelTest {
     }
 
     //Act test
-    model.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
+    model.score.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
 
     //Assert test
     assertEquals(expectedBox, model.box);
@@ -221,7 +221,7 @@ public class ModelTest {
 
     //Act test
     try {
-      model.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
+      model.score.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
       fail("The patten line is not complete");
     } catch (RuntimeException e) {
 

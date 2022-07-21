@@ -22,6 +22,7 @@ public class ModelTest {
   private static final int NUMBER_OF_PLAYERS = 4;
   private static List<String> testPlayers = new ArrayList<>();
 
+
   @BeforeAll
   static void setUp() {
 

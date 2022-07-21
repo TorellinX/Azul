@@ -16,7 +16,9 @@ public class Score {
         this.players = players;
         this.box = box;
     }
-
+    public List<Player> getPlayers() {
+        return players;
+    }
     /**
      * Moves all tiles except one from the specified complete patternLine to the box. One tile remains
      * on the wall.

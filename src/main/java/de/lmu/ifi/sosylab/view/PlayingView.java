@@ -89,7 +89,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     addListeners();
 
     for (Player player : model.getPlayers()) {
-      if (player.getState() == PlayerState.TO_MOVE) {
+      if (player.getPlayerState() == PlayerState.TO_MOVE) {
         System.out.println("Active Player: " + player);
       } else {
         System.out.println("Inactive Player: " + player);

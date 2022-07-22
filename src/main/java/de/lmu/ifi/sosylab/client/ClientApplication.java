@@ -22,7 +22,6 @@ import java.util.Scanner;
  */
 public class ClientApplication {
 
-  String pwd = "empty";
 
   /**
    * Constructor for http client.
@@ -55,19 +54,17 @@ public class ClientApplication {
   /**
    * http request for server (currently hardcoded, as there is only one, yet).
    *
-   * @return  server response
+   * @param uri       uri
+   * @param uriGet    GetMapping
+   * @return          server response
    */
-  public String serverRequest() {
+  public String serverGet(String uri, String uriGet) {
     // noch ohne auth: replace in try -> authenticate(user, pwd)
     try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
       // send request
-      HttpGet sendRequest = new HttpGet("http://localhost:8080/api/test");
-      // debug: print method
-      System.out.println("Request: " + sendRequest.getMethod());
+      HttpGet sendRequest = new HttpGet(uri + uriGet);
       // execute request
       HttpResponse getResponse = httpClient.execute(sendRequest);
-      // debug: print status line
-      System.out.println(getResponse.getStatusLine());
       // read response and return
       Scanner scan = new Scanner(getResponse.getEntity().getContent());
       String response = "";
@@ -85,35 +82,21 @@ public class ClientApplication {
   /**
    * Http post to server.
    *
-   * @param input  input for server
-   * @return       true if success
+   * @param uri       uri
+   * @param uriPost   PostMapping
+   * @param entity    entity to post
+   * @return          response
    */
-  public String serverPost(String input) {
+  public String serverPost(String uri, String uriPost, StringEntity entity) {
     // noch ohne auth: replace in try -> authenticate(user, pwd)
     try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-      // Build json array
-      JSONArray names = new JSONArray();
-      // Following just for some test...
-      names.put("test1");
-      names.put("test2");
-      names.put("test3");
-      names.put(input);
-      System.out.println(names.toString());
-      StringEntity namesArray = new StringEntity(names.toString(), "UTF-8");
-      // send request
-      HttpPost post = new HttpPost("http://localhost:8080/api/start");
+      // generate post
+      HttpPost post = new HttpPost(uri + uriPost);
       post.setHeader("Accept", "application/json");
       post.setHeader("Content-type", "application/json");
-      post.setEntity(namesArray);
-      // debug: print method
-      System.out.println("Request: " + post.getMethod());
-
-      //TODO: clarify/build post struct
-
+      post.setEntity(entity);
       // execute request
       HttpResponse getResponse = httpClient.execute(post);
-      // debug: print status line
-      System.out.println(getResponse.getStatusLine());
       // read response and return
       Scanner scan = new Scanner(getResponse.getEntity().getContent());
       String response = "";

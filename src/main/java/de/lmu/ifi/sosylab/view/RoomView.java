@@ -1,6 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
 import de.lmu.ifi.sosylab.client.ClientApplication;
+import de.lmu.ifi.sosylab.model.Player;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -15,6 +16,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 
 /**
  * Class for network based mulitplayer mode - premature.
@@ -22,6 +26,8 @@ import javax.swing.JTextField;
 public class RoomView extends JFrame {
 
   private JFrame thisFrame;
+  List<String> players;
+
 
   /**
    * Constructor - see class description.
@@ -32,6 +38,7 @@ public class RoomView extends JFrame {
     super(roomID);
 
     thisFrame = this;
+    this.players = players;
 
     setVisible(true);
     setSize(500, 400);
@@ -72,14 +79,18 @@ public class RoomView extends JFrame {
     // Body panel, currently http client output to api/start
     // TODO: something.... -> perhaps chat hier?
     JPanel textAreaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    JTextArea textArea = new JTextArea("Server Ausgabe für Test Button");
-    textAreaPanel.add(textArea);
+    JTextArea textArea1 = new JTextArea("Server Ausgabe für Test Button");
+    textAreaPanel.add(textArea1);
+    JTextArea textArea2 = new JTextArea("Serverausgabe GetMapping");
+    textAreaPanel.add(textArea2);
     add(textAreaPanel, BorderLayout.CENTER);
 
     // Bottom panel for buttons
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    JButton testButton = new JButton("Test server response to api/start with 3 fakes + nickname.");
-    buttonPanel.add(testButton);
+    JButton test1Button = new JButton("Server Post api/start.");
+    buttonPanel.add(test1Button);
+    JButton test2Button = new JButton("Server get api/getPlayers.");
+    buttonPanel.add(test2Button);
     JButton leaveButton = new JButton("LEAVE");
     buttonPanel.add(leaveButton);
     add(buttonPanel, BorderLayout.SOUTH);
@@ -88,11 +99,26 @@ public class RoomView extends JFrame {
     // ToDo: whatsoever required
     ClientApplication client = new ClientApplication();
 
-    testButton.addActionListener(new ActionListener() {
+    test1Button.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        textArea.setText(client.serverPost(players.get(players.size() - 1)));
-        // thisFrame.setVisible(false);
+        JSONArray names = new JSONArray();
+        for (int i = 0; i < players.size(); i++) {
+          names.put(players.get(i));
+        }
+        StringEntity namesArray = new StringEntity(names.toString(), "UTF-8");
+        String uri = "http://localhost:8080/";
+        String uriPost = "api/start";
+        textArea1.setText(client.serverPost(uri, uriPost, namesArray));
+      }
+    });
+
+    test2Button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        String uri = "http://localhost:8080/";
+        String uriGet = "api/getPlayers";
+        textArea2.setText(client.serverGet(uri, uriGet));
       }
     });
 

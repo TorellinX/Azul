@@ -109,7 +109,7 @@ public final class ColorSchemes {
       new Color(255, 216, 0),
       new Color(189, 179, 194),
       Color.WHITE,
-      new Color(155, 175, 255),
+      new Color(255, 216, 0),
       new Color(255, 204, 204),
       new Color(189, 179, 194),
       new Color(199, 199, 199),
@@ -118,6 +118,6 @@ public final class ColorSchemes {
       Color.BLACK,
       new Color(248, 255, 209),
       new Color(202, 245, 196),
-      "back_pastel.png"
+      "back_candy.png"
   );
 }

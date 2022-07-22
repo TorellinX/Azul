@@ -17,7 +17,7 @@ import static de.lmu.ifi.sosylab.model.GameModel.TILES_PER_PLATE;
 /**
  * Center Panel of the Game. Shows the panels and the center of the table.
  */
-public class DrawboardTableCenter extends JPanel {
+public class DrawboardTableCenterClassic extends JPanel {
 
   private final int cellSize = 35;
   private final int plateSize = 100;
@@ -39,8 +39,6 @@ public class DrawboardTableCenter extends JPanel {
   private ColorScheme colorScheme;
   private BufferedImage backgroundIMGClassic;
   private BufferedImage backgroundIMGCosmic;
-  private PlayingView themesItems;
-  private PlayingView themeSelected;
 
 
   /**
@@ -48,7 +46,7 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param model game model instance
    */
-  public DrawboardTableCenter(GameModel model, Controller controller, int playerNumber) {
+  public DrawboardTableCenterClassic(GameModel model, Controller controller, int playerNumber) {
     if (playerNumber > 2) {
       setPreferredSize(new Dimension(410, 900));
     } else {
@@ -89,7 +87,6 @@ public class DrawboardTableCenter extends JPanel {
     drawClassicBackground(g2D);
     drawPlates(g2D);
     drawTableCenter(g2D);
-    //addThemesActionListener(g2D);
   }
 
   /**
@@ -100,7 +97,7 @@ public class DrawboardTableCenter extends JPanel {
   public void drawClassicBackground(Graphics2D g2D){
     ClassLoader classLoader = null; //Name dieser klasse
     try {
-      classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawBackground").getClassLoader();
+      classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawboardTableCenterClassic").getClassLoader();
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -113,37 +110,9 @@ public class DrawboardTableCenter extends JPanel {
     g2D.drawImage(backgroundIMGClassic,0, 0,410, 900,this);
   }
 
-  public void drawCosmicBackground(Graphics2D g2D){
-    ClassLoader classLoader2 = null; //Name dieser klasse
-    try {
-      classLoader2 = Class.forName("de.lmu.ifi.sosylab.view.DrawBackground").getClassLoader();
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    var stream = (classLoader2.getResourceAsStream("back_cosmic.png"));
-    try {
-      backgroundIMGCosmic = ImageIO.read(stream);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    g2D.drawImage(backgroundIMGCosmic,0, 0,410, 900,this);
-  }
 
-  public void drawBeachBackground(Graphics2D g2D){
-    ClassLoader classLoader = null; //Name dieser klasse
-    try {
-      classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawBackground").getClassLoader();
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    var stream = (classLoader.getResourceAsStream("back_beach.png"));
-    try {
-      backgroundIMGClassic = ImageIO.read(stream);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    g2D.drawImage(backgroundIMGClassic,0, 0,410, 900,this);
-  }
+
+
 
 
   private void drawPlates(Graphics2D g2D) {
@@ -592,30 +561,5 @@ public class DrawboardTableCenter extends JPanel {
     this.colorScheme = colorScheme;
   }
 
-  public PlayingView getThemesItems() {
-    return themesItems;
-  }
-
-  public PlayingView getThemeSelected(){
-    return themeSelected;
-  }
-
-  public void addThemesActionListener(Graphics2D g2D){
-    getThemesItems().addActionlistener(e -> {
-      String themeSelected = String.valueOf(getThemeSelected());
-      if (themeSelected == "Cosmic"){
-        drawCosmicBackground(g2D);
-        drawPlates(g2D);
-        drawTableCenter(g2D);
-        repaint();
-      }
-      if (themeSelected == "Beach"){
-        drawBeachBackground(g2D);
-        drawPlates(g2D);
-        drawTableCenter(g2D);
-        repaint();
-      }
-    });
-  }
 
 }

@@ -1,23 +1,13 @@
 package de.lmu.ifi.sosylab.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
 /**
  * Displays the menu for hotseat mode with player name entry and start/back buttons.
@@ -66,7 +56,7 @@ public class HotseatMenuView extends JFrame {
     playerControlPanel.add(playerControlButtons, BorderLayout.CENTER);
     // Mit Tabelle für eingegebene Namen
     DefaultTableModel tableModel = new DefaultTableModel();
-    tableModel.addColumn("Player Nickname");
+    tableModel.addColumn("List of Players");
     localPlayers = new JTable(tableModel);
     JScrollPane nickNames = new JScrollPane(localPlayers);
     nickNames.setPreferredSize(new Dimension(400, 90));
@@ -79,7 +69,7 @@ public class HotseatMenuView extends JFrame {
     add(gameControlPanel, BorderLayout.SOUTH);
     // Game - Kontroll - Panel befüllen
     gameControlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    startGameButtonView();
+    startGameThemeView();
     backGameButtonView();
     gameControlPanel.add(gameControlButtons, BorderLayout.CENTER);
 
@@ -91,7 +81,7 @@ public class HotseatMenuView extends JFrame {
 
   private void addPlayerTextFieldView() {
     JPanel playerControlText = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    JLabel playerControlLabel = new JLabel("HIER BENUTZERNAME EINGEBEN: ");
+    JLabel playerControlLabel = new JLabel("PLEASE INSERT USERNAME HERE: ");
     playerControlText.add(playerControlLabel);
     nicknameLocal = new JTextField("", 30);
     playerControlText.add(nicknameLocal);
@@ -139,25 +129,36 @@ public class HotseatMenuView extends JFrame {
 
   }
 
-  private void startGameButtonView() {
-    JButton startGameButton = new JButton("START GAME");
-    gameControlButtons.add(startGameButton);
-
-    startGameButton.addActionListener(new ActionListener() {
+  private void startGameThemeView() {
+    JComboBox<String> startGameComboBox = new JComboBox<String>(new String[]{
+            "Choose Theme and Start Game","Start Classic Game", "Start Beach Game", "Start Candy Game", "Start Cosmic Game"
+    });
+    gameControlButtons.add(startGameComboBox);
+    startGameComboBox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         if (getNicknames().size() < 2 || getNicknames().size() > 4) {
           JOptionPane.showMessageDialog(null,
-              "It was not possible to create a Game, there can only be 2-4 players");
+                  "It was not possible to create a Game, there can only be 2-4 players");
         } else {
-
-          PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames());
-          // setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-          // dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+          String selectedTheme = (String) startGameComboBox.getSelectedItem();
+          if (selectedTheme == "Start Classic Game") {
+            PlayingViewClassic playingviewframe = new PlayingViewClassic(getNicknames().size(), getNicknames());
+          }
+          if (selectedTheme == "Start Beach Game") {
+            PlayingViewBeach playingviewbeachframe = new PlayingViewBeach(getNicknames().size(), getNicknames());
+          }
+          if (selectedTheme == "Start Candy Game") {
+            PlayingViewCandy playingviewcandyframe = new PlayingViewCandy(getNicknames().size(), getNicknames());
+          }
+          if (selectedTheme == "Start Cosmic Game") {
+            PlayingViewCosmic playingviewcosmicframe = new PlayingViewCosmic(getNicknames().size(), getNicknames());
+          }
+          setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+          dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         }
       }
     });
-
   }
 
   private void backGameButtonView() {
@@ -188,7 +189,11 @@ public class HotseatMenuView extends JFrame {
     if (numberOfPlayers >= 4) {
       JOptionPane.showMessageDialog(null, "There can't be more than 4 Players in the Game");
       isUserNameTaken = true;
+    }
 
+    if (nickname.equals("")) {
+      JOptionPane.showMessageDialog(null, "Choose a Nickname!");
+      isUserNameTaken = true;
     }
 
     if (!isUserNameTaken) {

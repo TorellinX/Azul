@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Graphic display of the playing view.
  */
-public class PlayingView extends JFrame implements PropertyChangeListener {
+public class PlayingViewCosmic extends JFrame implements PropertyChangeListener {
 
   @Serial
   private static final long serialVersionUID = 1L;
@@ -28,7 +28,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private JPanel menu;
   JComboBox<String> menuItems = new JComboBox<String>(
       new String[]{"- menu -", "restart", "leave", "end game"});
-  private DrawboardTableCenter drawboardTableCenter;
+  private DrawboardTableCenterCosmic drawboardTableCenterCosmic;
   private int playerCount;
   private List<String> nicknames;
   private List<Player> players;
@@ -36,9 +36,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private GameModel model;
   private DrawPlayerBoard[] playerBoards;
   private ColorScheme colorScheme;
-  //private DrawBackground drawBackground;
-  JComboBox<String> themesItems = new JComboBox<String>(
-          new String[]{"- themes -", "Classic", "Beach", "Cosmic"});
+
 
 
   /**
@@ -47,7 +45,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    * @param playerCount number of players
    * @param nicknames   list of nicknames of players
    */
-  public PlayingView(int playerCount, List<String> nicknames) {
+  public PlayingViewCosmic(int playerCount, List<String> nicknames) {
     super("Azul Playing View");
     this.playerCount = playerCount;
     List<String> unmodNameList = Collections.unmodifiableList(nicknames);
@@ -67,9 +65,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     setResizable(true);
     setTitle("Azul");
     setLayout(new BorderLayout());
-    setColors(ColorSchemes.classic); // TODO: the ability to choose the color scheme in the menu (ComboBox)
-    getContentPane().setBackground(colorScheme.playingView());  // TODO: replace with image
-    //TODO: implementieren setPlayingViewBackground()
+    setColors(ColorSchemes.cosmic);
+    getContentPane().setBackground(colorScheme.playingView());
     setPlayingViewBackground();
 
     createPlayingView();
@@ -91,7 +88,6 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     menu.setLayout(new FlowLayout(FlowLayout.CENTER));
     menu.setBackground(colorScheme.menu());
     menu.add(menuItems);
-    menu.add(themesItems);
     add(menu, BorderLayout.NORTH);
 
     // Mittlere Zone wird befüllt
@@ -99,11 +95,10 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     JPanel playingViewCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
     playingViewCenter.setOpaque(false);
     //drawClassicBackground = new DrawBackground();
-    drawboardTableCenter = new DrawboardTableCenter(model, controller, players.size());
-    drawboardTableCenter.setColorScheme(colorScheme);
-    drawboardTableCenter.setLayout(null);
-    //playingViewCenter.add(drawClassicBackground);
-    playingViewCenter.add(drawboardTableCenter);
+    drawboardTableCenterCosmic = new DrawboardTableCenterCosmic(model, controller, players.size());
+    drawboardTableCenterCosmic.setColorScheme(colorScheme);
+    drawboardTableCenterCosmic.setLayout(null);
+    playingViewCenter.add(drawboardTableCenterCosmic);
 
 
     playerBoards = new DrawPlayerBoard[players.size()];
@@ -204,10 +199,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   public void addActionlistener(ActionListener actionListener) {
   }
 
-  public void getSelectedItem(){
-    String themeSelected;
-    themeSelected = (String) themesItems.getSelectedItem();
-  }
+
 
 
 }

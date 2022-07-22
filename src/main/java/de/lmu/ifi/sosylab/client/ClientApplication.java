@@ -22,16 +22,13 @@ import java.util.Scanner;
  */
 public class ClientApplication {
 
-  String user;
   String pwd = "empty";
 
   /**
    * Constructor for http client.
-   *
-   * @param nickname player nickname
    */
-  public ClientApplication(String nickname) {
-    this.user = nickname;
+  public ClientApplication() {
+
   }
 
   /**
@@ -96,10 +93,11 @@ public class ClientApplication {
     try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
       // Build json array
       JSONArray names = new JSONArray();
+      // Following just for some test...
       names.put("test1");
       names.put("test2");
       names.put("test3");
-      names.put("test4");
+      names.put(input);
       System.out.println(names.toString());
       StringEntity namesArray = new StringEntity(names.toString(), "UTF-8");
       // send request

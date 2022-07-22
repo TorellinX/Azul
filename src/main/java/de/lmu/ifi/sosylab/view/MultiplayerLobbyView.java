@@ -31,7 +31,6 @@ public class MultiplayerLobbyView extends JFrame {
   private final JPanel multiPlayerLobbyPanel;
   // private final JPanel multiPlayerControlButtons;
   private final JPanel gameControlButtons;
-  private JTextField nicknameOnline;
   private JFrame thisFrame;
   ArrayList<LobbyElements> lobbyElementsList = new ArrayList<>();
 
@@ -103,9 +102,15 @@ public class MultiplayerLobbyView extends JFrame {
     connectButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        // TODO: step through lobbyElementsList, get nickname: if != "" -> this room! (my be > 1)
-        // TODO: room view(s) (with chat function?) offering to start game, or leave back to lobby
-
+        // Step through lobbyElementsList, get nickname: if != "" -> this room! (my be > 1)
+        // Generate room view(s) (with chat function?) offering to start game, or leave back to lobby
+        for (int room = 0; room < lobbyElementsList.size(); ++room) {
+          if (!lobbyElementsList.get(room).getNickName().isEmpty()) {
+            List<String> players = new ArrayList<>(lobbyElementsList.get(room).getPlayersAlreadyInRoom());
+            players.add(lobbyElementsList.get(room).getNickName());
+            RoomView roomView = new RoomView(lobbyElementsList.get(room).getRoomID(), players);
+          }
+        }
         // Anmerkung: Man kann theoretisch mehrere Räume joinen, das ist kein bug, sondern ein feature... ("simultan - Azul" :D )
       }
     });
@@ -144,8 +149,11 @@ public class MultiplayerLobbyView extends JFrame {
 
 class LobbyElements extends JPanel {
 
-  private String result = "";
+  private String nickname = "";
   ArrayList<JTextField> playerFields = new ArrayList<>();
+  JButton joinRoom;
+  private String roomID;
+  private List<String> players;
 
   /**
    * Generate lobby elements from server data.
@@ -154,23 +162,29 @@ class LobbyElements extends JPanel {
    * @param players   players list (preliminary: String, else: Player)
    */
   public LobbyElements(String roomID, List<String> players) {
+    this.roomID = roomID;
+    this.players = players;
 
     // Main panel for one lobby element
     setLayout(new BorderLayout());
-    // Add header
+
+    // Add header label to lobby element with room name
     JPanel roomText = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JLabel roomLabel = new JLabel("Room: " + roomID);
     roomText.add(roomLabel);
     add(roomText, BorderLayout.NORTH);
 
+    // Start of main lobby element view, showing players and join function
     JPanel roomStatus = new JPanel(new BorderLayout());
 
+    // Label for Players list, left main lobby element
     JPanel playerText = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JLabel playerLabel = new JLabel("     Players:    ");
     playerText.add(playerLabel);
     playerText.setPreferredSize(new Dimension(100, 50));
     roomStatus.add(playerLabel, BorderLayout.WEST);
 
+    // Players list, middle main lobby element with listeners call
     JPanel playersList = new JPanel(new GridLayout(4,1));
     for (int i = 0; i < 4; i++) {
       JTextField player = new JTextField("", 25);
@@ -182,11 +196,13 @@ class LobbyElements extends JPanel {
 
     }
     roomStatus.add(playersList, BorderLayout.CENTER);
+    addTextFieldsActionListener();
 
+    // Join button, right main lobby element with listener call
     JPanel joinButtonPanel = new JPanel(new BorderLayout());
     JPanel joinButtonPanelInset = new JPanel(new FlowLayout(FlowLayout.CENTER));
     joinButtonPanelInset.setPreferredSize(new Dimension(100, 40));
-    JButton joinRoom = new JButton("JOIN");
+    joinRoom = new JButton("JOIN");
     joinButtonPanelInset.add(joinRoom);
     joinButtonPanel.add(joinButtonPanelInset, BorderLayout.SOUTH);
     joinRoom.setBounds(new Rectangle(50, 20));
@@ -195,23 +211,18 @@ class LobbyElements extends JPanel {
     }
     // TODO: disable also, if game in room is active.
     roomStatus.add(joinButtonPanel, BorderLayout.EAST);
+    addJoinRoomActionListener();
 
+    // Position of main lobby elements
     add(roomStatus, BorderLayout.CENTER);
 
-    joinRoom.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        result = JOptionPane.showInputDialog(null,
-            "Enter nickname:", "Join " + roomID, JOptionPane.QUESTION_MESSAGE);
-        if (result == null) { result = ""; }
-        playerFields.get(players.size()).setText(result);
-        if (result.isEmpty()) {
-          playerFields.get(players.size()).setBackground(Color.white);
-        } else {
-          playerFields.get(players.size()).setBackground(Color.green);
-        }
-      }
-    });
+    // Spacer for Rooms
+    JPanel spacer = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    spacer.setPreferredSize(new Dimension(400, 10));
+    spacer.setBackground(new Color(135, 206, 250));
+    // Position of spacer
+    add(spacer, BorderLayout.SOUTH);
+
   }
 
   /**
@@ -220,8 +231,82 @@ class LobbyElements extends JPanel {
    * @return nickname -> if empty string, no join request!
    */
   public String getNickName() {
-    return result;
+    return nickname;
   }
+
+  /**
+   * Get room identifier of this lobby element
+   *
+   * @return room identifier
+   */
+  public String getRoomID() {
+    return roomID;
+  }
+
+  /**
+   * Get player list of this lobby element EXCLUDING player to join
+   *
+   * @return player list w/o player to join
+   */
+  public List<String> getPlayersAlreadyInRoom() {
+    return players;
+  }
+
+  private void addJoinRoomActionListener() {
+    joinRoom.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (playerFields.get(players.size()).getText().isEmpty()) {
+          nickname = JOptionPane.showInputDialog(null,
+              "Enter nickname:", "Join " + roomID, JOptionPane.QUESTION_MESSAGE);
+          if (nickname == null) {
+            nickname = "";
+          }
+          playerFields.get(players.size()).setText(nickname);
+          if (nickname.isEmpty()) {
+            playerFields.get(players.size()).setBackground(Color.white);
+          } else {
+            playerFields.get(players.size()).setBackground(Color.green);
+          }
+        } else {
+          nickname = playerFields.get(players.size()).getText();
+          if (nickname.isEmpty()) {
+            playerFields.get(players.size()).setBackground(Color.white);
+          } else {
+            playerFields.get(players.size()).setBackground(Color.green);
+          }
+        }
+      }
+    });
+  }
+
+  private void addTextFieldsActionListener() {
+
+    for (int field = 0; field < players.size(); ++field) {
+      final int fieldCount = field;
+      playerFields.get(field).addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+          playerFields.get(fieldCount).setText(players.get(fieldCount));
+        }
+      });
+    }
+
+    playerFields.get(players.size()).addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+
+        nickname = playerFields.get(players.size()).getText();
+        if (nickname.isEmpty()) {
+          playerFields.get(players.size()).setBackground(Color.white);
+        } else {
+          playerFields.get(players.size()).setBackground(Color.green);
+        }
+      }
+    });
+  }
+
 
   // end class 2
 }

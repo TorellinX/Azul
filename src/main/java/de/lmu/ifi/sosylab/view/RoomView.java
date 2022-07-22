@@ -89,7 +89,7 @@ public class RoomView extends JFrame {
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JButton test1Button = new JButton("Server Post api/start.");
     buttonPanel.add(test1Button);
-    JButton test2Button = new JButton("Server get api/getPlayers.");
+    JButton test2Button = new JButton("Server get api/getState.");
     buttonPanel.add(test2Button);
     JButton leaveButton = new JButton("LEAVE");
     buttonPanel.add(leaveButton);
@@ -117,7 +117,7 @@ public class RoomView extends JFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
         String uri = "http://localhost:8080/";
-        String uriGet = "api/getPlayers";
+        String uriGet = "api/getState";
         textArea2.setText(client.serverGet(uri, uriGet));
       }
     });

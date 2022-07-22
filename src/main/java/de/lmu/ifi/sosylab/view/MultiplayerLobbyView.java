@@ -42,7 +42,7 @@ public class MultiplayerLobbyView extends JFrame {
     super("Azul - Multiplayer Mode - Lobby");
     thisFrame = this;
     setLayout(new BorderLayout());
-    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     // Logo einrichten und anzeigen
 
@@ -96,7 +96,7 @@ public class MultiplayerLobbyView extends JFrame {
 
 
   private void connectButtonView() {
-    JButton connectButton = new JButton("ENTER ROOM");
+    JButton connectButton = new JButton("ENTER ROOM(S)");
     gameControlButtons.add(connectButton);
 
     connectButton.addActionListener(new ActionListener() {
@@ -106,12 +106,16 @@ public class MultiplayerLobbyView extends JFrame {
         // Generate room view(s) (with chat function?) offering to start game, or leave back to lobby
         for (int room = 0; room < lobbyElementsList.size(); ++room) {
           if (!lobbyElementsList.get(room).getNickName().isEmpty()) {
+            //ToDo: Change players list to type PLayer and work with corrsponding getters.
             List<String> players = new ArrayList<>(lobbyElementsList.get(room).getPlayersAlreadyInRoom());
             players.add(lobbyElementsList.get(room).getNickName());
             RoomView roomView = new RoomView(lobbyElementsList.get(room).getRoomID(), players);
           }
         }
         // Anmerkung: Man kann theoretisch mehrere Räume joinen, das ist kein bug, sondern ein feature... ("simultan - Azul" :D )
+
+        thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
       }
     });
 
@@ -124,6 +128,7 @@ public class MultiplayerLobbyView extends JFrame {
     leaveButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         StartMenuView startView = new StartMenuView();
       }
@@ -139,7 +144,40 @@ public class MultiplayerLobbyView extends JFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
 
-        //TODO: create new room @server, close this window, restart lobby view, then join room, then enter room
+        int skipFlag = 0;
+        String nickname = "";
+        String roomName = JOptionPane.showInputDialog(null,
+            "Please enter name for new room:", "Create room.", JOptionPane.QUESTION_MESSAGE);
+        if (roomName == null || roomName.isEmpty()) {
+          JOptionPane.showMessageDialog(null,
+              "A new room must get a name.",
+              "Error.", JOptionPane.ERROR_MESSAGE);
+          skipFlag = 1;
+        } else {
+          nickname = JOptionPane.showInputDialog(null,
+              "Enter nickname:", "Join " + roomName, JOptionPane.QUESTION_MESSAGE);
+          if (nickname == null) {
+            JOptionPane.showMessageDialog(null,
+                "Please enter a nickname.",
+                "Error.", JOptionPane.ERROR_MESSAGE);
+            skipFlag = 1;
+          }
+        }
+        if (skipFlag == 0) {
+
+          //ToDo: Change players list to type PLayer and work with corrsponding getters.
+          List<String> players = new ArrayList<>();
+          players.add(nickname);
+          RoomView roomView = new RoomView(roomName, players);
+
+          thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+          dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+        }
+
+        //TODO: create new room also @server
+
+        //TODO: alternative -> create new room @server, close this window, restart lobby view, then join room, then enter room
+
       }
     });
 
@@ -161,6 +199,7 @@ class LobbyElements extends JPanel {
    * @param roomID    room name
    * @param players   players list (preliminary: String, else: Player)
    */
+  //ToDo: Change players list to type PLayer and work with corrsponding getters.
   public LobbyElements(String roomID, List<String> players) {
     this.roomID = roomID;
     this.players = players;
@@ -248,6 +287,7 @@ class LobbyElements extends JPanel {
    *
    * @return player list w/o player to join
    */
+  //ToDo: Change players list to type PLayer and work with corrsponding getters.
   public List<String> getPlayersAlreadyInRoom() {
     return players;
   }
@@ -287,7 +327,7 @@ class LobbyElements extends JPanel {
       playerFields.get(field).addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-
+          //ToDo: Change players list to type PLayer and work with corrsponding getters.
           playerFields.get(fieldCount).setText(players.get(fieldCount));
         }
       });

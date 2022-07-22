@@ -1,10 +1,14 @@
 package de.lmu.ifi.sosylab.view;
 
+import static de.lmu.ifi.sosylab.view.ColorSchemes.beach;
+import static de.lmu.ifi.sosylab.view.ColorSchemes.candy;
+import static de.lmu.ifi.sosylab.view.ColorSchemes.classic;
+import static de.lmu.ifi.sosylab.view.ColorSchemes.cosmic;
+
+import java.util.Objects;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,13 +91,7 @@ public class HotseatMenuView extends JFrame {
     playerControlText.add(nicknameLocal);
     playerControlPanel.add(playerControlText, BorderLayout.NORTH);
 
-    nicknameLocal.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-
-        addPlayerToLocalGame(nicknameLocal.getText());
-      }
-    });
+    nicknameLocal.addActionListener(e -> addPlayerToLocalGame(nicknameLocal.getText()));
 
   }
 
@@ -101,13 +99,7 @@ public class HotseatMenuView extends JFrame {
     JButton addPlayerButton = new JButton("ADD PLAYER");
     playerControlButtons.add(addPlayerButton);
 
-    addPlayerButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-
-        addPlayerToLocalGame(nicknameLocal.getText());
-      }
-    });
+    addPlayerButton.addActionListener(e -> addPlayerToLocalGame(nicknameLocal.getText()));
 
   }
 
@@ -115,48 +107,44 @@ public class HotseatMenuView extends JFrame {
     JButton removePlayerButton = new JButton("REMOVE PLAYER");
     playerControlButtons.add(removePlayerButton);
 
-    removePlayerButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        // checks if a list element is selected
-        if (localPlayers.getSelectedRow() == -1) {
-          JOptionPane.showMessageDialog(null, "Please select a user to delete");
-        } else {
-          removePlayerLocalGame();
-        }
+    removePlayerButton.addActionListener(e -> {
+      // checks if a list element is selected
+      if (localPlayers.getSelectedRow() == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a user to delete");
+      } else {
+        removePlayerLocalGame();
       }
     });
 
   }
 
   private void startGameThemeView() {
-    JComboBox<String> startGameComboBox = new JComboBox<String>(new String[]{
-            "Choose Theme and Start Game","Start Classic Game", "Start Beach Game", "Start Candy Game", "Start Cosmic Game"
+    JComboBox<String> startGameComboBox = new JComboBox<>(new String[]{
+        "Choose Theme and Start Game", "Start Classic Game", "Start Beach Game", "Start Candy Game",
+        "Start Cosmic Game"
     });
     gameControlButtons.add(startGameComboBox);
-    startGameComboBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (getNicknames().size() < 2 || getNicknames().size() > 4) {
-          JOptionPane.showMessageDialog(null,
-                  "It was not possible to create a Game, there can only be 2-4 players");
-        } else {
-          String selectedTheme = (String) startGameComboBox.getSelectedItem();
-          if (selectedTheme == "Start Classic Game") {
-            PlayingViewClassic playingviewframe = new PlayingViewClassic(getNicknames().size(), getNicknames());
-          }
-          if (selectedTheme == "Start Beach Game") {
-            PlayingViewBeach playingviewbeachframe = new PlayingViewBeach(getNicknames().size(), getNicknames());
-          }
-          if (selectedTheme == "Start Candy Game") {
-            PlayingViewCandy playingviewcandyframe = new PlayingViewCandy(getNicknames().size(), getNicknames());
-          }
-          if (selectedTheme == "Start Cosmic Game") {
-            PlayingViewCosmic playingviewcosmicframe = new PlayingViewCosmic(getNicknames().size(), getNicknames());
-          }
-          setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-          dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+    startGameComboBox.addActionListener(e -> {
+      if (getNicknames().size() < 2 || getNicknames().size() > 4) {
+        JOptionPane.showMessageDialog(null,
+            "It was not possible to create a Game, there can only be 2-4 players");
+      } else {
+        String selectedTheme = (String) startGameComboBox.getSelectedItem();
+        Objects.requireNonNull(selectedTheme);
+        if (selectedTheme.equals("Start Classic Game")) {
+          new PlayingView(getNicknames().size(), getNicknames(), classic);
         }
+        if (selectedTheme.equals("Start Beach Game")) {
+          new PlayingView(getNicknames().size(), getNicknames(), beach);
+        }
+        if (selectedTheme.equals("Start Candy Game")) {
+          new PlayingView(getNicknames().size(), getNicknames(), candy);
+        }
+        if (selectedTheme.equals("Start Cosmic Game")) {
+          new PlayingView(getNicknames().size(), getNicknames(), cosmic);
+        }
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        //dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
       }
     });
   }
@@ -165,23 +153,19 @@ public class HotseatMenuView extends JFrame {
     JButton backGameButton = new JButton("BACK GAME");
     gameControlButtons.add(backGameButton);
 
-    backGameButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
-        StartMenuView startView = new StartMenuView();
-      }
+    backGameButton.addActionListener(e -> {
+      setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+      dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+      new StartMenuView();
     });
   }
 
   private void addPlayerToLocalGame(String nickname) {
     DefaultTableModel modelOfLocalPlayer = (DefaultTableModel) localPlayers.getModel();
-    Boolean isUserNameTaken = false;
-
+    boolean isUserNameTaken = false;
 
     for (int i = 0; i < numberOfPlayers; i++) {
-      if (nickname.equals((String) modelOfLocalPlayer.getValueAt(i, 0))) {
+      if (nickname.equals(modelOfLocalPlayer.getValueAt(i, 0))) {
         JOptionPane.showMessageDialog(null, "User already in the list");
         isUserNameTaken = true;
       }
@@ -216,7 +200,6 @@ public class HotseatMenuView extends JFrame {
     numberOfPlayers--;
 
   }
-
 
 
   /**

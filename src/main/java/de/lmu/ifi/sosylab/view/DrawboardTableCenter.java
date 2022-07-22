@@ -4,6 +4,7 @@ import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.*;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 
+import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ import static de.lmu.ifi.sosylab.model.GameModel.TILES_PER_PLATE;
 /**
  * Center Panel of the Game. Shows the panels and the center of the table.
  */
-public class DrawboardTableCenterClassic extends JPanel {
+public class DrawboardTableCenter extends JPanel {
 
   private final int cellSize = 35;
   private final int plateSize = 100;
@@ -28,7 +29,6 @@ public class DrawboardTableCenterClassic extends JPanel {
   private ArrayList<IntPair> positionTilesTableCenter;
   private List<IntPair[]> tilesOnAllPlatesCoordinates;
   private IntPair[] positionOfPlates;
-  private final TableCenter tableCenter;
   private final IntPair tableCoordinates = new IntPair(5, 490);
   private final List<Plate> listPlates;
   private final GameModel model;
@@ -37,8 +37,7 @@ public class DrawboardTableCenterClassic extends JPanel {
   private ArrayList<JButton> buttonsTable;
   private final int buttonsSize = 35;
   private ColorScheme colorScheme;
-  private BufferedImage backgroundIMGClassic;
-  private BufferedImage backgroundIMGCosmic;
+  private BufferedImage backgroundImg;
 
 
   /**
@@ -46,7 +45,7 @@ public class DrawboardTableCenterClassic extends JPanel {
    *
    * @param model game model instance
    */
-  public DrawboardTableCenterClassic(GameModel model, Controller controller, int playerNumber) {
+  public DrawboardTableCenter(GameModel model, Controller controller, int playerNumber) {
     if (playerNumber > 2) {
       setPreferredSize(new Dimension(410, 900));
     } else {
@@ -54,7 +53,6 @@ public class DrawboardTableCenterClassic extends JPanel {
     }
     this.model = model;
     this.controller = controller;
-    this.tableCenter = model.getTableCenter();
     this.listPlates = model.getPlates();
     initialize();
   }
@@ -84,7 +82,7 @@ public class DrawboardTableCenterClassic extends JPanel {
     Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
     setOpaque(false);
 
-    drawClassicBackground(g2D);
+    drawBackground(g2D);
     drawPlates(g2D);
     drawTableCenter(g2D);
   }
@@ -94,25 +92,17 @@ public class DrawboardTableCenterClassic extends JPanel {
    *
    * @param g2D graphics object - kind of "internal reference"
    */
-  public void drawClassicBackground(Graphics2D g2D){
-    ClassLoader classLoader = null; //Name dieser klasse
+  public void drawBackground(Graphics2D g2D) {
+    ClassLoader classLoader = getClass().getClassLoader();
+    var stream = (classLoader.getResourceAsStream(colorScheme.boardBackgroundImage()));
     try {
-      classLoader = Class.forName("de.lmu.ifi.sosylab.view.DrawboardTableCenterClassic").getClassLoader();
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    var stream = (classLoader.getResourceAsStream("back_classic.png"));
-    try {
-      backgroundIMGClassic = ImageIO.read(stream);
+      Objects.requireNonNull(stream);
+      backgroundImg = ImageIO.read(stream);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    g2D.drawImage(backgroundIMGClassic,0, 0,410, 900,this);
+    g2D.drawImage(backgroundImg, 0, 0, 410, 900, this);
   }
-
-
-
-
 
 
   private void drawPlates(Graphics2D g2D) {
@@ -514,9 +504,6 @@ public class DrawboardTableCenterClassic extends JPanel {
 
         de.lmu.ifi.sosylab.model.Color color = getColorOfTileOnPlate(
             buttonsFactory.get(final_i).getX(), buttonsFactory.get(final_i).getY());
-        /*if (color == null) {
-          return;
-        }*/
         if (controller.pickTilesFromPlate(color,
             model.getPlayers().get(model.getPlayerToMoveIndex()),
             model.getPlates().get(

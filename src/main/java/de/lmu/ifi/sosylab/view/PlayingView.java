@@ -6,6 +6,7 @@ import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 
+import java.util.Objects;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,24 +21,20 @@ import java.util.List;
 /**
  * Graphic display of the playing view.
  */
-public class PlayingViewCosmic extends JFrame implements PropertyChangeListener {
+public class PlayingView extends JFrame implements PropertyChangeListener {
 
   @Serial
   private static final long serialVersionUID = 1L;
-  public Object addActionlistener;
-  private JPanel menu;
-  JComboBox<String> menuItems = new JComboBox<String>(
+  JComboBox<String> menuItems = new JComboBox<>(
       new String[]{"- menu -", "restart", "leave", "end game"});
-  private DrawboardTableCenterCosmic drawboardTableCenterCosmic;
+  private DrawboardTableCenter drawboardTableCenter;
   private int playerCount;
   private List<String> nicknames;
   private List<Player> players;
-  private Controller controller;
-  private GameModel model;
+  private final Controller controller;
+  private final GameModel model;
   private DrawPlayerBoard[] playerBoards;
   private ColorScheme colorScheme;
-
-
 
   /**
    * Initializes the playing view.
@@ -45,13 +42,14 @@ public class PlayingViewCosmic extends JFrame implements PropertyChangeListener 
    * @param playerCount number of players
    * @param nicknames   list of nicknames of players
    */
-  public PlayingViewCosmic(int playerCount, List<String> nicknames) {
+  public PlayingView(int playerCount, List<String> nicknames, ColorScheme colorScheme) {
     super("Azul Playing View");
     this.playerCount = playerCount;
     List<String> unmodNameList = Collections.unmodifiableList(nicknames);
     this.nicknames = unmodNameList;
     this.model = new GameModel();
     this.controller = new GameController(model);
+    this.colorScheme = colorScheme;
 
     if (controller.startGame(nicknames)) {
       this.players = model.getPlayers();
@@ -65,9 +63,8 @@ public class PlayingViewCosmic extends JFrame implements PropertyChangeListener 
     setResizable(true);
     setTitle("Azul");
     setLayout(new BorderLayout());
-    setColors(ColorSchemes.cosmic);
+    setColors(colorScheme);
     getContentPane().setBackground(colorScheme.playingView());
-    setPlayingViewBackground();
 
     createPlayingView();
     addListeners();
@@ -83,7 +80,7 @@ public class PlayingViewCosmic extends JFrame implements PropertyChangeListener 
 
     // Menu
     //Oberes Panel wird mit Combobox gefüllt.
-    menu = new JPanel();
+    JPanel menu = new JPanel();
     // menu.setSize(1200, 75);
     menu.setLayout(new FlowLayout(FlowLayout.CENTER));
     menu.setBackground(colorScheme.menu());
@@ -94,12 +91,10 @@ public class PlayingViewCosmic extends JFrame implements PropertyChangeListener 
     // Center definieren: table center
     JPanel playingViewCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
     playingViewCenter.setOpaque(false);
-    //drawClassicBackground = new DrawBackground();
-    drawboardTableCenterCosmic = new DrawboardTableCenterCosmic(model, controller, players.size());
-    drawboardTableCenterCosmic.setColorScheme(colorScheme);
-    drawboardTableCenterCosmic.setLayout(null);
-    playingViewCenter.add(drawboardTableCenterCosmic);
-
+    drawboardTableCenter = new DrawboardTableCenter(model, controller, players.size());
+    drawboardTableCenter.setColorScheme(colorScheme);
+    drawboardTableCenter.setLayout(null);
+    playingViewCenter.add(drawboardTableCenter);
 
     playerBoards = new DrawPlayerBoard[players.size()];
     for (int i = 0; i < players.size(); i++) {
@@ -146,6 +141,7 @@ public class PlayingViewCosmic extends JFrame implements PropertyChangeListener 
     model.addPropertyChangeListener(this);
     menuItems.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        Objects.requireNonNull(menuItems.getSelectedItem());
         if (menuItems.getSelectedItem().equals("end game")) {
           System.exit(0);
         }
@@ -191,16 +187,6 @@ public class PlayingViewCosmic extends JFrame implements PropertyChangeListener 
   private void setColors(ColorScheme colorScheme) {
     this.colorScheme = colorScheme;
   }
-
-
-  private void setPlayingViewBackground() {
-  }
-
-  public void addActionlistener(ActionListener actionListener) {
-  }
-
-
-
 
 }
 

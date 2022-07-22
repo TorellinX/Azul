@@ -31,36 +31,35 @@ public final class ColorSchemes {
   }
 
   public static ColorScheme classic = new ColorScheme(
-          new Color(255, 193, 37),
-          new Color(205, 50, 120),
-          new Color(87,87,87),
-          new Color(46, 139, 87),
-          new Color(16 , 78, 139),
-          Color.lightGray,
-          Color.black,
-          new Color(100 , 149, 237),
-          new Color(204, 201, 199),
-          new Color(224, 224, 224),
-          new Color(100 , 149, 237),
-          new Color(128, 128, 128),
-          Color.white,
-          Color.DARK_GRAY,
-          new Color(139, 0, 139),
-          Color.BLACK,
-          Color.BLACK,
-          new Color(191, 239, 255),
-          new Color(176, 226, 255),
-          "/back_classic.png"
+      new Color(255, 193, 37),
+      new Color(205, 50, 120),
+      new Color(87, 87, 87),
+      new Color(46, 139, 87),
+      new Color(16, 78, 139),
+      Color.lightGray,
+      Color.black,
+      new Color(100, 149, 237),
+      new Color(204, 201, 199),
+      new Color(224, 224, 224),
+      new Color(100, 149, 237),
+      new Color(128, 128, 128),
+      Color.white,
+      Color.DARK_GRAY,
+      new Color(139, 0, 139),
+      Color.BLACK,
+      Color.BLACK,
+      new Color(191, 239, 255),
+      new Color(176, 226, 255),
+      "back_classic.png"
   );
-
 
 
   public static ColorScheme beach = new ColorScheme(
       new Color(238, 221, 130),
       new Color(238, 59, 59),
-      new Color(112,112,112),
+      new Color(112, 112, 112),
       new Color(102, 205, 170),
-      new Color(100 , 149, 237),
+      new Color(100, 149, 237),
       Color.lightGray,
       Color.black,
       new Color(205, 102, 29),
@@ -75,7 +74,7 @@ public final class ColorSchemes {
       Color.BLACK,
       new Color(255, 255, 255),
       new Color(245, 240, 212),
-      "/back_beach.png"
+      "back_beach.png"
   );
   public static ColorScheme cosmic = new ColorScheme(
       new Color(248, 255, 73),
@@ -97,7 +96,7 @@ public final class ColorSchemes {
       new Color(224, 224, 224),
       new Color(33, 0, 74),
       new Color(27, 8, 50),
-      "/back_cosmic.png"
+      "back_cosmic.png"
   );
   public static ColorScheme candy = new ColorScheme(
       new Color(255, 239, 0),
@@ -119,6 +118,6 @@ public final class ColorSchemes {
       Color.BLACK,
       new Color(248, 255, 209),
       new Color(202, 245, 196),
-      "/back_pastel.png"
+      "back_pastel.png"
   );
 }

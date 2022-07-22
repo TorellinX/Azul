@@ -1,76 +1,61 @@
 package de.lmu.ifi.sosylab.server;
 
-import de.lmu.ifi.sosylab.Authenticator;
 import de.lmu.ifi.sosylab.InformationWrapper;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
-
+import de.lmu.ifi.sosylab.model.State;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
 public class Room {
 
-  private Authenticator authenticatorOfRoom;
-  private ArrayList<Authenticator> listOfPlayers;
+  public String name;
+  //public String password;
+  @Getter
+  public String id;
+  public State state;
+
+  @Getter
+  private List<User> users = new ArrayList<>(4);
   private final GameModel model;
   private final GameController controller;
 
 
-  public Room(Authenticator authenticator) {
-    listOfPlayers = new ArrayList<>();
+  public Room(String name) {
+    this.name = name;
+    this.id = generateToken();
+    this.state = State.RUNNING;
 
     this.model = new GameModel();
     this.controller = new GameController(model);
-
-    this.authenticatorOfRoom = new Authenticator();
   }
 
-  public Boolean isPlayerPartOfRoom(Authenticator authenticator) {
-    if (listOfPlayers.contains(authenticator)) {
-      return true;
-    } else {
-      return false;
+  //Generate a random Room token
+  public static String generateToken() {
+    String token = "";
+    for (int i = 0; i < 6; i++) {
+      token += (char) (Math.random() * 26 + 'a');
     }
+    return token;
   }
 
-  public Boolean addPlayerToRoom(Authenticator authenticatorPlayer) {
-    if (!listOfPlayers.contains(authenticatorPlayer)) {
-      listOfPlayers.add(authenticatorPlayer);
-      return true;
-    } else {
-      return false;
-    }
+  //add user to list
+  public void addUser(User user) {
+    System.out.println(users.size());
+    users.add(user);
+    System.out.println(users.size());
   }
 
-  public Boolean removePlayerFromRoom(Authenticator authenticatorPlayer) {
-    if (listOfPlayers.contains(authenticatorPlayer)) {
-      listOfPlayers.remove(listOfPlayers.indexOf(authenticatorPlayer));
-      return true;
-    } else {
-      return false;
-    }
+  //start room
+  public Boolean start() {
+    state = State.RUNNING;
+    return true;
   }
 
-  public Authenticator getAuthenticatorOfRoom() {
-    return authenticatorOfRoom;
-  }
-
-
-  public List<Authenticator> getPlayers() {
-    return listOfPlayers;
-  }
-
-  public void terminateRoom() {
-
-  }
-
-  public Boolean start(Authenticator authenticator) {
-    if (listOfPlayers.contains(authenticator)) {
-      controller.start();
-      return true;
-    } else {
-      return false;
-    }
+  public boolean terminateRoom() {
+    //delete room
+    return true;
   }
 
   public Boolean pickTileFromPlate(InformationWrapper informationWrapper) {
@@ -84,5 +69,6 @@ public class Room {
   public Boolean placeTile(InformationWrapper informationWrapper) {
     return controller.placeTiles(informationWrapper.getPlayer(), informationWrapper.getRow());
   }
+
 
 }

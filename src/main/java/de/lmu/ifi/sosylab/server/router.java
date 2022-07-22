@@ -1,11 +1,16 @@
 package de.lmu.ifi.sosylab.server;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.lmu.ifi.sosylab.Authenticator;
 import de.lmu.ifi.sosylab.InformationWrapper;
-import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.model.*;
 
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +21,59 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class router {
 
-  private Management management;
-
   /**
    * Constructor for the class.
    */
+  Lobby lobby = new Lobby();
+
+
+  @GetMapping("/rooms")
+  public List<Room> getRooms() {
+    return lobby.rooms;
+  }
+
+  @PostMapping("/rooms/create")
+  public String createRoom(@RequestBody String name) {
+    return lobby.createRoom(name);
+  }
+
+  @PostMapping("/rooms/id/{id}/start")
+  public Boolean startRoom(@PathVariable(value = "id") String id) {
+    return lobby.getRoom(id).start();
+  }
+
+  @PostMapping("/rooms/id/{id}/terminate")
+  public Boolean terminateRoom(@PathVariable(value = "id") String id) {
+    return lobby.getRoom(id).terminateRoom();
+  }
+
+  @GetMapping("/users")
+  public List<String> getUsers() {
+    //System.out.println(lobby.getUsers().get(0).getUsername());
+    return lobby.getUsers().stream().map(user -> user.getUsername()).toList();
+  }
+
+  @PostMapping("/user/register")
+  public String register(@RequestBody String username, HttpServletResponse response) {
+    System.out.println(username);
+    if (lobby.checkUsername(username) || lobby.rooms.stream().anyMatch(r -> r.getUsers().stream().anyMatch(u -> u.getUsername().equals(username)))) {
+      response.setStatus(409);
+      return "Username already in use";
+    } else {
+      return lobby.createUser(username);
+    }
+  }
+
+  @PostMapping("/rooms/join")
+  public String joinRoom(@RequestBody ObjectNode json) {
+    String userToken = json.get("userToken").asText();
+    String roomId = json.get("roomId").asText();
+    lobby.joinRoom(userToken, roomId);
+    return "ok";
+  }
+
   public router() {
-    management = new Management();
+    //management = new Management();
   }
 
 
@@ -32,53 +83,21 @@ public class router {
     return informationWrapper;
   }
 
-  @PostMapping("/createRoom")
-  public InformationWrapper createRoom(@RequestBody InformationWrapper informationWrapper) {
-    Authenticator authenticator = new Authenticator();
-    InformationWrapper toReturn = new InformationWrapper();
-    toReturn.setAuthenticatorRoom(authenticator);
-    toReturn.setWasInputSuccesful(management.creatNewRoom(authenticator, informationWrapper.getAuthenticatorPlayer()));
-    return toReturn;
-  }
-
-  @PostMapping("/start")
-  public Boolean startGame(@RequestBody InformationWrapper informationWrapper) {
-    return management.startGame(informationWrapper.getAuthenticatorRoom(), informationWrapper.getAuthenticatorPlayer());
-  }
-
-  @PostMapping("/addPlayer")
-  public Boolean addPlayer(@RequestBody InformationWrapper informationWrapper) {
-    return management.addPlayerToServer(informationWrapper.getAuthenticatorPlayer(), informationWrapper.getAuthenticatorRoom());
-
-  }
-
-  @PostMapping("/removePlayer")
-  public Boolean removePlayer(@RequestBody InformationWrapper informationWrapper) {
-    return management.removePlayerFromServer(informationWrapper.getAuthenticatorPlayer(), informationWrapper.getAuthenticatorRoom());
-  }
-
-  @GetMapping("/getRooms")
-  public List<Room> getRooms() {
-    return management.getAllRooms();
-  }
-
-  @PostMapping("/removeRoom")
-  public Boolean removeRoom(@RequestBody InformationWrapper informationWrapper) {
-    return management.removeRoom(informationWrapper.getAuthenticatorRoom(), informationWrapper.getAuthenticatorPlayer());
-  }
-
-  @PostMapping("/pickTilePlate")
+  @PostMapping("/rooms/id/{roomid}/pickTilePlate")
   public Boolean pickTilePlate(@RequestBody InformationWrapper informationWrapper) {
-    return management.pickTileFromPlate(informationWrapper);
+    //management.pickTileFromPlate(informationWrapper);
+    return null;
   }
 
   @PostMapping("/pickTileFromTableCenter")
   public Boolean pickTileFromTableCenter(@RequestBody InformationWrapper informationWrapper) {
-    return management.pickTileFromTableCenter(informationWrapper);
+    //management.pickTileFromTableCenter(informationWrapper);
+    return null;
   }
 
   @PostMapping("/placeTile")
   public Boolean placeTile(@RequestBody InformationWrapper informationWrapper) {
-    return management.placeTile(informationWrapper);
+    //management.placeTile(informationWrapper);
+    return null;
   }
 }

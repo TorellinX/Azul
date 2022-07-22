@@ -9,16 +9,16 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
-@Component
+//@Component
 public class WebSocketEventListener {
 
-  private static final Logger log = LoggerFactory.getLogger(WebSocketEventListener.class);
+  /*private static final Logger log = LoggerFactory.getLogger(WebSocketEventListener.class);
 
   @Autowired
   private SimpMessageSendingOperations sendingOperations;
 
   @EventListener
-  public void handleWebSocketConnectListener(SessionConnectedEvent event) {
+  public void handleSessionConnected(SessionConnectedEvent event) {
     log.info("New connection! " + event.getMessage());
   }
 
@@ -27,4 +27,5 @@ public class WebSocketEventListener {
 
     log.info("Disconnected! " + event);
   }
+  */
 }

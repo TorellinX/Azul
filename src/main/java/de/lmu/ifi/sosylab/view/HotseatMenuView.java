@@ -4,6 +4,7 @@ import static de.lmu.ifi.sosylab.view.ColorSchemes.*;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.Objects;
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ public class HotseatMenuView extends JFrame {
   private final JPanel playerControlPanel;
   private final JPanel playerButtonsPanel;
   private final JPanel controlButtonsPanel;
-  private final JTextField[] nicknameInputFields = new JTextField[4];
+  private final ArrayList<JTextField> nicknameInputFields = new ArrayList<>();
   private final JFrame thisFrame;
   private int numberOfPlayers = 2;
   private ColorScheme colorScheme = classic;
@@ -65,21 +66,31 @@ public class HotseatMenuView extends JFrame {
     nicknameFieldsPanel.setLayout(layout);
     nicknameFieldsPanel.setOpaque(false);
     for (int i = 0; i < 4; i++) {
-      nicknameInputFields[i] = new JTextField(25);
-      nicknameInputFields[i].setText("Player " + (i + 1));
-      nicknameFieldsPanel.add(nicknameInputFields[i]);
-      nicknameInputFields[i].addActionListener(e -> {
+      nicknameInputFields.add(i, new JTextField(25));
+      nicknameInputFields.get(i).setText("Player " + (i + 1));
+      nicknameFieldsPanel.add(nicknameInputFields.get(i));
+      nicknameInputFields.get(i).addActionListener(e -> {
         //
+        int fieldIndex = nicknameInputFields.indexOf(e.getSource());
+        if (fieldIndex < numberOfPlayers - 1) {
+          nicknameInputFields.get(fieldIndex + 1).requestFocusInWindow();
+          nicknameInputFields.get(fieldIndex + 1).selectAll();
+        }
       });
-      nicknameInputFields[i].addMouseListener(new MouseAdapter() {
+      nicknameInputFields.get(i).addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-          //((JTextField) e.getSource()).setText("");
+          JTextField textField = (JTextField) e.getSource();
+          if (textField.getSelectedText() == null) {
+            (textField).selectAll();
+          } else {
+            (textField).setCaretPosition(textField.getText().length());
+          }
         }
       });
     }
-    nicknameInputFields[2].setEnabled(false);
-    nicknameInputFields[3].setEnabled(false);
+    nicknameInputFields.get(2).setEnabled(false);
+    nicknameInputFields.get(3).setEnabled(false);
     playerNicknamePanel.add(nicknameFieldsPanel);
     playerControlPanel.add(playerNicknamePanel, BorderLayout.NORTH);
 
@@ -91,7 +102,7 @@ public class HotseatMenuView extends JFrame {
     // Game-Kontroll-Panel befüllen
     controlButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     controlButtonsPanel.setOpaque(false);
-    startGameButtonView();
+    addStartGameButton();
     startGameThemeView();
     backGameButtonView();
     gameControlPanel.add(controlButtonsPanel, BorderLayout.CENTER);
@@ -107,11 +118,11 @@ public class HotseatMenuView extends JFrame {
     playerButtonsPanel.add(addPlayerButton);
 
     addPlayerButton.addActionListener(e -> {
-      if (!nicknameInputFields[2].isEnabled()) {
-        nicknameInputFields[2].setEnabled(true);
+      if (!nicknameInputFields.get(2).isEnabled()) {
+        nicknameInputFields.get(2).setEnabled(true);
         numberOfPlayers++;
-      } else if (!nicknameInputFields[3].isEnabled()) {
-        nicknameInputFields[3].setEnabled(true);
+      } else if (!nicknameInputFields.get(3).isEnabled()) {
+        nicknameInputFields.get(3).setEnabled(true);
         numberOfPlayers++;
       }
     });
@@ -122,32 +133,35 @@ public class HotseatMenuView extends JFrame {
     playerButtonsPanel.add(removePlayerButton);
 
     removePlayerButton.addActionListener(e -> {
-      if (nicknameInputFields[3].isEnabled()) {
-        nicknameInputFields[3].setEnabled(false);
+      if (nicknameInputFields.get(3).isEnabled()) {
+        nicknameInputFields.get(3).setEnabled(false);
         numberOfPlayers--;
-      } else if (nicknameInputFields[2].isEnabled()) {
-        nicknameInputFields[2].setEnabled(false);
+      } else if (nicknameInputFields.get(2).isEnabled()) {
+        nicknameInputFields.get(2).setEnabled(false);
         numberOfPlayers--;
       }
     });
 
   }
 
-  private void startGameButtonView() {
+  private void addStartGameButton() {
     JButton startGameButton = new JButton("START GAME");
     controlButtonsPanel.add(startGameButton);
-    startGameButton.addActionListener(e -> {
-          if (getNicknames().size() < 2 || getNicknames().size() > 4) {
-            JOptionPane.showMessageDialog(null,
-                "It was not possible to create a Game, there can be only between two and four players.");
-            return;
-          }
-          if (areNicknamesCorrect()) {
-            System.out.println("Nicknames" + getNicknames());
-            new PlayingView(getNicknames().size(), getNicknames(), colorScheme);
-          }
-        }
-    );
+    startGameButton.addActionListener(e -> startGame());
+  }
+
+  /**
+   * Starts the game.
+   */
+  private void startGame() {
+    if (getNicknames().size() < 2 || getNicknames().size() > 4) {
+      JOptionPane.showMessageDialog(null,
+          "It was not possible to create a Game, there can be only between two and four players.");
+      return;
+    }
+    if (areNicknamesCorrect()) {
+      new PlayingView(getNicknames().size(), getNicknames(), colorScheme);
+    }
   }
 
   private void startGameThemeView() {
@@ -193,13 +207,13 @@ public class HotseatMenuView extends JFrame {
       }
       String nickname = nicknameField.getText();
       for (int i = 0; i < numberOfPlayers; i++) {
-        if (nicknameField == nicknameInputFields[i]) {
+        if (nicknameField == nicknameInputFields.get(i)) {
           continue;
         }
-        if (!nicknameInputFields[i].isEnabled()) {
+        if (!nicknameInputFields.get(i).isEnabled()) {
           continue;
         }
-        if (nickname.equals(nicknameInputFields[i].getText())) {
+        if (nickname.equals(nicknameInputFields.get(i).getText())) {
           JOptionPane.showMessageDialog(null, "Enter different player names.");
           return false;
         }
@@ -220,10 +234,10 @@ public class HotseatMenuView extends JFrame {
   public List<String> getNicknames() {
     ArrayList<String> listOfPlayer = new ArrayList<>();
     for (int i = 0; i < numberOfPlayers; i++) {
-      if (!nicknameInputFields[i].isEnabled()) {
+      if (!nicknameInputFields.get(i).isEnabled()) {
         break;
       }
-      listOfPlayer.add(nicknameInputFields[i].getText());
+      listOfPlayer.add(nicknameInputFields.get(i).getText());
     }
     return listOfPlayer;
   }

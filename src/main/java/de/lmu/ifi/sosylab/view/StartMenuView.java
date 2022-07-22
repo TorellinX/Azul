@@ -84,7 +84,7 @@ public class StartMenuView extends JFrame {
     multiPlayerButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        MultiplayerMenuView multiplayerMenuView = new MultiplayerMenuView();
+        MultiplayerLobbyView multiplayerLobbyView = new MultiplayerLobbyView();
         thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         // thisFrame.setVisible(false);

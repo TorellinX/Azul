@@ -131,8 +131,8 @@ public class HotseatMenuView extends JFrame {
                     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
                 }
-            );
-        }
+        );
+    }
 
     private void startGameThemeView() {
         JComboBox<String> startGameComboBox = new JComboBox<>(new String[]{

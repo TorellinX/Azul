@@ -26,7 +26,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   @Serial
   private static final long serialVersionUID = 1L;
   JComboBox<String> menuItems = new JComboBox<>(
-      new String[]{"- menu -", "restart", "leave", "end game"});
+      new String[]{"MENU", "restart", "leave", "end game"});
   private DrawboardTableCenter drawboardTableCenter;
   private int playerCount;
   private List<String> nicknames;
@@ -84,6 +84,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     // menu.setSize(1200, 75);
     menu.setLayout(new FlowLayout(FlowLayout.CENTER));
     menu.setBackground(colorScheme.menu());
+    menuItems.setFont(menuItems.getFont().deriveFont(1, 16));
     menu.add(menuItems);
     add(menu, BorderLayout.NORTH);
 
@@ -143,9 +144,24 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       public void actionPerformed(ActionEvent e) {
         Objects.requireNonNull(menuItems.getSelectedItem());
         if (menuItems.getSelectedItem().equals("end game")) {
-          System.exit(0);
+          // TODO: new JOptionPane "Do you want to end the game?
+          closeWindow();
+        }
+        if (menuItems.getSelectedItem().equals("restart")) {
+          // TODO: new JOptionPane "Do you want to restart the game?
+          closeWindow();
+          new PlayingView(players.size(), nicknames, colorScheme);
         }
         System.out.println(menuItems.getSelectedItem());
+      }
+
+      private void closeWindow() {
+        Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        if (window != null)
+        {
+          WindowEvent windowClosing = new WindowEvent(window, WindowEvent.WINDOW_CLOSING);
+          window.dispatchEvent(windowClosing);
+        }
       }
 
       private void dispose() {

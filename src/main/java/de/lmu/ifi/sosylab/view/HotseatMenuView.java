@@ -66,7 +66,9 @@ public class HotseatMenuView extends JFrame {
     nicknameFieldsPanel.setLayout(layout);
     nicknameFieldsPanel.setOpaque(false);
     for (int i = 0; i < 4; i++) {
-      nicknameInputFields.add(i, new JTextField(25));
+      nicknameInputFields.add(i, new JTextField());
+      nicknameInputFields.get(i).setPreferredSize(new Dimension(200, 35));
+      changeFontOf(nicknameInputFields.get(i));
       nicknameInputFields.get(i).setText("Player " + (i + 1));
       nicknameFieldsPanel.add(nicknameInputFields.get(i));
       nicknameInputFields.get(i).addActionListener(e -> {
@@ -115,6 +117,7 @@ public class HotseatMenuView extends JFrame {
 
   private void addPlayerButtonView() {
     JButton addPlayerButton = new JButton("ADD PLAYER");
+    changeFontOf(addPlayerButton);
     playerButtonsPanel.add(addPlayerButton);
 
     addPlayerButton.addActionListener(e -> {
@@ -130,6 +133,7 @@ public class HotseatMenuView extends JFrame {
 
   private void removePlayerButtonView() {
     JButton removePlayerButton = new JButton("REMOVE PLAYER");
+    changeFontOf(removePlayerButton);
     playerButtonsPanel.add(removePlayerButton);
 
     removePlayerButton.addActionListener(e -> {
@@ -146,6 +150,7 @@ public class HotseatMenuView extends JFrame {
 
   private void addStartGameButton() {
     JButton startGameButton = new JButton("START GAME");
+    changeFontOf(startGameButton);
     controlButtonsPanel.add(startGameButton);
     startGameButton.addActionListener(e -> startGame());
   }
@@ -166,9 +171,11 @@ public class HotseatMenuView extends JFrame {
 
   private void startGameThemeView() {
     JLabel theme = new JLabel("  THEME: ");
+    changeFontOf(theme);
     controlButtonsPanel.add(theme);
     JComboBox<String> startGameComboBox = new JComboBox<>(new String[]{
         "Classic", "Beach", "Candy", "Cosmic"});
+    changeFontOf(startGameComboBox);
     controlButtonsPanel.add(startGameComboBox);
     startGameComboBox.addActionListener(e -> {
       String selectedTheme = (String) startGameComboBox.getSelectedItem();
@@ -186,6 +193,7 @@ public class HotseatMenuView extends JFrame {
 
   private void backGameButtonView() {
     JButton backGameButton = new JButton("BACK TO MAIN MENU");
+    changeFontOf(backGameButton);
     controlButtonsPanel.add(backGameButton);
 
     backGameButton.addActionListener(e -> {
@@ -193,6 +201,12 @@ public class HotseatMenuView extends JFrame {
       dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
       new StartMenuView();
     });
+  }
+
+  private void changeFontOf(JComponent component) {
+    if (component.getFont() != null) {
+      component.setFont(component.getFont().deriveFont(1, 16));
+    }
   }
 
   /**

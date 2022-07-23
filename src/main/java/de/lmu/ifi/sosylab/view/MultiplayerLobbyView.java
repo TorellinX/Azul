@@ -44,6 +44,7 @@ public class MultiplayerLobbyView extends JFrame {
   public MultiplayerLobbyView(ClientApplication clientApplication) {
     super("Azul - Multiplayer Mode - Lobby");
     thisFrame = this;
+    this.clientApplication = clientApplication;
     setLayout(new BorderLayout());
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

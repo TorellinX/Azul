@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,7 +12,7 @@ import java.util.List;
  */
 public class PlayerBoard {
 
-  static final int WALL_SIZE = 5;
+  public static final int WALL_SIZE = 5;
   static final int FLOORLINE_SIZE = 7;
 
   private int score;
@@ -148,8 +147,7 @@ public class PlayerBoard {
 
 
   public List<Tile> getFloorLine() {
-    List<Tile> unmodifiableTilesList = Collections.unmodifiableList(floorLine);
-    return unmodifiableTilesList;
+    return floorLine;
   }
 
 
@@ -234,6 +232,10 @@ public class PlayerBoard {
     if (floorLine.size() == FLOORLINE_SIZE) {
       addTileToBox((ColorTile) floorLine.get(floorLine.size() - 1));
       floorLine.set(floorLine.size() - 1, null);
+    }
+    int lastColorTileIndex = floorLine.size() - 1;
+    if (floorLine.get(lastColorTileIndex) != null) {
+      floorLine.add(floorLine.get(lastColorTileIndex));
     }
     for (int i = floorLine.size() - 1; i > 0; i--) {
       floorLine.set(i, floorLine.get(i - 1));

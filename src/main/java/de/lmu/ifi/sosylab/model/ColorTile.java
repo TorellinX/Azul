@@ -1,5 +1,6 @@
 package de.lmu.ifi.sosylab.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
@@ -7,7 +8,12 @@ import java.util.Objects;
  */
 public class ColorTile extends Tile {
 
-  private final Color color;
+  @JsonProperty("color")
+  public Color color;
+
+  public ColorTile() {
+
+  }
 
   public ColorTile(Color color) {
     this.color = color;

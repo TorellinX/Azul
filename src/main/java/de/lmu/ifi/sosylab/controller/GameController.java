@@ -1,7 +1,5 @@
 package de.lmu.ifi.sosylab.controller;
 
-import static java.util.Objects.requireNonNull;
-
 import de.lmu.ifi.sosylab.model.Color;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Plate;
@@ -9,8 +7,6 @@ import de.lmu.ifi.sosylab.model.PlateState;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.RoundState;
 import de.lmu.ifi.sosylab.model.State;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,18 +14,22 @@ import java.util.List;
  */
 public class GameController implements Controller {
 
-  GameModel model;
+  private final GameModel model;
   //View view;
 
+  /**
+   * Constructor of the game controller. Main access interface implementation to the model.
+   *
+   * @param model game model instance
+   */
   public GameController(GameModel model) {
-    List<GameModel> gameModelList = new ArrayList<>();
-    gameModelList.add(requireNonNull(model));
-    List<GameModel> immutableGameModelList = Collections.unmodifiableList(gameModelList);
-    this.model = immutableGameModelList.get(0);
+    this.model = model;
   }
 
   @Override
   public void start() {
+    // MainMenuView view = new MainMenuView(this, model);
+
     //view.showLobby;
   }
 
@@ -52,9 +52,9 @@ public class GameController implements Controller {
   /**
    * Player action: pick a tile from a plate.
    *
-   * @param color Color of the selected tiles.
+   * @param color  Color of the selected tiles.
    * @param player Player to move.
-   * @param plate Plate from where the tiles where selected.
+   * @param plate  Plate from where the tiles where selected.
    * @return true if success.
    */
   public boolean pickTilesFromPlate(Color color, Player player, Plate plate) {
@@ -81,7 +81,7 @@ public class GameController implements Controller {
   /**
    * Player action: pick a tile from table center.
    *
-   * @param color Color of the selected tiles.
+   * @param color  Color of the selected tiles.
    * @param player Player to move.
    * @return true if success.
    */
@@ -127,12 +127,17 @@ public class GameController implements Controller {
     //model.removePropertyChangeListener(view);
   }
 
-
+  /**
+   * Places tiles from "selectedtiels" - list to the selected row.
+   *
+   * @param player current Player.
+   * @param row    selected Row.
+   * @return true if success
+   */
   public boolean placeTiles(Player player, int row) {
-    if(player == model.getPlayerToMove()) {
+    if (player == model.getPlayerToMove()) {
       return model.setTiles(player, row);
-    }
-    else {
+    } else {
       return false;
     }
   }

@@ -22,6 +22,7 @@ public class ModelTest {
   private static final int NUMBER_OF_PLAYERS = 4;
   private static List<String> testPlayers = new ArrayList<>();
 
+
   @BeforeAll
   static void setUp() {
 
@@ -103,6 +104,26 @@ public class ModelTest {
   }
 
   @Test
+  public void addTileToFloorLine_floorLineWhenPenaltyTileIsBeingAddedToFloorLine() {
+    //Arrange test
+    GameModel model = newModelAndCreatePlayers();
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.floorLine = new ArrayList<>();
+    for (int i = 0; i < 6; i++) {
+      Color currentColor = Color.values()[i % (Color.values().length - 1)];
+      testingPlayer.playerBoard.floorLine.add(new ColorTile(currentColor));
+    }
+    List<Tile> expectedFloorLine = new ArrayList<>(testingPlayer.playerBoard.floorLine);
+    expectedFloorLine.add(0, new PenaltyTile());
+
+    //Act test
+    testingPlayer.playerBoard.addTileToFloorLine(new PenaltyTile());
+
+    //Assert test
+    assertEquals(expectedFloorLine, testingPlayer.playerBoard.floorLine);
+  }
+
+  @Test
   public void addTileToFloorLine_boxWhenPenaltyTileIsBeingAddedToFullFloorLine() {
     //Arrange test
     GameModel model = newModelAndCreatePlayers();
@@ -143,6 +164,26 @@ public class ModelTest {
   }
 
   @Test
+  public void addTileToFloorLine_floorLineWhenPenaltyTileIsBeingAddedToFloorLine() {
+    //Arrange test
+    GameModel model = newModelAndCreatePlayers();
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.floorLine = new ArrayList<>();
+    for (int i = 0; i < 6; i++) {
+      Color currentColor = Color.values()[i % (Color.values().length - 1)];
+      testingPlayer.playerBoard.floorLine.add(new ColorTile(currentColor));
+    }
+    List<Tile> expectedFloorLine = new ArrayList<>(testingPlayer.playerBoard.floorLine);
+    expectedFloorLine.add(0, new PenaltyTile());
+
+    //Act test
+    testingPlayer.playerBoard.addTileToFloorLine(new PenaltyTile());
+
+    //Assert test
+    assertEquals(expectedFloorLine, testingPlayer.playerBoard.floorLine);
+  }
+
+  @Test
   public void addTileToFloorLine_boxWhenColorTileIsBeingAddedToFullFloorLine() {
     //Arrange test
     GameModel model = newModelAndCreatePlayers();
@@ -177,7 +218,7 @@ public class ModelTest {
     ColorTile[] expectedRow = new ColorTile[rowIndex + 1];
 
     //Act test
-    model.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
+    model.score.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
 
     //Assert test
     assertArrayEquals(expectedRow, testingPlayer.playerBoard.patternLines[rowIndex]);
@@ -200,7 +241,7 @@ public class ModelTest {
     }
 
     //Act test
-    model.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
+    model.score.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
 
     //Assert test
     assertEquals(expectedBox, model.box);
@@ -221,7 +262,7 @@ public class ModelTest {
 
     //Act test
     try {
-      model.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
+      model.score.moveFullPatternLineToBox(rowIndex, testingPlayer.playerBoard);
       fail("The patten line is not complete");
     } catch (RuntimeException e) {
 

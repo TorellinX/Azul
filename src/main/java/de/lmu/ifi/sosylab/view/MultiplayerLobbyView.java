@@ -388,7 +388,6 @@ class LobbyElements extends JPanel {
   }
 
 
-
   private void addTextFieldsActionListener() {
 
     for (int field = 0; field < players.size(); ++field) {

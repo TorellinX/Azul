@@ -3,8 +3,6 @@ package de.lmu.ifi.sosylab.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.lmu.ifi.sosylab.InformationWrapper;
-import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.server.Room;
 import de.lmu.ifi.sosylab.server.User;
 import java.io.IOException;
@@ -48,7 +46,6 @@ public class ClientApplication {
 
   @Getter
   String roomId;
-
 
 
   /**
@@ -140,7 +137,8 @@ public class ClientApplication {
     OkHttpClient client = new OkHttpClient().newBuilder()
         .build();
     MediaType mediaType = MediaType.parse("application/json");
-    RequestBody body = RequestBody.create("{\"userToken\": \"" + user.getToken() + "\",\"roomId\": \"" + roomId + "\"}", mediaType);
+    RequestBody body = RequestBody.create(
+        "{\"userToken\": \"" + user.getToken() + "\",\"roomId\": \"" + roomId + "\"}", mediaType);
     System.out.println(body);
     Request request = new Request.Builder()
         .url("http://localhost:8080/api/rooms/join")
@@ -166,11 +164,11 @@ public class ClientApplication {
     MediaType mediaType = MediaType.parse("text/plain");
     RequestBody body = RequestBody.create("", mediaType);
     Request request = new Request.Builder()
-        .url("http://localhost:8080/api/rooms/id/" + roomId +"/start")
+        .url("http://localhost:8080/api/rooms/id/" + roomId + "/start")
         .method("POST", body)
         .build();
     Response response = client.newCall(request).execute();
-    if(response.isSuccessful()) {
+    if (response.isSuccessful()) {
       System.out.println("Game started");
       return true;
     } else {
@@ -351,7 +349,7 @@ public class ClientApplication {
         .addHeader("Content-Type", "application/json")
         .build();
     Response response = client.newCall(request).execute();
-    if(response.isSuccessful()) {
+    if (response.isSuccessful()) {
       return true;
     } else {
       return false;
@@ -370,7 +368,7 @@ public class ClientApplication {
         .addHeader("Content-Type", "application/json")
         .build();
     Response response = client.newCall(request).execute();
-    if(response.isSuccessful()) {
+    if (response.isSuccessful()) {
       return true;
     } else {
       return false;

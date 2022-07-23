@@ -76,10 +76,10 @@ public class Room {
   }
 
   //send GameModel to all users subscribing to this room
-  public void sendModel(){
-      if (state == State.RUNNING) {
-        apiController.sendGameModel(id, model);
-      }
+  public void sendModel() {
+    if (state == State.RUNNING) {
+      apiController.sendGameModel(id, model);
+    }
 
   }
 

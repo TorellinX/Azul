@@ -1,6 +1,5 @@
 package de.lmu.ifi.sosylab;
 
-import de.lmu.ifi.sosylab.client.ClientApplication;
 import de.lmu.ifi.sosylab.view.StartMenuView;
 
 // TODO: refine JavaDoc

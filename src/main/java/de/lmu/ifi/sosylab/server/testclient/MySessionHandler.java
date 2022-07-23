@@ -1,11 +1,14 @@
 package de.lmu.ifi.sosylab.server.testclient;
 
+import static de.lmu.ifi.sosylab.view.ColorSchemes.classic;
+
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerBoard;
 import de.lmu.ifi.sosylab.model.TableCenter;
+import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import de.lmu.ifi.sosylab.view.PlayingView;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -53,7 +56,8 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     System.out.println(payload);
     GameModel model = (GameModel) payload;
     Controller controller = new GameController(model);
-    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(), controller, model);
+    ColorScheme colorScheme = classic;
+    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(), colorScheme ,controller, model);
     playingView.setVisible(true);
 
     // System.out.println(model.getState());

@@ -3,9 +3,12 @@ package de.lmu.ifi.sosylab.view;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
 
 /**
  * Component drawing class for wall.
@@ -103,6 +106,7 @@ public class DrawWall extends JPanel {
 
   /**
    * Setter for color scheme of the wall.
+   *
    * @param colorScheme current color scheme
    */
   public void setColorScheme(ColorScheme colorScheme) {

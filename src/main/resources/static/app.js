@@ -5,8 +5,7 @@ function setConnected(connected) {
   $("#disconnect").prop("disabled", !connected);
   if (connected) {
     $("#conversation").show();
-  }
-  else {
+  } else {
     $("#conversation").hide();
   }
   $("#greetings").html("");
@@ -18,10 +17,11 @@ function connect() {
   stompClient.connect({}, function (frame) {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/room/' + $('#name').val() + '/model', function (greeting) {
-      console.log(greeting.body)
-      showGreeting(JSON.parse(greeting.body).content);
-    });
+    stompClient.subscribe('/topic/room/' + $('#name').val() + '/model',
+        function (greeting) {
+          console.log(greeting.body)
+          showGreeting(JSON.parse(greeting.body).content);
+        });
   });
 }
 
@@ -34,7 +34,8 @@ function disconnect() {
 }
 
 function sendName() {
-  stompClient.send("/app/game/create", {}, JSON.stringify({'name': $("#name").val()}));
+  stompClient.send("/app/game/create", {},
+      JSON.stringify({'name': $("#name").val()}));
 }
 
 function showGreeting(message) {
@@ -45,7 +46,13 @@ $(function () {
   $("form").on('submit', function (e) {
     e.preventDefault();
   });
-  $( "#connect" ).click(function() { connect(); });
-  $( "#disconnect" ).click(function() { disconnect(); });
-  $( "#send" ).click(function() { sendName(); });
+  $("#connect").click(function () {
+    connect();
+  });
+  $("#disconnect").click(function () {
+    disconnect();
+  });
+  $("#send").click(function () {
+    sendName();
+  });
 });

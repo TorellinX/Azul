@@ -34,6 +34,7 @@ public class Lobby {
     }
     return false;
   }
+
   // Create User and add it to the list
   public User createUser(String name) {
     User user = new User(name);

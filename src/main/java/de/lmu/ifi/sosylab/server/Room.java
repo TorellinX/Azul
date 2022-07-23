@@ -7,7 +7,6 @@ import de.lmu.ifi.sosylab.model.State;
 import de.lmu.ifi.sosylab.server.controller.APIController;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import lombok.Getter;
 
@@ -27,7 +26,7 @@ public class Room {
 
   private APIController apiController;
 
-  public Room(){
+  public Room() {
   }
 
   public Room(String name, APIController apiController) {
@@ -78,8 +77,9 @@ public class Room {
 
   //send GameModel to all users subscribing to this room
   public void sendModel() {
-    if (state == State.RUNNING)
-    apiController.sendGameModel(id, model);
+    if (state == State.RUNNING) {
+      apiController.sendGameModel(id, model);
+    }
   }
 
   public boolean terminateRoom() {
@@ -88,11 +88,13 @@ public class Room {
   }
 
   public Boolean pickTileFromPlate(InformationWrapper informationWrapper) {
-    return controller.pickTilesFromPlate(informationWrapper.getColor(), informationWrapper.getPlayer(), informationWrapper.getPlate());
+    return controller.pickTilesFromPlate(informationWrapper.getColor(),
+        informationWrapper.getPlayer(), informationWrapper.getPlate());
   }
 
   public Boolean pickTileFromTableCenter(InformationWrapper informationWrapper) {
-    return controller.pickTilesFromTableCenter(informationWrapper.getColor(), informationWrapper.getPlayer());
+    return controller.pickTilesFromTableCenter(informationWrapper.getColor(),
+        informationWrapper.getPlayer());
   }
 
   public Boolean placeTile(InformationWrapper informationWrapper) {

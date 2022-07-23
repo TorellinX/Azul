@@ -1,6 +1,6 @@
 package de.lmu.ifi.sosylab.view;
 
-import java.awt.*;
+import java.awt.Color;
 
 public final class ColorSchemes {
 

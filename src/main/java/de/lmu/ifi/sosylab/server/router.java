@@ -1,21 +1,18 @@
 package de.lmu.ifi.sosylab.server;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.lmu.ifi.sosylab.Authenticator;
 import de.lmu.ifi.sosylab.InformationWrapper;
-
 import de.lmu.ifi.sosylab.server.controller.APIController;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import org.springframework.web.bind.annotation.*;
 
 /**
  * The class provides the interface for the API calls and processes them.
@@ -62,7 +59,8 @@ public class router {
   @PostMapping("/user/register")
   public User register(@RequestBody String username, HttpServletResponse response) {
     System.out.println(username);
-    if (lobby.checkUsername(username) || lobby.rooms.stream().anyMatch(r -> r.getUsers().stream().anyMatch(u -> u.equals(username)))) {
+    if (lobby.checkUsername(username) || lobby.rooms.stream()
+        .anyMatch(r -> r.getUsers().stream().anyMatch(u -> u.equals(username)))) {
       response.setStatus(409);
       return null;
     } else {

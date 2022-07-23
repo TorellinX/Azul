@@ -6,10 +6,14 @@ import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerState;
 import de.lmu.ifi.sosylab.model.Tile;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
  * Component drawing class for floorline including action listener.
@@ -45,7 +49,8 @@ public class DrawFloorline extends JPanel {
     floorlineButton.addActionListener(e -> {
       System.out.println(player.getNickname() + " - " + "floorLineButton");
       if (myNickname.equals("") ||
-              (player.getPlayerState().equals(PlayerState.TO_MOVE) && player.getNickname().equals(myNickname))) {
+          (player.getPlayerState().equals(PlayerState.TO_MOVE) && player.getNickname()
+              .equals(myNickname))) {
         controller.placeTiles(player, -1);
       }
       // controller.placeTiles(player, -1);
@@ -110,6 +115,7 @@ public class DrawFloorline extends JPanel {
 
   /**
    * Setter for color scheme of the floor line.
+   *
    * @param colorScheme current color scheme
    */
   public void setColorScheme(ColorScheme colorScheme) {
@@ -117,7 +123,8 @@ public class DrawFloorline extends JPanel {
   }
 
   /**
-   * Routing for my nickname from multiplayer mode client for identification of allowed floorline events.
+   * Routing for my nickname from multiplayer mode client for identification of allowed floorline
+   * events.
    *
    * @param myNickname
    */

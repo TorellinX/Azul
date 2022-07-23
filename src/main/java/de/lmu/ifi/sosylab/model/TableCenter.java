@@ -28,7 +28,7 @@ public class TableCenter {
   }
 
   public record SelectedTilesAndMaybePenaltyTile(List<ColorTile> colorTiles,
-                                          Optional<PenaltyTile> penaltyTile) {
+                                                 Optional<PenaltyTile> penaltyTile) {
 
   }
 

@@ -1,9 +1,6 @@
 package de.lmu.ifi.sosylab.view;
 
-import static java.util.Objects.requireNonNull;
-
 import de.lmu.ifi.sosylab.client.ClientApplication;
-import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.server.Room;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,15 +14,12 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 
 /**
@@ -43,7 +37,6 @@ public class MultiplayerLobbyView extends JFrame {
 
   /**
    * Constructor of the class.
-   *
    */
   public MultiplayerLobbyView(ClientApplication clientApplication) {
     super("Azul - Multiplayer Mode - Lobby");
@@ -71,8 +64,10 @@ public class MultiplayerLobbyView extends JFrame {
     // Lobby Elemente positionieren
     // TODO: Zahl der existierenden Räume abfragen (Bsp 5), Elementliste anlegen
     // TODO: laufendes update, davor Elementliste nach join requests durchsuchen und in den neuen Zyklus weiterreichen...
-    List<String> fakeRooms = Arrays.asList("Buenos Aires", "Córdoba", "La Plata", "Montevideo", "Ascunión");    // FAKE!
-    List<String> players = Arrays.asList("Player1", "Player2", "Player3");                                      // FAKE!
+    List<String> fakeRooms = Arrays.asList("Buenos Aires", "Córdoba", "La Plata", "Montevideo",
+        "Ascunión");    // FAKE!
+    List<String> players = Arrays.asList("Player1", "Player2",
+        "Player3");                                      // FAKE!
 
 
 /*    List<String> rooms = null;
@@ -86,7 +81,8 @@ public class MultiplayerLobbyView extends JFrame {
     JPanel lobbyElementsPanel = new JPanel(new GridLayout(5, 1));
     try {
       for (Room room : clientApplication.requestRooms()) {
-        LobbyElements lobbyElements = new LobbyElements(room.getId(), room.getName(), room.getUsers(), clientApplication);
+        LobbyElements lobbyElements = new LobbyElements(room.getId(), room.getName(),
+            room.getUsers(), clientApplication);
         lobbyElementsList.add(lobbyElements);
         lobbyElementsPanel.add(lobbyElements);
       }
@@ -103,8 +99,6 @@ public class MultiplayerLobbyView extends JFrame {
       lobbyElementsList.add(lobbyElements);
       lobbyElementsPanel.add(lobbyElements);
     }*/
-
-
 
     // Game - Kontroll - Panel
     JPanel gameControlPanel = new JPanel(new BorderLayout());
@@ -137,7 +131,7 @@ public class MultiplayerLobbyView extends JFrame {
         for (int room = 0; room < lobbyElementsList.size(); ++room) {
           if (!lobbyElementsList.get(room).getNickName().isEmpty()) {
             try {
-              if(clientApplication.joinRoom(lobbyElementsList.get(room).getRoomId())){
+              if (clientApplication.joinRoom(lobbyElementsList.get(room).getRoomId())) {
                 clientApplication.startGame();
                 dispose();
               }
@@ -224,8 +218,6 @@ public class MultiplayerLobbyView extends JFrame {
            */
         }
 
-
-
         //TODO: create new room also @server
 
         //TODO: alternative -> create new room @server, close this window, restart lobby view, then join room, then enter room
@@ -252,11 +244,12 @@ class LobbyElements extends JPanel {
   /**
    * Generate lobby elements from server data.
    *
-   * @param roomId    room name
-   * @param players   players list (preliminary: String, else: Player)
+   * @param roomId  room name
+   * @param players players list (preliminary: String, else: Player)
    */
   //ToDo: Change players list to type PLayer and work with corrsponding getters.
-  public LobbyElements(String roomId, String roomName, List<String> players, ClientApplication clientApplication) {
+  public LobbyElements(String roomId, String roomName, List<String> players,
+      ClientApplication clientApplication) {
     this.roomId = roomId;
     this.roomName = roomName;
     this.players = players;
@@ -282,7 +275,7 @@ class LobbyElements extends JPanel {
     roomStatus.add(playerLabel, BorderLayout.WEST);
 
     // Players list, middle main lobby element with listeners call
-    JPanel playersList = new JPanel(new GridLayout(4,1));
+    JPanel playersList = new JPanel(new GridLayout(4, 1));
     for (int i = 0; i < 4; i++) {
       JTextField player = new JTextField("", 25);
       player.setEditable(false);
@@ -406,7 +399,6 @@ class LobbyElements extends JPanel {
       }
     });
   }
-
 
   // end class 2
 }

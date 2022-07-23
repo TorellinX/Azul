@@ -5,18 +5,11 @@ import static de.lmu.ifi.sosylab.view.ColorSchemes.classic;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
-import de.lmu.ifi.sosylab.model.Player;
-import de.lmu.ifi.sosylab.model.PlayerBoard;
-import de.lmu.ifi.sosylab.model.TableCenter;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import de.lmu.ifi.sosylab.view.PlayingView;
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.List;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import nonapi.io.github.classgraph.json.JSONDeserializer;
-import org.springframework.context.annotation.Import;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -37,7 +30,8 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
   }
 
   @Override
-  public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+  public void handleException(StompSession session, StompCommand command, StompHeaders headers,
+      byte[] payload, Throwable exception) {
     exception.printStackTrace();
   }
 
@@ -57,12 +51,12 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     GameModel model = (GameModel) payload;
     Controller controller = new GameController(model);
     ColorScheme colorScheme = classic;
-    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(), colorScheme ,controller, model);
+    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(),
+        colorScheme, controller, model);
     playingView.setVisible(true);
 
     // System.out.println(model.getState());
   }
-
 
 
 }

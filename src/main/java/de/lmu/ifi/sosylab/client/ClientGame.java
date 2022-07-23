@@ -30,12 +30,13 @@ public class ClientGame extends StompSessionHandlerAdapter {
   @SneakyThrows
   @Override
   public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-    session.subscribe("/topic/room/" + roomid +"/model", this);
+    session.subscribe("/topic/room/" + roomid + "/model", this);
     log.info("New session: {}", session.getSessionId());
   }
 
   @Override
-  public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+  public void handleException(StompSession session, StompCommand command, StompHeaders headers,
+      byte[] payload, Throwable exception) {
     exception.printStackTrace();
   }
 
@@ -55,7 +56,8 @@ public class ClientGame extends StompSessionHandlerAdapter {
     GameModel model = (GameModel) payload;
     Controller controller = new GameController(model);
     ColorScheme colorScheme = classic;
-    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(), username, colorScheme ,controller, model);
+    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(),
+        username, colorScheme, controller, model);
     playingView.setVisible(true);
 
     // System.out.println(model.getState());

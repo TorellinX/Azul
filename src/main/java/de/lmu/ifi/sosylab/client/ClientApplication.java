@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.lmu.ifi.sosylab.server.Room;
 import de.lmu.ifi.sosylab.server.User;
-import de.lmu.ifi.sosylab.server.testclient.MySessionHandler;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import okhttp3.MediaType;
@@ -27,11 +26,6 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.json.JSONArray;
-
-import java.io.IOException;
-import java.util.Scanner;
-import org.json.JSONObject;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -43,6 +37,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
  * Http client application for multiplayer game.
  */
 public class ClientApplication {
+
   @Getter
   List<Room> rooms;
 
@@ -52,16 +47,16 @@ public class ClientApplication {
   String roomId;
 
 
-
-
   /**
    * Constructor for http client.
    */
   public ClientApplication() {
 
   }
+
   /**
    * login to the server.
+   *
    * @param username username
    */
   @SneakyThrows
@@ -82,26 +77,29 @@ public class ClientApplication {
 
   /**
    * Get a list of rooms from the server.
+   *
    * @return list of rooms
    */
-public List<Room> requestRooms() throws IOException {
-  ObjectMapper objectMapper = new ObjectMapper();
-  System.out.println("Getting rooms...");
-  OkHttpClient client = new OkHttpClient().newBuilder()
-      .build();
-  MediaType mediaType = MediaType.parse("text/plain");
-  Request request = new Request.Builder()
-      .url("http://localhost:8080/api/rooms")
-      .method("GET", null)
-      .build();
-  Response response = client.newCall(request).execute();
-  //get id and name of rooms from response
-  rooms = new ObjectMapper().readValue(response.body().string(), new TypeReference<List<Room>>() {});
-  return rooms;
-}
+  public List<Room> requestRooms() throws IOException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    System.out.println("Getting rooms...");
+    OkHttpClient client = new OkHttpClient().newBuilder()
+        .build();
+    MediaType mediaType = MediaType.parse("text/plain");
+    Request request = new Request.Builder()
+        .url("http://localhost:8080/api/rooms")
+        .method("GET", null)
+        .build();
+    Response response = client.newCall(request).execute();
+    //get id and name of rooms from response
+    rooms = new ObjectMapper().readValue(response.body().string(), new TypeReference<List<Room>>() {
+    });
+    return rooms;
+  }
 
   /**
    * Create a new room.
+   *
    * @param name name of the room
    * @return
    */
@@ -129,6 +127,7 @@ public List<Room> requestRooms() throws IOException {
 
   /**
    * Join a room.
+   *
    * @param roomId id of the room
    * @return
    */
@@ -137,7 +136,8 @@ public List<Room> requestRooms() throws IOException {
     OkHttpClient client = new OkHttpClient().newBuilder()
         .build();
     MediaType mediaType = MediaType.parse("application/json");
-    RequestBody body = RequestBody.create(mediaType, "{\"userToken\": \"" +user.getToken() + "\",\"roomId\": \"" + roomId+ "\"}");
+    RequestBody body = RequestBody.create(mediaType,
+        "{\"userToken\": \"" + user.getToken() + "\",\"roomId\": \"" + roomId + "\"}");
     System.out.println(body);
     Request request = new Request.Builder()
         .url("http://localhost:8080/api/rooms/join")
@@ -157,7 +157,7 @@ public List<Room> requestRooms() throws IOException {
   }
 
 
-  public void startGame(){
+  public void startGame() {
     WebSocketClient webSocketClient = new StandardWebSocketClient();
     WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
     stompClient.setMessageConverter(new MappingJackson2MessageConverter());
@@ -169,13 +169,13 @@ public List<Room> requestRooms() throws IOException {
 
     // check if connection is alive, if not reconnect
 
-
     new Scanner(System.in).nextLine(); //Don't close immediately.
   }
 
 
   /**
    * Get the list of users in a room.
+   *
    * @param roomId id of the room
    * @return
    */
@@ -204,15 +204,12 @@ public List<Room> requestRooms() throws IOException {
   }
 
 
-
-
-
   /**
    * Authentication of player for http client.
    *
-   * @param nickname  player nickname
-   * @param passwd    password
-   * @return          http client object
+   * @param nickname player nickname
+   * @param passwd   password
+   * @return http client object
    */
   private CloseableHttpClient authenticate(String nickname, String passwd) {
 
@@ -231,9 +228,9 @@ public List<Room> requestRooms() throws IOException {
   /**
    * http request for server (currently hardcoded, as there is only one, yet).
    *
-   * @param uri       uri
-   * @param uriGet    GetMapping
-   * @return          server response
+   * @param uri    uri
+   * @param uriGet GetMapping
+   * @return server response
    */
   public String serverGet(String uri, String uriGet) {
     // noch ohne auth: replace in try -> authenticate(user, pwd)
@@ -259,10 +256,10 @@ public List<Room> requestRooms() throws IOException {
   /**
    * Http post to server.
    *
-   * @param uri       uri
-   * @param uriPost   PostMapping
-   * @param entity    entity to post
-   * @return          response
+   * @param uri     uri
+   * @param uriPost PostMapping
+   * @param entity  entity to post
+   * @return response
    */
   public String serverPost(String uri, String uriPost, StringEntity entity) {
     // noch ohne auth: replace in try -> authenticate(user, pwd)
@@ -298,8 +295,6 @@ public List<Room> requestRooms() throws IOException {
     }
     return -1;
   }
-
-
 
   // end class
 }

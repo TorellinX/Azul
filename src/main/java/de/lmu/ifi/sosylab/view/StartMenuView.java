@@ -1,11 +1,15 @@
 package de.lmu.ifi.sosylab.view;
 
 import de.lmu.ifi.sosylab.client.ClientApplication;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import lombok.SneakyThrows;
 
 /**
@@ -58,7 +62,6 @@ public class StartMenuView extends JFrame {
   }
 
 
-
   private void hotSeatButtonView() {
     hotSeatButton = new JButton("HOTSEAT");
     buttons.add(hotSeatButton);
@@ -96,7 +99,6 @@ public class StartMenuView extends JFrame {
   public void showStartView() {
     thisFrame.setVisible(true);
   }
-
 
 
 }

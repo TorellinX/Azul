@@ -134,9 +134,9 @@ public class GameModel {
   /**
    * Set tiles from selected tiles list to selected row.
    *
-   * @param player  player to move
-   * @param row     row to set
-   * @return        true if success
+   * @param player player to move
+   * @param row    row to set
+   * @return true if success
    */
   // (patternLines (0-4) or floorLine (-1)
   public synchronized boolean setTiles(Player player, int row) {
@@ -157,7 +157,8 @@ public class GameModel {
       return true;
     }
     System.out.println(
-        "Active Player: " + getPlayerToMoveIndex() + " State: " + players.get(playerToMoveIndex).getPlayerState());
+        "Active Player: " + getPlayerToMoveIndex() + " State: " + players.get(playerToMoveIndex)
+            .getPlayerState());
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
     return true;

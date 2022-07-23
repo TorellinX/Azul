@@ -3,7 +3,6 @@ package de.lmu.ifi.sosylab;
 import de.lmu.ifi.sosylab.model.Color;
 import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
-
 import java.util.List;
 
 public class InformationWrapper {
@@ -19,75 +18,72 @@ public class InformationWrapper {
   private Boolean wasInputSuccesful;
 
 
-
-
-  public InformationWrapper(){
+  public InformationWrapper() {
 
   }
-  public void playersList(List<Player> playersList){
+
+  public void playersList(List<Player> playersList) {
     this.playersList = playersList;
   }
 
-  public void setPlayer(Player player){
+  public void setPlayer(Player player) {
     this.player = player;
   }
 
-  public void setPlatesList(List<Plate> platesList){
+  public void setPlatesList(List<Plate> platesList) {
     this.platesList = platesList;
   }
 
-  public void setPlate(Plate plate){
+  public void setPlate(Plate plate) {
     this.plate = plate;
   }
 
-  public void setColor(Color color){
+  public void setColor(Color color) {
     this.color = color;
   }
 
-  public void setRow(int row){
+  public void setRow(int row) {
     this.row = row;
   }
 
-  public void setAutenticatorPlayer(Authenticator authenticator){
+  public void setAutenticatorPlayer(Authenticator authenticator) {
     this.autenticatorPlayer = authenticator;
   }
 
-  public void setAuthenticatorRoom(Authenticator authenticator){
+  public void setAuthenticatorRoom(Authenticator authenticator) {
     this.authenticatorRoom = authenticator;
   }
 
-  public void setWasInputSuccesful(Boolean succesful){
+  public void setWasInputSuccesful(Boolean succesful) {
     this.wasInputSuccesful = succesful;
   }
 
 
-
-
-  public int getRow(){
+  public int getRow() {
     return row;
   }
 
-  public Player getPlayer(){
+  public Player getPlayer() {
     return player;
   }
 
-  public List<Player> getPlayersList(){
+  public List<Player> getPlayersList() {
     return playersList;
   }
 
-  public List<Plate> getPlatesList(){
+  public List<Plate> getPlatesList() {
     return platesList;
   }
 
-  public Color getColor(){
+  public Color getColor() {
     return color;
   }
 
-  public Plate getPlate(){
+  public Plate getPlate() {
     return plate;
   }
 
-  public Authenticator getAuthenticatorPlayer(){
+  public Authenticator getAuthenticatorPlayer() {
     return autenticatorPlayer;
   }
 
@@ -95,7 +91,7 @@ public class InformationWrapper {
     return authenticatorRoom;
   }
 
-  public Boolean getWasInputSuccesful(){
+  public Boolean getWasInputSuccesful() {
     return wasInputSuccesful;
   }
 }

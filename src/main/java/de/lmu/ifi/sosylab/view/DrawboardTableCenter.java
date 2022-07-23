@@ -1,19 +1,28 @@
 package de.lmu.ifi.sosylab.view;
 
-import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.model.*;
-import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
+import static de.lmu.ifi.sosylab.model.GameModel.TILES_PER_PLATE;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.model.ColorTile;
+import de.lmu.ifi.sosylab.model.GameModel;
+import de.lmu.ifi.sosylab.model.PenaltyTile;
+import de.lmu.ifi.sosylab.model.Plate;
+import de.lmu.ifi.sosylab.model.State;
+import de.lmu.ifi.sosylab.model.Tile;
+import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
+import java.awt.BasicStroke;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static de.lmu.ifi.sosylab.model.GameModel.TILES_PER_PLATE;
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
  * Center Panel of the Game. Shows the panels and the center of the table.

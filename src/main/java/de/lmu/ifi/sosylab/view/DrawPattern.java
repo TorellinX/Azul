@@ -5,12 +5,16 @@ import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerState;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
  * Component drawing class for pattern lines including action listeners.
@@ -82,7 +86,8 @@ public class DrawPattern extends JPanel {
         public void actionPerformed(ActionEvent e) {
           System.out.println(player.getNickname() + " - " + count);
           if (myNickname.equals("") ||
-                  (player.getPlayerState().equals(PlayerState.TO_MOVE) && player.getNickname().equals(myNickname))) {
+              (player.getPlayerState().equals(PlayerState.TO_MOVE) && player.getNickname()
+                  .equals(myNickname))) {
             controller.placeTiles(player, count);
           }
 //          controller.placeTiles(player, count);
@@ -152,7 +157,8 @@ public class DrawPattern extends JPanel {
   }
 
   /**
-   * Routing endpoint for my nickname from multiplayer mode client for identification of allowed pattern events.
+   * Routing endpoint for my nickname from multiplayer mode client for identification of allowed
+   * pattern events.
    *
    * @param myNickname
    */

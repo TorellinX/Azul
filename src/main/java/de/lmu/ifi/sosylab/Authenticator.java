@@ -32,13 +32,14 @@ public class Authenticator {
           authenticator.concat(Character.toString(DIGITS.charAt(random.nextInt(DIGITS.length()))));
           break;
         case 4:
-          authenticator.concat(Character.toString(PUNCTUATION.charAt(random.nextInt(PUNCTUATION.length()))));
+          authenticator.concat(
+              Character.toString(PUNCTUATION.charAt(random.nextInt(PUNCTUATION.length()))));
           break;
       }
     }
   }
 
-  public String getAuthenticator(){
+  public String getAuthenticator() {
     return authenticator;
   }
 

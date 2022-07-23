@@ -1,10 +1,6 @@
 package de.lmu.ifi.sosylab.view;
 
-import static java.util.Objects.requireNonNull;
-
-import com.google.common.collect.Iterables;
 import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.State;
@@ -19,7 +15,6 @@ import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.util.Collections;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.stream.IntStream;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -59,7 +54,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    * @param controller  controller instance
    * @param model       game model instance
    */
-  public PlayingView(int playerCount, List<String> nicknames, ColorScheme colorScheme, Controller controller, GameModel model) {
+  public PlayingView(int playerCount, List<String> nicknames, ColorScheme colorScheme,
+      Controller controller, GameModel model) {
     super("Azul Playing View");
 
     stateFinishedprocessed = 0;
@@ -75,8 +71,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       this.players = model.getPlayers();
     } else {
       JOptionPane.showMessageDialog(null,
-              "Game could not be started!",
-              "Internal Error!", JOptionPane.ERROR_MESSAGE);
+          "Game could not be started!",
+          "Internal Error!", JOptionPane.ERROR_MESSAGE);
       dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -91,6 +87,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     pack();
     setVisible(true);
   }
+
   /**
    * Initializes the playing view for multiplayer mode.
    *
@@ -101,7 +98,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    * @param controller  controller instance
    * @param model       game model instance
    */
-  public PlayingView(int playerCount, List<String> nicknames, String myNickname, ColorScheme colorScheme, Controller controller, GameModel model) {
+  public PlayingView(int playerCount, List<String> nicknames, String myNickname,
+      ColorScheme colorScheme, Controller controller, GameModel model) {
     super("Azul Playing View");
 
     stateFinishedprocessed = 0;
@@ -116,15 +114,15 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
     // Index of myNickname in later players list - assuming names list is processed in sequence!
     myNicknameIndex = IntStream.range(0, nicknames.size())
-            .filter(i -> myNickname.equals(nicknames.get(i)))
-            .findFirst().orElse(-1);
+        .filter(i -> myNickname.equals(nicknames.get(i)))
+        .findFirst().orElse(-1);
 
     if (controller.startGame(nicknames)) {
       this.players = model.getPlayers();
     } else {
       JOptionPane.showMessageDialog(null,
-              "Game could not be started!",
-              "Internal Error!", JOptionPane.ERROR_MESSAGE);
+          "Game could not be started!",
+          "Internal Error!", JOptionPane.ERROR_MESSAGE);
       dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -169,7 +167,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       playerBoards[i] = new DrawPlayerBoard(players.get(i), controller, colorScheme);
       playerBoards[i].setColorScheme(colorScheme);
     }
-    playerBoards[myNicknameIndex].setMyNickname(myNickname);      // route myNickname for player board
+    playerBoards[myNicknameIndex].setMyNickname(
+        myNickname);      // route myNickname for player board
 
     // Linkes und rechtes panel mit Playerboards belegen
     JPanel playingViewLeft = new JPanel(new BorderLayout());
@@ -235,8 +234,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     if (event.getPropertyName().equals("Model changed")) {
       repaint();
       for (int i = 0; i < players.size(); i++) {
-      playerBoards[i].setScoreLabel(players.get(i).getScore());
-      playerBoards[i].setPlayerLabelBackgroundColor(players.get(i));
+        playerBoards[i].setScoreLabel(players.get(i).getScore());
+        playerBoards[i].setPlayerLabelBackgroundColor(players.get(i));
       }
       if (model.getState() == State.FINISHED && stateFinishedprocessed == 0) {
         stateFinishedprocessed = 1;
@@ -259,8 +258,10 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
             }
           }
         }
-        int option = JOptionPane.showOptionDialog(null, winText + winners + "\n\n" + "Restart game?",
-              "Game End.", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,null, JOptionPane.NO_OPTION);
+        int option = JOptionPane.showOptionDialog(null,
+            winText + winners + "\n\n" + "Restart game?",
+            "Game End.", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null,
+            JOptionPane.NO_OPTION);
         if (option == JOptionPane.YES_OPTION) {
           dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } else {

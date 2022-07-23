@@ -13,7 +13,7 @@ public class JacksonConfig {
 
   @Bean
   @Primary
-  public ObjectMapper customJson(){
+  public ObjectMapper customJson() {
     return new Jackson2ObjectMapperBuilder()
         .indentOutput(true)
         .failOnEmptyBeans(false)

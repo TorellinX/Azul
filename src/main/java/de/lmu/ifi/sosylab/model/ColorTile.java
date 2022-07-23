@@ -11,7 +11,7 @@ public class ColorTile extends Tile {
   @JsonProperty("color")
   public Color color;
 
-  public ColorTile(){
+  public ColorTile() {
 
   }
 

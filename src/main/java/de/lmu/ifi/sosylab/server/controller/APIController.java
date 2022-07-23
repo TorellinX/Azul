@@ -6,7 +6,6 @@ import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerBoard;
 import de.lmu.ifi.sosylab.model.TableCenter;
-//import de.lmu.ifi.sosylab.server.RoomManager;
 import de.lmu.ifi.sosylab.server.Room;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +69,8 @@ public class APIController {
     //de.lmu.ifi.sosylab.controller.Controller controller = new GameController(model);
     model.createPlayers(players);
     System.out.println("here");
-    de.lmu.ifi.sosylab.controller.Controller controller = new de.lmu.ifi.sosylab.controller.GameController(model);
+    de.lmu.ifi.sosylab.controller.Controller controller = new de.lmu.ifi.sosylab.controller.GameController(
+        model);
     //PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(), controller, model);
     //playingView.setVisible(true);
     return model;
@@ -90,7 +90,7 @@ public class APIController {
   @MessageMapping("/game/player")
   @SendTo("/topic/messages")
   public Player getPlayer(String message) throws Exception {
-    System.out.println("getPlayer :"+ message);
+    System.out.println("getPlayer :" + message);
     Thread.sleep(500); // simulated delay
     List<String> players = List.of("Player1", "Player2", "Player3", "Player4");
     GameModel model = new GameModel();

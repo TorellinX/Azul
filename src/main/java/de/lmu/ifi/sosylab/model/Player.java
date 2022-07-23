@@ -25,8 +25,7 @@ public class Player {
   PlayerBoard playerBoard;
 
   /**
-  /**
-   * Builds a player with state defined by argument.
+   * /** Builds a player with state defined by argument.
    *
    * @param nickname string of player nickname
    * @param state    state the player is initiated with
@@ -57,7 +56,6 @@ public class Player {
   public String getNickname() {
     return nickname;
   }
-
 
 
   /**

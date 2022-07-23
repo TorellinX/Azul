@@ -41,6 +41,7 @@ public class Plate {
   public Plate() {
 
   }
+
   public Plate(List<ColorTile> tiles) {
     this.addTiles(tiles);
   }

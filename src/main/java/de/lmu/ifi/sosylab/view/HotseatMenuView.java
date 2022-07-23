@@ -1,19 +1,31 @@
 package de.lmu.ifi.sosylab.view;
 
+import static de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
+import static de.lmu.ifi.sosylab.view.ColorSchemes.beach;
+import static de.lmu.ifi.sosylab.view.ColorSchemes.candy;
+import static de.lmu.ifi.sosylab.view.ColorSchemes.classic;
+import static de.lmu.ifi.sosylab.view.ColorSchemes.cosmic;
+
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static de.lmu.ifi.sosylab.view.ColorSchemes.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * Displays the menu for hotseat mode with player name entry and start/back buttons.

@@ -1,7 +1,6 @@
 package de.lmu.ifi.sosylab.view;
 
 import de.lmu.ifi.sosylab.client.ClientApplication;
-import de.lmu.ifi.sosylab.model.Player;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -10,14 +9,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import lombok.SneakyThrows;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 
@@ -28,7 +25,6 @@ public class RoomView extends JFrame {
 
   private JFrame thisFrame;
   List<String> players;
-
 
 
   /**
@@ -54,7 +50,7 @@ public class RoomView extends JFrame {
     headerPanel.add(headerPanelHeader, BorderLayout.NORTH);
 
     // Body of header panel: players list
-    JPanel playersList = new JPanel(new GridLayout(4,1));
+    JPanel playersList = new JPanel(new GridLayout(4, 1));
     for (int i = 0; i < players.size(); i++) {
       JPanel playerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
       JTextField player = new JTextField("", 25);
@@ -95,7 +91,6 @@ public class RoomView extends JFrame {
     JButton leaveButton = new JButton("LEAVE");
     buttonPanel.add(leaveButton);
     add(buttonPanel, BorderLayout.SOUTH);
-
 
     test1Button.addActionListener(new ActionListener() {
       @SneakyThrows

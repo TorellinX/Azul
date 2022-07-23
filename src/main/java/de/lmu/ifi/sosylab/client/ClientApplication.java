@@ -158,18 +158,20 @@ public class ClientApplication {
 
 
   public void startGame() {
-    WebSocketClient webSocketClient = new StandardWebSocketClient();
-    WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
-    stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-    stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
+    Thread t = new Thread(() -> {
+      WebSocketClient webSocketClient = new StandardWebSocketClient();
+      WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
+      stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+      stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
 
-    String url = "ws://127.0.0.1:8080/websocket";
-    StompSessionHandler sessionHandler = new ClientGame(roomId, user.getUsername());
-    stompClient.connect(url, sessionHandler);
+      String url = "ws://127.0.0.1:8080/websocket";
+      StompSessionHandler sessionHandler = new ClientGame(roomId, user.getUsername());
+      stompClient.connect(url, sessionHandler);
 
-    // check if connection is alive, if not reconnect
-
-    new Scanner(System.in).nextLine(); //Don't close immediately.
+      // check if connection is alive, if not reconnect
+      new Scanner(System.in).nextLine(); //Don't close immediately.
+    });
+    t.start();
   }
 
 

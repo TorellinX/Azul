@@ -2,12 +2,14 @@ package de.lmu.ifi.sosylab.client;
 
 import static de.lmu.ifi.sosylab.view.ColorSchemes.classic;
 
+import de.lmu.ifi.sosylab.client.ClientApplication;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import de.lmu.ifi.sosylab.view.PlayingView;
 import java.lang.reflect.Type;
+import javax.swing.SwingUtilities;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -21,6 +23,7 @@ public class ClientGame extends StompSessionHandlerAdapter {
   String roomid;
   ClientApplication clientApplication;
   String username;
+  private ColorScheme colorScheme = classic;
 
   public ClientGame(String roomid, String username) {
     this.roomid = roomid;
@@ -55,11 +58,14 @@ public class ClientGame extends StompSessionHandlerAdapter {
     System.out.println(payload);
     GameModel model = (GameModel) payload;
     Controller controller = new GameController(model);
-    ColorScheme colorScheme = classic;
-    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(),
-        username, colorScheme, controller, model);
-    playingView.setVisible(true);
 
-    // System.out.println(model.getState());
+   // SwingUtilities.invokeLater(() -> {
+      PlayingView playingView = new PlayingView(model.getPlayers().size(),
+          model.getPlayerNames(), colorScheme, controller, model);
+
+      playingView.setVisible(true);
+    //});
+
+     System.out.println(model.getState());
   }
 }

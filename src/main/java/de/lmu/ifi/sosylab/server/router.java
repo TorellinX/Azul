@@ -41,7 +41,7 @@ public class router {
   }
 
   @PostMapping("/rooms/id/{id}/start")
-  public Boolean startRoom(@PathVariable(value = "id") String id) {
+  public Boolean startRoom(@PathVariable(value = "id") String id) throws InterruptedException {
     return lobby.getRoom(id).start();
   }
 

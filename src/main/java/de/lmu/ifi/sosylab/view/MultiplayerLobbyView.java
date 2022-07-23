@@ -133,7 +133,7 @@ public class MultiplayerLobbyView extends JFrame {
             try {
               if (clientApplication.joinRoom(lobbyElementsList.get(room).getRoomId())) {
                 clientApplication.startGame();
-                dispose();
+                // dispose();
               }
             } catch (IOException ex) {
               throw new RuntimeException(ex);
@@ -201,6 +201,7 @@ public class MultiplayerLobbyView extends JFrame {
           try {
             clientApplication.createRoom(roomName);
             //TODO: Dont recreate lobby
+
             new MultiplayerLobbyView(clientApplication);
             thisFrame.dispose();
           } catch (IOException ex) {

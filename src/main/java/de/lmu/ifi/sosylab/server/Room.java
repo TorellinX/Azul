@@ -62,7 +62,7 @@ public class Room {
   }
 
   //start room
-  public Boolean start() {
+  public boolean start() throws InterruptedException {
     this.model = new GameModel();
     this.controller = new GameController(model);
     if (users.size() >= 2 && users.size() <= 4) {
@@ -76,10 +76,11 @@ public class Room {
   }
 
   //send GameModel to all users subscribing to this room
-  public void sendModel() {
-    if (state == State.RUNNING) {
-      apiController.sendGameModel(id, model);
-    }
+  public void sendModel(){
+      if (state == State.RUNNING) {
+        apiController.sendGameModel(id, model);
+      }
+
   }
 
   public boolean terminateRoom() {

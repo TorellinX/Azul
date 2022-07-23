@@ -85,10 +85,10 @@ public class StartMenuView extends JFrame {
       @SneakyThrows
       @Override
       public void actionPerformed(ActionEvent e) {
+        System.out.println("actionPerformed thread: " + Thread.currentThread().getId());
         ClientApplication client = new ClientApplication();
         new MultiplayerLobbyView(client);
         thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        System.out.println("Hotseat");
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         // thisFrame.setVisible(false);
       }

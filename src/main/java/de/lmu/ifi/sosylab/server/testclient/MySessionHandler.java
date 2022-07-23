@@ -22,7 +22,7 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
   @SneakyThrows
   @Override
   public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-    session.subscribe("/topic/room/cjshuw/model", this);
+    session.subscribe("/topic/room/yrxrra/model", this);
     //session.send("/app/game/room/dsgxcr/model", "test");
     //session.send("/app/game/newUser", "Player1-Test");
     //session.send("/app/game/newUser", "Player2-Test");
@@ -55,7 +55,7 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
         colorScheme, controller, model);
     playingView.setVisible(true);
 
-    // System.out.println(model.getState());
+    //System.out.println(model.getState());
   }
 
 

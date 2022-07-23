@@ -1,5 +1,6 @@
 package de.lmu.ifi.sosylab;
 
+import de.lmu.ifi.sosylab.client.ClientApplication;
 import de.lmu.ifi.sosylab.view.StartMenuView;
 
 // TODO: refine JavaDoc
@@ -25,6 +26,8 @@ public class AzulMain {
     //controller.setView(view);
     //model.addPropertyChangeListener(view);
     // controller.start();
+    System.out.println("main thread: " + Thread.currentThread().getId());
     StartMenuView startView = new StartMenuView();
+    // ClientApplication clientApplication = new ClientApplication();
   }
 }

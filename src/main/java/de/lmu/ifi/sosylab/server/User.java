@@ -7,11 +7,11 @@ public class User {
 
   @Getter
   @Setter
-  private static String username;
+  private String username;
 
   @Getter
   @Setter
-  private static String token;
+  private String token;
 
   // User constructor and auto generate token
   public User(String username) {
@@ -27,6 +27,10 @@ public class User {
     }
     return token;
   }
+
+
+
+
 
 
 }

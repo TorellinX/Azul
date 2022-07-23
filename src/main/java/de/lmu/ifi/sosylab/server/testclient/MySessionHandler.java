@@ -26,8 +26,8 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
   @SneakyThrows
   @Override
   public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-    session.subscribe("/topic/messages", this);
-    session.send("/app/game/model", "test");
+    session.subscribe("/topic/room/zqwcpz/model", this);
+    //session.send("/app/game/room/dsgxcr/model", "test");
     //session.send("/app/game/newUser", "Player1-Test");
     //session.send("/app/game/newUser", "Player2-Test");
     log.info("New session: {}", session.getSessionId());
@@ -55,7 +55,6 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     Controller controller = new GameController(model);
     PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(), controller, model);
     playingView.setVisible(true);
-    Thread.sleep(1000);
 
     // System.out.println(model.getState());
   }

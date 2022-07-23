@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.lmu.ifi.sosylab.Authenticator;
 import de.lmu.ifi.sosylab.InformationWrapper;
 
+import de.lmu.ifi.sosylab.server.controller.APIController;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class router {
 
+  @Autowired
+  APIController apiController;
+
   /**
    * Constructor for the class.
    */
@@ -34,7 +40,7 @@ public class router {
 
   @PostMapping("/rooms/create")
   public String createRoom(@RequestBody String name) {
-    return lobby.createRoom(name);
+    return lobby.createRoom(name, apiController);
   }
 
   @PostMapping("/rooms/id/{id}/start")
@@ -49,16 +55,16 @@ public class router {
 
   @GetMapping("/users")
   public List<String> getUsers() {
-    //System.out.println(lobby.getUsers().get(0).getUsername());
-    return lobby.getUsers().stream().map(user -> user.getUsername()).toList();
+    // return a string list of all users
+    return lobby.getUsers().stream().map(User::getUsername).toList();
   }
 
   @PostMapping("/user/register")
-  public String register(@RequestBody String username, HttpServletResponse response) {
+  public User register(@RequestBody String username, HttpServletResponse response) {
     System.out.println(username);
-    if (lobby.checkUsername(username) || lobby.rooms.stream().anyMatch(r -> r.getUsers().stream().anyMatch(u -> u.getUsername().equals(username)))) {
+    if (lobby.checkUsername(username) || lobby.rooms.stream().anyMatch(r -> r.getUsers().stream().anyMatch(u -> u.equals(username)))) {
       response.setStatus(409);
-      return "Username already in use";
+      return null;
     } else {
       return lobby.createUser(username);
     }
@@ -71,6 +77,12 @@ public class router {
     lobby.joinRoom(userToken, roomId);
     return "ok";
   }
+
+  @GetMapping("/rooms/id/{id}/users")
+  public List<String> getRoomUsers(@PathVariable(value = "id") String id) {
+    return lobby.getRoom(id).getUsers().stream().collect(Collectors.toUnmodifiableList());
+  }
+
 
   public router() {
     //management = new Management();

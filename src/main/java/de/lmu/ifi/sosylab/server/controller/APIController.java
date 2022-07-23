@@ -10,6 +10,7 @@ import de.lmu.ifi.sosylab.model.TableCenter;
 import de.lmu.ifi.sosylab.server.Room;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -17,7 +18,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class GameController {
+public class APIController {
 
   //RoomManager roomManager = new RoomManager();
 
@@ -59,8 +60,8 @@ public class GameController {
     return model.getPlates();
   }
 
-  @MessageMapping("/game/model")
-  @SendTo("/topic/messages")
+  @MessageMapping("/game/room/{roomId}/model")
+  @SendTo("/topic/room/{roomId}/model")
   public GameModel model(String message) throws Exception {
     System.out.println(message);
     Thread.sleep(1000); // simulated delay
@@ -108,6 +109,14 @@ public class GameController {
     //de.lmu.ifi.sosylab.controller.Controller controller = new GameController(model);
     model.createPlayers(players);
     return model.getPlayerToMove().getPlayerBoard();
+  }
+
+
+  //publish GameModel to a specific topic with roomId
+  //@MessageMapping("/game/model/{roomId}")
+  //send current GameModel to all clients in the room
+  public void sendGameModel(@DestinationVariable String roomId, GameModel model) {
+    this.messagingTemplate.convertAndSend("/topic/room/" + roomId + "/model", model);
   }
 
 

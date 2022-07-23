@@ -4,8 +4,11 @@ import de.lmu.ifi.sosylab.InformationWrapper;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.State;
+import de.lmu.ifi.sosylab.server.controller.APIController;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 public class Room {
@@ -16,19 +19,20 @@ public class Room {
   public String id;
   public State state;
 
-  @Getter
+
   private List<User> users = new ArrayList<>(4);
-  private final GameModel model;
-  private final GameController controller;
+  private GameModel model;
+  private GameController controller;
+
+  private final APIController apiController;
 
 
-  public Room(String name) {
+
+  public Room(String name, APIController apiController) {
     this.name = name;
     this.id = generateToken();
     this.state = State.RUNNING;
-
-    this.model = new GameModel();
-    this.controller = new GameController(model);
+    this.apiController = apiController;
   }
 
   //Generate a random Room token
@@ -40,6 +44,15 @@ public class Room {
     return token;
   }
 
+  public List<String> getUsers() {
+    //return username of all users in room
+    List<String> res = new ArrayList<>();
+    for (User user : users) {
+      res.add(user.getUsername());
+    }
+    return res;
+  }
+
   //add user to list
   public void addUser(User user) {
     System.out.println(users.size());
@@ -49,8 +62,22 @@ public class Room {
 
   //start room
   public Boolean start() {
-    state = State.RUNNING;
-    return true;
+    this.model = new GameModel();
+    this.controller = new GameController(model);
+    if (users.size() >= 2 && users.size() <= 4) {
+      this.model.createPlayers(users.stream().map(User::getUsername).collect(Collectors.toList()));
+      this.state = State.RUNNING;
+      sendModel();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //send GameModel to all users subscribing to this room
+  public void sendModel() {
+    if (state == State.RUNNING)
+    apiController.sendGameModel(id, model);
   }
 
   public boolean terminateRoom() {

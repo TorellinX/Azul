@@ -3,6 +3,7 @@ package de.lmu.ifi.sosylab.model;
 import static java.util.Objects.requireNonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
 import java.beans.PropertyChangeListener;
@@ -34,10 +35,12 @@ public class GameModel {
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
   private List<Plate> plates;
   private final TableCenter tableCenter;
+  @JsonProperty("bag")
   private final List<ColorTile> bag = Arrays.stream(Color.values())
       .flatMap(color -> IntStream.range(0, TILES_PER_COLOR).mapToObj(i -> new ColorTile(color)))
       .collect(Collectors.toList());
   private final Random random = new Random();
+  @JsonProperty("box")
   List<ColorTile> box = new ArrayList<>();
 
   public State getState() {
@@ -386,13 +389,11 @@ public class GameModel {
   }
 
   public List<Plate> getPlates() {
-    List<Plate> unmodifiablePlateList = Collections.unmodifiableList(plates);
-    return unmodifiablePlateList;
+    return plates;
   }
 
   public List<Player> getPlayers() {
-    List<Player> unmodifiablePlayersList = Collections.unmodifiableList(players);
-    return unmodifiablePlayersList;
+    return players;
   }
 
   /**

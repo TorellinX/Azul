@@ -1,5 +1,7 @@
 package de.lmu.ifi.sosylab.server;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import de.lmu.ifi.sosylab.server.controller.APIController;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -9,6 +11,7 @@ public class Lobby {
 
   @Getter
   @Setter
+  @JsonProperty("users")
   List<User> users = new ArrayList<>();
 
   @Getter
@@ -16,8 +19,8 @@ public class Lobby {
   List<Room> rooms = new ArrayList<>();
 
 
-  public String createRoom(String name) {
-    Room room = new Room(name);
+  public String createRoom(String name, APIController apiController) {
+    Room room = new Room(name, apiController);
     rooms.add(room);
     return room.id;
   }
@@ -32,10 +35,10 @@ public class Lobby {
     return false;
   }
   // Create User and add it to the list
-  public String createUser(String name) {
+  public User createUser(String name) {
     User user = new User(name);
     users.add(user);
-    return user.getToken();
+    return user;
   }
 
   // User join a room

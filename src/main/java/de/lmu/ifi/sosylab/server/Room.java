@@ -24,9 +24,10 @@ public class Room {
   private GameModel model;
   private GameController controller;
 
-  private final APIController apiController;
+  private APIController apiController;
 
-
+  public Room(){
+  }
 
   public Room(String name, APIController apiController) {
     this.name = name;

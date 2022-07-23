@@ -1,5 +1,16 @@
 package de.lmu.ifi.sosylab.client;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.lmu.ifi.sosylab.server.Room;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -16,11 +27,14 @@ import org.json.JSONArray;
 
 import java.io.IOException;
 import java.util.Scanner;
+import org.json.JSONObject;
 
 /**
  * Http client application for multiplayer game.
  */
 public class ClientApplication {
+
+  List<Room> rooms;
 
 
   /**
@@ -29,6 +43,134 @@ public class ClientApplication {
   public ClientApplication() {
 
   }
+  /**
+   * login to the server.
+   * @param username username
+   */
+  public String register(String username) throws UnsupportedEncodingException {
+    CloseableHttpClient httpclient = HttpClients.createDefault();
+    HttpPost httpPost = new HttpPost("http://localhost:8080/register");
+    httpPost.setHeader("Content-Type", "application/json");
+    JSONArray jsonArray = new JSONArray();
+    jsonArray.put(username);
+    StringEntity entity = new StringEntity(jsonArray.toString());
+    httpPost.setEntity(entity);
+    try {
+      HttpResponse response = httpclient.execute(httpPost);
+      System.out.println(response.getStatusLine());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return username;
+  }
+
+  /**
+   * Get a list of rooms from the server.
+   * @return list of rooms
+   */
+public void getRooms() throws IOException {
+  ObjectMapper objectMapper = new ObjectMapper();
+  System.out.println("Getting rooms...");
+  OkHttpClient client = new OkHttpClient().newBuilder()
+      .build();
+  MediaType mediaType = MediaType.parse("text/plain");
+  Request request = new Request.Builder()
+      .url("http://localhost:8080/api/rooms")
+      .method("GET", null)
+      .build();
+  Response response = client.newCall(request).execute();
+  //get id and name of rooms from response
+  rooms = new ObjectMapper().readValue(response.body().string(), new TypeReference<List<Room>>() {});
+  System.out.println(rooms.get(0).getId());
+}
+
+  /**
+   * Create a new room.
+   * @param name name of the room
+   * @return
+   */
+
+  public boolean createRoom(String name) throws IOException {
+    System.out.println("Creating room...");
+    OkHttpClient client = new OkHttpClient().newBuilder()
+        .build();
+    MediaType mediaType = MediaType.parse("application/javascript");
+    RequestBody body = RequestBody.create(name, mediaType);
+    Request request = new Request.Builder()
+        .url("http://localhost:8080/api/rooms/create")
+        .method("POST", body)
+        .addHeader("Content-Type", "application/javascript")
+        .build();
+    Response response = client.newCall(request).execute();
+    if (response.isSuccessful()) {
+      System.out.println("Room created");
+      getRooms();
+      return true;
+    } else {
+      System.out.println("Room creation failed");
+      return false;
+    }
+  }
+
+  /**
+   * Join a room.
+   * @param roomId id of the room
+   * @return
+   */
+  public boolean joinRoom(String roomId, String userToken) throws IOException {
+    System.out.println("Joining room...");
+    OkHttpClient client = new OkHttpClient().newBuilder()
+        .build();
+    MediaType mediaType = MediaType.parse("application/json");
+    RequestBody body = RequestBody.create("{\n    \"userToken\": \"" +userToken  + ",\n    \"roomId\": \"" + roomId + "\"\n}", mediaType);
+    Request request = new Request.Builder()
+        .url("http://localhost:8080/api/rooms/join")
+        .method("POST", body)
+        .addHeader("Content-Type", "application/json")
+        .build();
+    Response response = client.newCall(request).execute();
+    if (response.isSuccessful()) {
+      System.out.println("Room joined");
+      return true;
+    } else {
+      System.out.println("Room join failed");
+      return false;
+    }
+  }
+
+
+  /**
+   * Get the list of users in a room.
+   * @param roomId id of the room
+   * @return
+   */
+  public List<String> getUsers(String roomId) throws IOException {
+    System.out.println("Getting users...");
+    OkHttpClient client = new OkHttpClient().newBuilder()
+        .build();
+    MediaType mediaType = MediaType.parse("application/json");
+    RequestBody body = RequestBody.create("{\n    \"roomId\": \"" + roomId + "\"\n}", mediaType);
+    Request request = new Request.Builder()
+        .url("http://localhost:8080/api/rooms/users")
+        .method("POST", body)
+        .addHeader("Content-Type", "application/json")
+        .build();
+    Response response = client.newCall(request).execute();
+    if (response.isSuccessful()) {
+      System.out.println("Users retrieved");
+      List<String> users = new ObjectMapper().readValue(response.body().string(),
+          new TypeReference<List<String>>() {
+          });
+      return users;
+    } else {
+      System.out.println("Users retrieval failed");
+      return null;
+    }
+  }
+
+
+
+
 
   /**
    * Authentication of player for http client.

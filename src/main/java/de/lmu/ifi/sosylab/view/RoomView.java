@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import lombok.SneakyThrows;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -29,14 +30,14 @@ public class RoomView extends JFrame {
   List<String> players;
 
 
+
   /**
    * Constructor - see class description.
    */
   // TODO: change type of players in player list to Player in final implementation and use getters
   // TODO: chat to coordinate players in room?
-  public RoomView(String roomID, List<String> players) {
+  public RoomView(String roomID, List<String> players, ClientApplication client) {
     super(roomID);
-
     thisFrame = this;
     this.players = players;
 
@@ -95,11 +96,9 @@ public class RoomView extends JFrame {
     buttonPanel.add(leaveButton);
     add(buttonPanel, BorderLayout.SOUTH);
 
-    // Call http client to add new new user to room and whatsoever
-    // ToDo: whatsoever required
-    ClientApplication client = new ClientApplication();
 
     test1Button.addActionListener(new ActionListener() {
+      @SneakyThrows
       @Override
       public void actionPerformed(ActionEvent e) {
         JSONArray names = new JSONArray();
@@ -109,7 +108,9 @@ public class RoomView extends JFrame {
         StringEntity namesArray = new StringEntity(names.toString(), "UTF-8");
         String uri = "http://localhost:8080/";
         String uriPost = "api/start";
-        textArea1.setText(client.serverPost(uri, uriPost, namesArray));
+        String user = "test";
+        //textArea1.setText(client.serverPost(uri, uriPost, namesArray));
+        textArea1.setText(client.register(user));
       }
     });
 
@@ -125,7 +126,7 @@ public class RoomView extends JFrame {
     leaveButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        MultiplayerLobbyView multiplayerLobbyView = new MultiplayerLobbyView();
+        MultiplayerLobbyView multiplayerLobbyView = new MultiplayerLobbyView(client);
         thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
       }

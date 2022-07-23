@@ -1,10 +1,12 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.client.ClientApplication;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import lombok.SneakyThrows;
 
 /**
  * Displays the logo and allows for choice between hotseat and server based multiplayer.
@@ -60,7 +62,6 @@ public class StartMenuView extends JFrame {
   private void hotSeatButtonView() {
     hotSeatButton = new JButton("HOTSEAT");
     buttons.add(hotSeatButton);
-
     hotSeatButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -78,10 +79,14 @@ public class StartMenuView extends JFrame {
     buttons.add(multiPlayerButton);
 
     multiPlayerButton.addActionListener(new ActionListener() {
+      @SneakyThrows
       @Override
       public void actionPerformed(ActionEvent e) {
-        new MultiplayerLobbyView();
+        ClientApplication client = new ClientApplication();
+        new MultiplayerLobbyView(client);
         thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        System.out.println("Hotseat");
+        client.getRooms();
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         // thisFrame.setVisible(false);
       }

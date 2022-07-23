@@ -2,6 +2,7 @@ package de.lmu.ifi.sosylab.view;
 
 import static java.util.Objects.requireNonNull;
 
+import de.lmu.ifi.sosylab.client.ClientApplication;
 import de.lmu.ifi.sosylab.model.Player;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -34,11 +35,13 @@ public class MultiplayerLobbyView extends JFrame {
   private JFrame thisFrame;
   ArrayList<LobbyElements> lobbyElementsList = new ArrayList<>();
 
+  ClientApplication clientApplication;
+
   /**
    * Constructor of the class.
    *
    */
-  public MultiplayerLobbyView() {
+  public MultiplayerLobbyView(ClientApplication clientApplication) {
     super("Azul - Multiplayer Mode - Lobby");
     thisFrame = this;
     setLayout(new BorderLayout());
@@ -63,7 +66,7 @@ public class MultiplayerLobbyView extends JFrame {
     // Lobby Elemente positionieren
     // TODO: Zahl der existierenden Räume abfragen (Bsp 5), Elementliste anlegen
     // TODO: laufendes update, davor Elementliste nach join requests durchsuchen und in den neuen Zyklus weiterreichen...
-    List<String> fakeRooms = Arrays.asList("Buenos Aires", "Córdoba", "La Plata", "Montevideo", "Ascunión");    // FAKE!
+    List<String> fakeRooms = Arrays.asList("Buenos Aires", "Córdoba", "La Plata", "Montevideo", "Ascunión", "münchen");    // FAKE!
     List<String> players = Arrays.asList("Player1", "Player2", "Player3");                                      // FAKE!
 
     JPanel lobbyElementsPanel = new JPanel(new GridLayout(5, 1));
@@ -109,7 +112,7 @@ public class MultiplayerLobbyView extends JFrame {
             //ToDo: Change players list to type PLayer and work with corrsponding getters.
             List<String> players = new ArrayList<>(lobbyElementsList.get(room).getPlayersAlreadyInRoom());
             players.add(lobbyElementsList.get(room).getNickName());
-            RoomView roomView = new RoomView(lobbyElementsList.get(room).getRoomID(), players);
+            RoomView roomView = new RoomView(lobbyElementsList.get(room).getRoomID(), players, clientApplication);
           }
         }
         // Anmerkung: Man kann theoretisch mehrere Räume joinen, das ist kein bug, sondern ein feature... ("simultan - Azul" :D )
@@ -168,7 +171,7 @@ public class MultiplayerLobbyView extends JFrame {
           //ToDo: Change players list to type PLayer and work with corrsponding getters.
           List<String> players = new ArrayList<>();
           players.add(nickname);
-          RoomView roomView = new RoomView(roomName, players);
+          RoomView roomView = new RoomView(roomName, players, clientApplication);
 
           thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
           dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));

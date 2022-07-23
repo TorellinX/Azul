@@ -2,6 +2,7 @@ package de.lmu.ifi.sosylab.view;
 
 import static java.util.Objects.requireNonNull;
 
+import com.google.common.collect.Iterables;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
@@ -18,6 +19,8 @@ import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.util.Collections;
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -44,12 +47,16 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private DrawPlayerBoard[] playerBoards;
   private ColorScheme colorScheme;
   int stateFinishedprocessed;
+  private String myNickname = "";
+  private int myNicknameIndex = 0;
 
   /**
-   * Initializes the playing view.
+   * Initializes the playing view for hotseat mode.
    *
    * @param playerCount number of players
    * @param nicknames   list of nicknames of players
+   * @param controller  controller instance
+   * @param model       game model instance
    */
   public PlayingView(int playerCount, List<String> nicknames, Controller controller, GameModel model) {
     super("Azul Playing View");
@@ -68,6 +75,55 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       JOptionPane.showMessageDialog(null,
           "Game could not be started!",
           "Internal Error!", JOptionPane.ERROR_MESSAGE);
+      dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    setResizable(true);
+    setTitle("Azul");
+    setLayout(new BorderLayout());
+    setColors(ColorSchemes.cosmic); // TODO: the ability to choose the color scheme in the menu (ComboBox)
+    getContentPane().setBackground(colorScheme.playingView());  // TODO: replace with image
+    //TODO: implementieren setPlayingViewBackground()
+    setPlayingViewBackground();
+
+    createPlayingView();
+    addListeners();
+    pack();
+    setVisible(true);
+  }
+
+  /**
+   * Initializes the playing view for multiplayer mode.
+   *
+   * @param playerCount number of players
+   * @param nicknames   list of nicknames of players
+   * @param myNickname  nickname of the player correlated with calling multiplayer mode client
+   * @param controller  controller instance
+   * @param model       game model instance
+   */
+  public PlayingView(int playerCount, List<String> nicknames, String myNickname, Controller controller, GameModel model) {
+    super("Azul Playing View");
+
+    stateFinishedprocessed = 0;
+
+    this.playerCount = playerCount;
+    List<String> unmodNameList = Collections.unmodifiableList(nicknames);
+    this.nicknames = unmodNameList;
+    this.myNickname = myNickname;
+    this.model = model;
+    this.controller = controller;
+
+    // Index of myNickname in later players list - assuming names list is processed in sequence!
+    myNicknameIndex = IntStream.range(0, nicknames.size())
+            .filter(i -> myNickname.equals(nicknames.get(i)))
+            .findFirst().orElse(-1);
+
+    if (controller.startGame(nicknames)) {
+      this.players = model.getPlayers();
+    } else {
+      JOptionPane.showMessageDialog(null,
+              "Game could not be started!",
+              "Internal Error!", JOptionPane.ERROR_MESSAGE);
       dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -114,6 +170,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       playerBoards[i] = new DrawPlayerBoard(players.get(i), controller, colorScheme);
       playerBoards[i].setColorScheme(colorScheme);
     }
+    playerBoards[myNicknameIndex].setMyNickname(myNickname);      // route myNickname for player board
+
     // Linkes und rechtes panel mit Playerboards belegen
     JPanel playingViewLeft = new JPanel(new BorderLayout());
     playingViewLeft.setOpaque(false);

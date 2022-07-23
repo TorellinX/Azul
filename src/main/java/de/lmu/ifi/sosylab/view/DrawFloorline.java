@@ -3,6 +3,7 @@ package de.lmu.ifi.sosylab.view;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.PenaltyTile;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.model.PlayerState;
 import de.lmu.ifi.sosylab.model.Tile;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BasicStroke;
@@ -29,6 +30,7 @@ public class DrawFloorline extends JPanel {
   private ColorScheme colorScheme;
   private final String[] textPenaltyPoints = new String[]{"-1", "-1", "-2", "-2", "-2", "-3", "-3"};
   private final Player player;
+  private String myNickname = "";
 
   /**
    * Constructs the floorline and links it to player and controller.
@@ -47,9 +49,15 @@ public class DrawFloorline extends JPanel {
     floorlineButton.setOpaque(false);
     floorlineButton.setContentAreaFilled(false);
     floorlineButton.setBorderPainted(false);
+
     floorlineButton.addActionListener(e -> {
       System.out.println(player.getNickname() + " - " + "floorLineButton");
-      controller.placeTiles(player, -1);
+      if (myNickname.equals("") ||
+              (player.getPlayerState().equals(PlayerState.TO_MOVE) && player.getNickname().equals(myNickname))) {
+        controller.placeTiles(player, -1);
+      }
+      // controller.placeTiles(player, -1);
+
     });
 
   }
@@ -115,6 +123,15 @@ public class DrawFloorline extends JPanel {
    */
   public void setColorScheme(ColorScheme colorScheme) {
     this.colorScheme = colorScheme;
+  }
+
+  /**
+   * Routing for my nickname from multiplayer mode client for identification of allowed floorline events.
+   *
+   * @param myNickname
+   */
+  public void setMyNickname(String myNickname) {
+    this.myNickname = myNickname;
   }
 }
 

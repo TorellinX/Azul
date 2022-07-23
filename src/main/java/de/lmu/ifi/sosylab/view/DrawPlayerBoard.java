@@ -135,4 +135,14 @@ public class DrawPlayerBoard extends JPanel {
     drawPattern.setColorScheme(colorScheme);
     drawFloorline.setColorScheme(colorScheme);
   }
+
+  /**
+   * Routing for my nickname from multiplayer mode client for identification of active board events listeners.
+   *
+   * @param myNickname
+   */
+  public void setMyNickname(String myNickname) {
+    drawPattern.setMyNickname(myNickname);
+    drawFloorline.setMyNickname(myNickname);
+  }
 }

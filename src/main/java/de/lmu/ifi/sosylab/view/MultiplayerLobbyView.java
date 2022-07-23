@@ -94,14 +94,16 @@ public class MultiplayerLobbyView extends JFrame {
       throw new RuntimeException(e);
     }
 
+    multiPlayerLobbyPanel.add(lobbyElementsPanel, BorderLayout.CENTER);
+    multiPlayerLobbyPanel.setBackground(new Color(135, 206, 250));
+
 
 /*    for (int i = 0; i < rooms.size(); i++) {
       LobbyElements lobbyElements = new LobbyElements(rooms.get(i), players);
       lobbyElementsList.add(lobbyElements);
       lobbyElementsPanel.add(lobbyElements);
     }*/
-    multiPlayerLobbyPanel.add(lobbyElementsPanel, BorderLayout.CENTER);
-    multiPlayerLobbyPanel.setBackground(new Color(135, 206, 250));
+
 
 
     // Game - Kontroll - Panel
@@ -173,7 +175,7 @@ public class MultiplayerLobbyView extends JFrame {
       public void actionPerformed(ActionEvent e) {
 
         int skipFlag = 0;
-        String nickname = "";
+        //String nickname = "";
         String roomName = JOptionPane.showInputDialog(null,
             "Please enter name for new room:", "Create room.", JOptionPane.QUESTION_MESSAGE);
         if (roomName == null || roomName.isEmpty()) {
@@ -181,7 +183,8 @@ public class MultiplayerLobbyView extends JFrame {
               "A new room must get a name.",
               "Error.", JOptionPane.ERROR_MESSAGE);
           skipFlag = 1;
-        } else {
+        }
+        /*else {
           nickname = JOptionPane.showInputDialog(null,
               "Enter nickname:", "Join " + roomName, JOptionPane.QUESTION_MESSAGE);
           if (nickname == null) {
@@ -190,17 +193,30 @@ public class MultiplayerLobbyView extends JFrame {
                 "Error.", JOptionPane.ERROR_MESSAGE);
             skipFlag = 1;
           }
-        }
+        }*/
         if (skipFlag == 0) {
 
+          try {
+            clientApplication.createRoom(roomName);
+            //TODO: Dont recreate lobby
+            new MultiplayerLobbyView(clientApplication);
+            thisFrame.dispose();
+          } catch (IOException ex) {
+            throw new RuntimeException(ex);
+          }
+
           //ToDo: Change players list to type PLayer and work with corrsponding getters.
-          List<String> players = new ArrayList<>();
+          /*List<String> players = new ArrayList<>();
           players.add(nickname);
           RoomView roomView = new RoomView(roomName, players, clientApplication);
 
           thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
           dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+
+           */
         }
+
+
 
         //TODO: create new room also @server
 

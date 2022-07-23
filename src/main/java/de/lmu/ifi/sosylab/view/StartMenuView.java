@@ -86,7 +86,6 @@ public class StartMenuView extends JFrame {
         new MultiplayerLobbyView(client);
         thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         System.out.println("Hotseat");
-        client.requestRooms();
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         // thisFrame.setVisible(false);
       }

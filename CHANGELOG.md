@@ -18,3 +18,26 @@
 > - Die Methode zur Auswahl aus der Tischmitte ordnet den Strafstein automatisch dem ersten Spieler zu, der aus der Tischmitte Steine zieht.
 > - Am Rundenende wird automatisch der score für alle Spieler gemäß Anleitung ermittelt.
 
+
+## Zweite Abgabe:
+
+### Addes
+> - Serverimplementierung mit SpringBoot und Websockets.
+> - Neue Farb Themes stehen zur Auswahl.
+> - Background der einzelnen Fenster wurden durch Bilder ersetzt.
+> - Playfenster kann von der größe Variiert werden. 
+> - Mitteilung, wenn neue Runde beginnt.
+
+
+## Changed
+> - Refactoring der View und des Models.
+> - Model und View Farben stimmen überein. 
+> - Anzeige des Players welcher am Zug ist, ist deutlicher.
+
+## Fixed
+> - Penalty tile wurde überschrieben.
+> - Doppelaufrufe von Methoden. 
+> - Indicies haben nicht mehr zwei verschiedene zählzweisen.
+> - NullPointerExecption in der Playingview.
+> - Löschen von Spielern wirft keine Exception mehr. 
+

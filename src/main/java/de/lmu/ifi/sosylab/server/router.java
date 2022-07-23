@@ -94,13 +94,13 @@ public class router {
     return informationWrapper;
   }
 
-  @PostMapping("/rooms/id/{roomid}/pickTilePlate")
+  @PostMapping("/room/{roomid}/pickTilePlate")
   public Boolean pickTilePlate(@RequestBody InformationWrapper informationWrapper) {
     //management.pickTileFromPlate(informationWrapper);
     return null;
   }
 
-  @PostMapping("/pickTileFromTableCenter")
+  @PostMapping("/rooms/id/{roomid}/pickTileFromTableCenter")
   public Boolean pickTileFromTableCenter(@RequestBody InformationWrapper informationWrapper) {
     //management.pickTileFromTableCenter(informationWrapper);
     return null;

@@ -26,7 +26,6 @@ public class AzulMain {
     //controller.setView(view);
     //model.addPropertyChangeListener(view);
     // controller.start();
-    System.out.println("main thread: " + Thread.currentThread().getId());
     StartMenuView startView = new StartMenuView();
     // ClientApplication clientApplication = new ClientApplication();
   }

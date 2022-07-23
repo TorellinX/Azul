@@ -2,6 +2,9 @@ package de.lmu.ifi.sosylab.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.lmu.ifi.sosylab.InformationWrapper;
+import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.server.Room;
 import de.lmu.ifi.sosylab.server.User;
 import java.io.IOException;
@@ -45,6 +48,7 @@ public class ClientApplication {
 
   @Getter
   String roomId;
+
 
 
   /**
@@ -136,8 +140,7 @@ public class ClientApplication {
     OkHttpClient client = new OkHttpClient().newBuilder()
         .build();
     MediaType mediaType = MediaType.parse("application/json");
-    RequestBody body = RequestBody.create(mediaType,
-        "{\"userToken\": \"" + user.getToken() + "\",\"roomId\": \"" + roomId + "\"}");
+    RequestBody body = RequestBody.create("{\"userToken\": \"" + user.getToken() + "\",\"roomId\": \"" + roomId + "\"}", mediaType);
     System.out.println(body);
     Request request = new Request.Builder()
         .url("http://localhost:8080/api/rooms/join")
@@ -156,6 +159,26 @@ public class ClientApplication {
     }
   }
 
+  @SneakyThrows
+  public boolean startGameRequest(String roomId) {
+    OkHttpClient client = new OkHttpClient().newBuilder()
+        .build();
+    MediaType mediaType = MediaType.parse("text/plain");
+    RequestBody body = RequestBody.create("", mediaType);
+    Request request = new Request.Builder()
+        .url("http://localhost:8080/api/rooms/id/" + roomId +"/start")
+        .method("POST", body)
+        .build();
+    Response response = client.newCall(request).execute();
+    if(response.isSuccessful()) {
+      System.out.println("Game started");
+      return true;
+    } else {
+      System.out.println("Game start failed");
+      return false;
+    }
+  }
+
 
   public void startGame() {
     Thread t = new Thread(() -> {
@@ -165,7 +188,7 @@ public class ClientApplication {
       stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
 
       String url = "ws://127.0.0.1:8080/websocket";
-      StompSessionHandler sessionHandler = new ClientGame(roomId, user.getUsername());
+      StompSessionHandler sessionHandler = new ClientGame(roomId, user.getUsername(), this);
       stompClient.connect(url, sessionHandler);
 
       // check if connection is alive, if not reconnect
@@ -299,4 +322,58 @@ public class ClientApplication {
   }
 
   // end class
+
+  @SneakyThrows
+  public Boolean pickTileFromPlate(InformationWrapper informationWrapper) {
+    System.out.println("Picking tile from plate...");
+    OkHttpClient client = new OkHttpClient().newBuilder()
+        .build();
+    MediaType mediaType = MediaType.parse("application/json");
+    RequestBody body = RequestBody.create(String.valueOf(informationWrapper), mediaType);
+    Request request = new Request.Builder()
+        .url("http://localhost:8080/api/room/" + rooms + "/pickTilePlate")
+        .method("POST", body)
+        .addHeader("Content-Type", "application/json")
+        .build();
+    Response response = client.newCall(request).execute();
+    return true;
+  }
+
+  @SneakyThrows
+  public Boolean pickTileFromTableCenter(InformationWrapper informationWrapper) {
+    OkHttpClient client = new OkHttpClient().newBuilder()
+        .build();
+    MediaType mediaType = MediaType.parse("application/json");
+    RequestBody body = RequestBody.create(String.valueOf(informationWrapper), mediaType);
+    Request request = new Request.Builder()
+        .url("http://localhost:8080/api/room/" + rooms + "/pickTileFromTableCenter")
+        .method("POST", body)
+        .addHeader("Content-Type", "application/json")
+        .build();
+    Response response = client.newCall(request).execute();
+    if(response.isSuccessful()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @SneakyThrows
+  public Boolean placeTiles(InformationWrapper informationWrapper) {
+    OkHttpClient client = new OkHttpClient().newBuilder()
+        .build();
+    MediaType mediaType = MediaType.parse("application/json");
+    RequestBody body = RequestBody.create(String.valueOf(informationWrapper), mediaType);
+    Request request = new Request.Builder()
+        .url("http://localhost:8080/api/room/" + rooms + "/placeTile")
+        .method("POST", body)
+        .addHeader("Content-Type", "application/json")
+        .build();
+    Response response = client.newCall(request).execute();
+    if(response.isSuccessful()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

@@ -25,9 +25,10 @@ public class ClientGame extends StompSessionHandlerAdapter {
   String username;
   private ColorScheme colorScheme = classic;
 
-  public ClientGame(String roomid, String username) {
+  public ClientGame(String roomid, String username, ClientApplication clientApplication) {
     this.roomid = roomid;
     this.username = username;
+    this.clientApplication = clientApplication;
   }
 
   @SneakyThrows

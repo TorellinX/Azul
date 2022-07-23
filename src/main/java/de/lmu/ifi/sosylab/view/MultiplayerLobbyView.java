@@ -147,7 +147,7 @@ public class MultiplayerLobbyView extends JFrame {
         // Anmerkung: Man kann theoretisch mehrere Räume joinen, das ist kein bug, sondern ein feature... ("simultan - Azul" :D )
 
         thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+        //dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
       }
     });
 
@@ -235,6 +235,7 @@ class LobbyElements extends JPanel {
   private String nickname = "";
   ArrayList<JTextField> playerFields = new ArrayList<>();
   JButton joinRoom;
+  JButton startRoom;
   private String roomId;
 
   private String roomName;
@@ -295,8 +296,10 @@ class LobbyElements extends JPanel {
     JPanel joinButtonPanelInset = new JPanel(new FlowLayout(FlowLayout.CENTER));
     joinButtonPanelInset.setPreferredSize(new Dimension(100, 40));
     joinRoom = new JButton("JOIN");
+    startRoom = new JButton("START");
     joinButtonPanelInset.add(joinRoom);
-    joinButtonPanel.add(joinButtonPanelInset, BorderLayout.SOUTH);
+    joinButtonPanelInset.add(startRoom);
+    joinButtonPanel.add(joinButtonPanelInset, BorderLayout.CENTER);
     joinRoom.setBounds(new Rectangle(50, 20));
     if (players.size() > 3) {
       joinRoom.setEnabled(false);
@@ -304,6 +307,7 @@ class LobbyElements extends JPanel {
     // TODO: disable also, if game in room is active.
     roomStatus.add(joinButtonPanel, BorderLayout.EAST);
     addJoinRoomActionListener();
+    addStartListener();
 
     // Position of main lobby elements
     add(roomStatus, BorderLayout.CENTER);
@@ -373,6 +377,17 @@ class LobbyElements extends JPanel {
       }
     });
   }
+
+  public void addStartListener() {
+    startRoom.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        clientApplication.startGameRequest(roomId);
+      }
+    });
+  }
+
+
 
   private void addTextFieldsActionListener() {
 

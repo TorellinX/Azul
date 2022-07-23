@@ -86,7 +86,7 @@ public class MultiplayerLobbyView extends JFrame {
     JPanel lobbyElementsPanel = new JPanel(new GridLayout(5, 1));
     try {
       for (Room room : clientApplication.requestRooms()) {
-        LobbyElements lobbyElements = new LobbyElements(room.getName(), room.getId(), room.getUsers());
+        LobbyElements lobbyElements = new LobbyElements(room.getId(), room.getName(), room.getUsers(), clientApplication);
         lobbyElementsList.add(lobbyElements);
         lobbyElementsPanel.add(lobbyElements);
       }
@@ -137,7 +137,10 @@ public class MultiplayerLobbyView extends JFrame {
         for (int room = 0; room < lobbyElementsList.size(); ++room) {
           if (!lobbyElementsList.get(room).getNickName().isEmpty()) {
             try {
-              clientApplication.joinRoom(lobbyElementsList.get(room).getRoomId());
+              if(clientApplication.joinRoom(lobbyElementsList.get(room).getRoomId())){
+                clientApplication.startGame();
+                dispose();
+              }
             } catch (IOException ex) {
               throw new RuntimeException(ex);
             }
@@ -244,6 +247,8 @@ class LobbyElements extends JPanel {
   private String roomName;
   private List<String> players;
 
+  private ClientApplication clientApplication;
+
   /**
    * Generate lobby elements from server data.
    *
@@ -251,10 +256,11 @@ class LobbyElements extends JPanel {
    * @param players   players list (preliminary: String, else: Player)
    */
   //ToDo: Change players list to type PLayer and work with corrsponding getters.
-  public LobbyElements(String roomId, String roomName, List<String> players) {
+  public LobbyElements(String roomId, String roomName, List<String> players, ClientApplication clientApplication) {
     this.roomId = roomId;
     this.roomName = roomName;
     this.players = players;
+    this.clientApplication = clientApplication;
 
     // Main panel for one lobby element
     setLayout(new BorderLayout());
@@ -369,6 +375,7 @@ class LobbyElements extends JPanel {
             playerFields.get(players.size()).setBackground(Color.green);
           }
         }
+        clientApplication.register(nickname);
       }
     });
   }

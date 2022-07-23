@@ -72,6 +72,7 @@ public class router {
 
   @PostMapping("/rooms/join")
   public String joinRoom(@RequestBody ObjectNode json) {
+    System.out.println(json.toString());
     String userToken = json.get("userToken").asText();
     String roomId = json.get("roomId").asText();
     lobby.joinRoom(userToken, roomId);

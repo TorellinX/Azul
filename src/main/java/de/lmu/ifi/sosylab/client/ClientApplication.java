@@ -3,10 +3,13 @@ package de.lmu.ifi.sosylab.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.lmu.ifi.sosylab.server.Room;
+import de.lmu.ifi.sosylab.server.User;
+import de.lmu.ifi.sosylab.server.testclient.MySessionHandler;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,6 +32,12 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.util.Scanner;
 import org.json.JSONObject;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompSessionHandler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.web.socket.client.WebSocketClient;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 /**
  * Http client application for multiplayer game.
@@ -37,12 +46,10 @@ public class ClientApplication {
   @Getter
   List<Room> rooms;
 
+  User user;
+
   @Getter
-  String username;
-  @Getter
-  String userToken;
-  @Getter
-  String roomID;
+  String roomId;
 
 
 
@@ -57,21 +64,20 @@ public class ClientApplication {
    * login to the server.
    * @param username username
    */
-  public String register(String username) throws UnsupportedEncodingException {
-    CloseableHttpClient httpclient = HttpClients.createDefault();
-    HttpPost httpPost = new HttpPost("http://localhost:8080/register");
-    httpPost.setHeader("Content-Type", "application/json");
-    JSONArray jsonArray = new JSONArray();
-    jsonArray.put(username);
-    StringEntity entity = new StringEntity(jsonArray.toString());
-    httpPost.setEntity(entity);
-    try {
-      HttpResponse response = httpclient.execute(httpPost);
-      System.out.println(response.getStatusLine());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return username;
+  @SneakyThrows
+  public String register(String username) {
+    OkHttpClient client = new OkHttpClient().newBuilder()
+        .build();
+    MediaType mediaType = MediaType.parse("text/plain");
+    RequestBody body = RequestBody.create(username, mediaType);
+    Request request = new Request.Builder()
+        .url("http://localhost:8080/api/user/register")
+        .method("POST", body)
+        .addHeader("Content-Type", "text/plain")
+        .build();
+    Response response = client.newCall(request).execute();
+    user = new ObjectMapper().readValue(response.body().string(), User.class);
+    return user.getUsername();
   }
 
   /**
@@ -114,7 +120,6 @@ public List<Room> requestRooms() throws IOException {
     Response response = client.newCall(request).execute();
     if (response.isSuccessful()) {
       System.out.println("Room created");
-      getRooms();
       return true;
     } else {
       System.out.println("Room creation failed");
@@ -128,25 +133,44 @@ public List<Room> requestRooms() throws IOException {
    * @return
    */
   public boolean joinRoom(String roomId) throws IOException {
-    System.out.println("Joining room...");
+    System.out.println("Joining room..." + roomId);
     OkHttpClient client = new OkHttpClient().newBuilder()
         .build();
     MediaType mediaType = MediaType.parse("application/json");
-    RequestBody body = RequestBody.create("{\n    \"userToken\": \"" + userToken  + ",\n    \"roomId\": \"" + roomId + "\"\n}", mediaType);
-    System.out.println(body.toString());
+    RequestBody body = RequestBody.create(mediaType, "{\"userToken\": \"" +user.getToken() + "\",\"roomId\": \"" + roomId+ "\"}");
+    System.out.println(body);
     Request request = new Request.Builder()
         .url("http://localhost:8080/api/rooms/join")
         .method("POST", body)
         .addHeader("Content-Type", "application/json")
         .build();
     Response response = client.newCall(request).execute();
+    System.out.println(response.body().string());
     if (response.isSuccessful()) {
       System.out.println("Room joined");
+      this.roomId = roomId;
       return true;
     } else {
       System.out.println("Room join failed");
       return false;
     }
+  }
+
+
+  public void startGame(){
+    WebSocketClient webSocketClient = new StandardWebSocketClient();
+    WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
+    stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+    stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
+
+    String url = "ws://127.0.0.1:8080/websocket";
+    StompSessionHandler sessionHandler = new ClientGame(roomId, user.getUsername());
+    stompClient.connect(url, sessionHandler);
+
+    // check if connection is alive, if not reconnect
+
+
+    new Scanner(System.in).nextLine(); //Don't close immediately.
   }
 
 

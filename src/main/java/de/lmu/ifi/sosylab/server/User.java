@@ -13,6 +13,10 @@ public class User {
   @Setter
   private String token;
 
+  public User() {
+
+  }
+
   // User constructor and auto generate token
   public User(String username) {
     this.username = username;

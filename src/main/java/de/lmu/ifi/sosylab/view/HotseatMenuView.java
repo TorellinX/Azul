@@ -4,24 +4,16 @@ import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
+import java.util.Objects;
+
+import static de.lmu.ifi.sosylab.view.ColorSchemes.*;
 
 /**
  * Displays the menu for hotseat mode with player name entry and start/back buttons.
@@ -29,12 +21,13 @@ import javax.swing.table.DefaultTableModel;
 public class HotseatMenuView extends JFrame {
 
   private final JPanel playerControlPanel;
-  private final JPanel playerControlButtons;
-  private final JPanel gameControlButtons;
-  private JTextField nicknameLocal;
+  private final JPanel playerButtonsPanel;
+  private final JPanel controlButtonsPanel;
+  private final ArrayList<JTextField> nicknameInputFields = new ArrayList<>();
   private final JFrame thisFrame;
-  private final JTable localPlayers;
-  private int numberOfPlayers = 0;
+  private int numberOfPlayers = 2;
+  private ColorScheme colorScheme = classic;
+  private final Color hotseatMenu = new Color(135, 206, 250);
 
   /**
    * Constructor - see class description.
@@ -44,48 +37,78 @@ public class HotseatMenuView extends JFrame {
     thisFrame = this;
     setLayout(new BorderLayout());
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setBackground(hotseatMenu);
 
     // Logo einrichten und anzeigen
 
     JPanel graphic = new JPanel();
+    graphic.setBackground(hotseatMenu);
     add(graphic, BorderLayout.NORTH);
     GraphicAzul graphicAzul = new GraphicAzul();
     graphic.add(graphicAzul.azulPanel);
-    graphic.setBackground(new Color(135, 206, 250));
 
     // Unter dem Logo Kontrollen einrichten und anzeigen
 
     // Player - Kontroll - Panel
     playerControlPanel = new JPanel(new BorderLayout());
-    playerControlPanel.setBackground(new Color(135, 206, 250));
+    playerControlPanel.setBackground(hotseatMenu);
     // Im Main Frame positionieren
     add(playerControlPanel, BorderLayout.CENTER);
-    // Player - Kontroll - Panel befüllen
-    // Mit Namenseingabefeld
-    addPlayerTextFieldView();
     // Mit Buttons
-    playerControlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    playerButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    playerButtonsPanel.setOpaque(false);
     addPlayerButtonView();
     removePlayerButtonView();
-    playerControlPanel.add(playerControlButtons, BorderLayout.CENTER);
-    // Mit Tabelle für eingegebene Namen
-    DefaultTableModel tableModel = new DefaultTableModel();
-    tableModel.addColumn("Player Nickname");
-    localPlayers = new JTable(tableModel);
-    JScrollPane nickNames = new JScrollPane(localPlayers);
-    nickNames.setPreferredSize(new Dimension(400, 90));
-    playerControlPanel.add(nickNames, BorderLayout.SOUTH);
+    playerControlPanel.add(playerButtonsPanel, BorderLayout.CENTER);
 
-    // Game - Kontroll - Panel
+    JPanel playerNicknamePanel = new JPanel();
+    playerNicknamePanel.setOpaque(false);
+    playerNicknamePanel.setLayout(new FlowLayout());
+    JPanel nicknameFieldsPanel = new JPanel();
+    BoxLayout layout = new BoxLayout(nicknameFieldsPanel, BoxLayout.Y_AXIS);
+    nicknameFieldsPanel.setLayout(layout);
+    nicknameFieldsPanel.setOpaque(false);
+    for (int i = 0; i < 4; i++) {
+      nicknameInputFields.add(i, new JTextField(25));
+      nicknameInputFields.get(i).setText("Player " + (i + 1));
+      nicknameFieldsPanel.add(nicknameInputFields.get(i));
+      nicknameInputFields.get(i).addActionListener(e -> {
+        //
+        int fieldIndex = nicknameInputFields.indexOf(e.getSource());
+        if (fieldIndex < numberOfPlayers - 1) {
+          nicknameInputFields.get(fieldIndex + 1).requestFocusInWindow();
+          nicknameInputFields.get(fieldIndex + 1).selectAll();
+        }
+      });
+      nicknameInputFields.get(i).addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+          JTextField textField = (JTextField) e.getSource();
+          if (textField.getSelectedText() == null) {
+            (textField).selectAll();
+          } else {
+            (textField).setCaretPosition(textField.getText().length());
+          }
+        }
+      });
+    }
+    nicknameInputFields.get(2).setEnabled(false);
+    nicknameInputFields.get(3).setEnabled(false);
+    playerNicknamePanel.add(nicknameFieldsPanel);
+    playerControlPanel.add(playerNicknamePanel, BorderLayout.NORTH);
+
+    // Game-Kontroll-Panel
     JPanel gameControlPanel = new JPanel(new BorderLayout());
-    gameControlPanel.setBackground(new Color(135, 206, 250));
+    gameControlPanel.setBackground(hotseatMenu);
     // Im Main Frame positionieren
     add(gameControlPanel, BorderLayout.SOUTH);
-    // Game - Kontroll - Panel befüllen
-    gameControlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    startGameButtonView();
+    // Game-Kontroll-Panel befüllen
+    controlButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    controlButtonsPanel.setOpaque(false);
+    addStartGameButton();
+    startGameThemeView();
     backGameButtonView();
-    gameControlPanel.add(gameControlButtons, BorderLayout.CENTER);
+    gameControlPanel.add(controlButtonsPanel, BorderLayout.CENTER);
 
     // Ende set-up, packen, sichtbar machen
     pack();
@@ -93,131 +116,120 @@ public class HotseatMenuView extends JFrame {
 
   }
 
-  private void addPlayerTextFieldView() {
-    JPanel playerControlText = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    JLabel playerControlLabel = new JLabel("HIER BENUTZERNAME EINGEBEN: ");
-    playerControlText.add(playerControlLabel);
-    nicknameLocal = new JTextField("", 30);
-    playerControlText.add(nicknameLocal);
-    playerControlPanel.add(playerControlText, BorderLayout.NORTH);
-
-    nicknameLocal.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-
-        addPlayerToLocalGame(nicknameLocal.getText());
-      }
-    });
-
-  }
-
   private void addPlayerButtonView() {
     JButton addPlayerButton = new JButton("ADD PLAYER");
-    playerControlButtons.add(addPlayerButton);
+    playerButtonsPanel.add(addPlayerButton);
 
-    addPlayerButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-
-        addPlayerToLocalGame(nicknameLocal.getText());
+    addPlayerButton.addActionListener(e -> {
+      if (!nicknameInputFields.get(2).isEnabled()) {
+        nicknameInputFields.get(2).setEnabled(true);
+        numberOfPlayers++;
+      } else if (!nicknameInputFields.get(3).isEnabled()) {
+        nicknameInputFields.get(3).setEnabled(true);
+        numberOfPlayers++;
       }
     });
-
   }
 
   private void removePlayerButtonView() {
     JButton removePlayerButton = new JButton("REMOVE PLAYER");
-    playerControlButtons.add(removePlayerButton);
+    playerButtonsPanel.add(removePlayerButton);
 
-    removePlayerButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        // checks if a list element is selected
-        if (localPlayers.getSelectedRow() == -1) {
-          JOptionPane.showMessageDialog(null, "Please select a user to delete");
-        } else {
-          removePlayerLocalGame();
-        }
+    removePlayerButton.addActionListener(e -> {
+      if (nicknameInputFields.get(3).isEnabled()) {
+        nicknameInputFields.get(3).setEnabled(false);
+        numberOfPlayers--;
+      } else if (nicknameInputFields.get(2).isEnabled()) {
+        nicknameInputFields.get(2).setEnabled(false);
+        numberOfPlayers--;
       }
     });
 
   }
 
-  private void startGameButtonView() {
+  private void addStartGameButton() {
     JButton startGameButton = new JButton("START GAME");
-    gameControlButtons.add(startGameButton);
-
-    startGameButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (getNicknames().size() < 2 || getNicknames().size() > 4) {
-          JOptionPane.showMessageDialog(null,
-              "It was not possible to create a Game, there can only be 2-4 players");
-        } else {
-          GameModel model = new GameModel();
-          Controller controller = new GameController(model);
-          PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(), controller, model);
-          // setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-          // dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
-        }
-      }
-    });
-
-  }
-
-  private void backGameButtonView() {
-    JButton backGameButton = new JButton("BACK GAME");
-    gameControlButtons.add(backGameButton);
-
-    backGameButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
-        StartMenuView startView = new StartMenuView();
-      }
-    });
-  }
-
-  private void addPlayerToLocalGame(String nickname) {
-    DefaultTableModel modelOfLocalPlayer = (DefaultTableModel) localPlayers.getModel();
-    Boolean isUserNameTaken = false;
-
-
-    for (int i = 0; i < numberOfPlayers; i++) {
-      if (nickname.equals((String) modelOfLocalPlayer.getValueAt(i, 0))) {
-        JOptionPane.showMessageDialog(null, "User already in the list");
-        isUserNameTaken = true;
-      }
-    }
-    if (numberOfPlayers >= 4) {
-      JOptionPane.showMessageDialog(null, "There can't be more than 4 Players in the Game");
-      isUserNameTaken = true;
-
-    }
-
-    if (!isUserNameTaken) {
-      modelOfLocalPlayer.addRow(new Object[]{nickname});
-      numberOfPlayers++;
-    }
-
-    nicknameLocal.setText("");
+    controlButtonsPanel.add(startGameButton);
+    startGameButton.addActionListener(e -> startGame());
   }
 
   /**
-   * Removes a player from the local Player Table.
+   * Starts the game.
    */
-
-  private void removePlayerLocalGame() {
-    int row = localPlayers.getSelectedRow();
-
-    DefaultTableModel model = (DefaultTableModel) localPlayers.getModel();
-    model.removeRow(row);
-    numberOfPlayers--;
-
+  private void startGame() {
+    if (getNicknames().size() < 2 || getNicknames().size() > 4) {
+      JOptionPane.showMessageDialog(null,
+          "It was not possible to create a Game, there can be only between two and four players.");
+      return;
+    }
+    if (areNicknamesCorrect()) {
+      GameModel model = new GameModel();
+      Controller controller = new GameController(model);
+      new PlayingView(getNicknames().size(), getNicknames(), colorScheme, controller, model);
+    }
   }
 
+  private void startGameThemeView() {
+    JLabel theme = new JLabel("  THEME: ");
+    controlButtonsPanel.add(theme);
+    JComboBox<String> startGameComboBox = new JComboBox<>(new String[]{
+        "Classic", "Beach", "Candy", "Cosmic"});
+    controlButtonsPanel.add(startGameComboBox);
+    startGameComboBox.addActionListener(e -> {
+      String selectedTheme = (String) startGameComboBox.getSelectedItem();
+      Objects.requireNonNull(selectedTheme);
+      switch (selectedTheme) {
+        case "Classic" -> colorScheme = classic;
+        case "Beach" -> colorScheme = beach;
+        case "Candy" -> colorScheme = candy;
+        case "Cosmic" -> colorScheme = cosmic;
+        default -> throw new IllegalArgumentException("Non valid color scheme: " + selectedTheme);
+      }
+      //dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+    });
+  }
 
+  private void backGameButtonView() {
+    JButton backGameButton = new JButton("BACK TO MAIN MENU");
+    controlButtonsPanel.add(backGameButton);
+
+    backGameButton.addActionListener(e -> {
+      setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+      dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+      new StartMenuView();
+    });
+  }
+
+  /**
+   * Checks that there are no duplicate or empty nicknames.
+   *
+   * @return true if there are no duplicate or empty nicknames
+   */
+  private boolean areNicknamesCorrect() {
+    for (JTextField nicknameField : nicknameInputFields) {
+      if (!nicknameField.isEnabled()) {
+        break;
+      }
+      String nickname = nicknameField.getText();
+      for (int i = 0; i < numberOfPlayers; i++) {
+        if (nicknameField == nicknameInputFields.get(i)) {
+          continue;
+        }
+        if (!nicknameInputFields.get(i).isEnabled()) {
+          continue;
+        }
+        if (nickname.equals(nicknameInputFields.get(i).getText())) {
+          JOptionPane.showMessageDialog(null, "Enter different player names.");
+          return false;
+        }
+      }
+      if (nickname.equals("")) {
+        JOptionPane.showMessageDialog(null, "Choose a Nickname!");
+        return false;
+      }
+    }
+    return true;
+  }
 
   /**
    * Returns the list of players' nicknames.
@@ -226,35 +238,12 @@ public class HotseatMenuView extends JFrame {
    */
   public List<String> getNicknames() {
     ArrayList<String> listOfPlayer = new ArrayList<>();
-    DefaultTableModel localPlayer = (DefaultTableModel) localPlayers.getModel();
-
-    for (int i = 0; i < localPlayer.getRowCount(); i++) {
-      listOfPlayer.add((String) localPlayer.getValueAt(i, 0));
+    for (int i = 0; i < numberOfPlayers; i++) {
+      if (!nicknameInputFields.get(i).isEnabled()) {
+        break;
+      }
+      listOfPlayer.add(nicknameInputFields.get(i).getText());
     }
-    System.out.println(listOfPlayer);
     return listOfPlayer;
   }
-
-  /*
-  private void showGame() {
-    if (model.getState() == State.RUNNING) {
-      setVisible(false);
-      PlayingView playingviewframe = new PlayingView(getNicknames().size(), getNicknames(),
-          controller, model);
-      model.addPropertyChangeListener(playingviewframe);
-    }
-  }
-
-  @Override
-  public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-    SwingUtilities.invokeLater(() -> handleModelUpdate(propertyChangeEvent));
-  }
-
-  private void handleModelUpdate(PropertyChangeEvent event) {
-    if (event.getPropertyName().equals("GameState changed")) {
-      showGame();
-    }
-  }
-
-   */
 }

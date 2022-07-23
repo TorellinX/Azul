@@ -55,10 +55,11 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
    *
    * @param playerCount number of players
    * @param nicknames   list of nicknames of players
+   * @param colorScheme color scheme
    * @param controller  controller instance
    * @param model       game model instance
    */
-  public PlayingView(int playerCount, List<String> nicknames, Controller controller, GameModel model) {
+  public PlayingView(int playerCount, List<String> nicknames, ColorScheme colorScheme, Controller controller, GameModel model) {
     super("Azul Playing View");
 
     stateFinishedprocessed = 0;
@@ -68,40 +69,39 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     this.nicknames = unmodNameList;
     this.model = model;
     this.controller = controller;
+    this.colorScheme = colorScheme;
 
     if (controller.startGame(nicknames)) {
       this.players = model.getPlayers();
     } else {
       JOptionPane.showMessageDialog(null,
-          "Game could not be started!",
-          "Internal Error!", JOptionPane.ERROR_MESSAGE);
+              "Game could not be started!",
+              "Internal Error!", JOptionPane.ERROR_MESSAGE);
       dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(true);
     setTitle("Azul");
     setLayout(new BorderLayout());
-    setColors(ColorSchemes.cosmic); // TODO: the ability to choose the color scheme in the menu (ComboBox)
-    getContentPane().setBackground(colorScheme.playingView());  // TODO: replace with image
-    //TODO: implementieren setPlayingViewBackground()
-    setPlayingViewBackground();
+    setColors(colorScheme);
+    getContentPane().setBackground(colorScheme.playingView());
 
     createPlayingView();
     addListeners();
     pack();
     setVisible(true);
   }
-
   /**
    * Initializes the playing view for multiplayer mode.
    *
    * @param playerCount number of players
    * @param nicknames   list of nicknames of players
    * @param myNickname  nickname of the player correlated with calling multiplayer mode client
+   * @param colorScheme color scheme
    * @param controller  controller instance
    * @param model       game model instance
    */
-  public PlayingView(int playerCount, List<String> nicknames, String myNickname, Controller controller, GameModel model) {
+  public PlayingView(int playerCount, List<String> nicknames, String myNickname, ColorScheme colorScheme, Controller controller, GameModel model) {
     super("Azul Playing View");
 
     stateFinishedprocessed = 0;
@@ -112,6 +112,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     this.myNickname = myNickname;
     this.model = model;
     this.controller = controller;
+    this.colorScheme = colorScheme;
 
     // Index of myNickname in later players list - assuming names list is processed in sequence!
     myNicknameIndex = IntStream.range(0, nicknames.size())
@@ -130,10 +131,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     setResizable(true);
     setTitle("Azul");
     setLayout(new BorderLayout());
-    setColors(ColorSchemes.cosmic); // TODO: the ability to choose the color scheme in the menu (ComboBox)
-    getContentPane().setBackground(colorScheme.playingView());  // TODO: replace with image
-    //TODO: implementieren setPlayingViewBackground()
-    setPlayingViewBackground();
+    setColors(colorScheme);
+    getContentPane().setBackground(colorScheme.playingView());
 
     createPlayingView();
     addListeners();

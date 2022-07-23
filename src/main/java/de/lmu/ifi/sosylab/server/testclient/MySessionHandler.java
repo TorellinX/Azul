@@ -53,7 +53,8 @@ public class MySessionHandler extends StompSessionHandlerAdapter {
     System.out.println(payload);
     GameModel model = (GameModel) payload;
     Controller controller = new GameController(model);
-    PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(), controller, model);
+    // color schemes !!!
+    // PlayingView playingView = new PlayingView(model.getPlayers().size(), model.getPlayerNames(), controller, model);
     Thread.sleep(1000);
 
     // System.out.println(model.getState());

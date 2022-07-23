@@ -1,25 +1,19 @@
 package de.lmu.ifi.sosylab.view;
 
-import static de.lmu.ifi.sosylab.model.GameModel.TILES_PER_PLATE;
-
 import de.lmu.ifi.sosylab.controller.Controller;
-import de.lmu.ifi.sosylab.model.ColorTile;
-import de.lmu.ifi.sosylab.model.GameModel;
-import de.lmu.ifi.sosylab.model.PenaltyTile;
-import de.lmu.ifi.sosylab.model.Plate;
-import de.lmu.ifi.sosylab.model.State;
-import de.lmu.ifi.sosylab.model.TableCenter;
-import de.lmu.ifi.sosylab.model.Tile;
+import de.lmu.ifi.sosylab.model.*;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
-import java.awt.BasicStroke;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import java.util.Objects;
+
+import static de.lmu.ifi.sosylab.model.GameModel.TILES_PER_PLATE;
 
 /**
  * Center Panel of the Game. Shows the panels and the center of the table.
@@ -35,7 +29,6 @@ public class DrawboardTableCenter extends JPanel {
   private ArrayList<IntPair> positionTilesTableCenter;
   private List<IntPair[]> tilesOnAllPlatesCoordinates;
   private IntPair[] positionOfPlates;
-  private final TableCenter tableCenter;
   private final IntPair tableCoordinates = new IntPair(5, 490);
   private final List<Plate> listPlates;
   private final GameModel model;
@@ -44,6 +37,7 @@ public class DrawboardTableCenter extends JPanel {
   private ArrayList<JButton> buttonsTable;
   private final int buttonsSize = 35;
   private ColorScheme colorScheme;
+  private BufferedImage backgroundImg;
 
 
   /**
@@ -59,7 +53,6 @@ public class DrawboardTableCenter extends JPanel {
     }
     this.model = model;
     this.controller = controller;
-    this.tableCenter = model.getTableCenter();
     this.listPlates = model.getPlates();
     initialize();
   }
@@ -73,6 +66,8 @@ public class DrawboardTableCenter extends JPanel {
     addButtonsPlayboardCenter();
     addActionListenerFactory();
     addActionListenerTableCenter();
+
+
   }
 
   /**
@@ -87,6 +82,7 @@ public class DrawboardTableCenter extends JPanel {
     Graphics2D g2D = (Graphics2D) g;    // Type g2D required for stroke methods - use unified, not both, g and g2D
     setOpaque(false);
 
+    drawBackground(g2D);
     drawPlates(g2D);
     drawTableCenter(g2D);
   }
@@ -96,6 +92,19 @@ public class DrawboardTableCenter extends JPanel {
    *
    * @param g2D graphics object - kind of "internal reference"
    */
+  public void drawBackground(Graphics2D g2D) {
+    ClassLoader classLoader = getClass().getClassLoader();
+    var stream = (classLoader.getResourceAsStream(colorScheme.boardBackgroundImage()));
+    try {
+      Objects.requireNonNull(stream);
+      backgroundImg = ImageIO.read(stream);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    g2D.drawImage(backgroundImg, 0, 0, 410, 900, this);
+  }
+
+
   private void drawPlates(Graphics2D g2D) {
     if (model.getState() == State.FINISHED) {
       return;
@@ -157,7 +166,7 @@ public class DrawboardTableCenter extends JPanel {
   /**
    * Draws the tiles in the center of the table.
    *
-   * @param g2D graphics object
+   * @param g2D graphics object - kind of "internal reference"
    */
   private void drawTableCenterTiles(Graphics2D g2D) {
     List<Tile> tableCenterTiles = model.getTableCenter().getTiles();
@@ -495,9 +504,6 @@ public class DrawboardTableCenter extends JPanel {
 
         de.lmu.ifi.sosylab.model.Color color = getColorOfTileOnPlate(
             buttonsFactory.get(final_i).getX(), buttonsFactory.get(final_i).getY());
-        /*if (color == null) {
-          return;
-        }*/
         if (controller.pickTilesFromPlate(color,
             model.getPlayers().get(model.getPlayerToMoveIndex()),
             model.getPlates().get(
@@ -541,5 +547,6 @@ public class DrawboardTableCenter extends JPanel {
   public void setColorScheme(ColorScheme colorScheme) {
     this.colorScheme = colorScheme;
   }
+
 
 }

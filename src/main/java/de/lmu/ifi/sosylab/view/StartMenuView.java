@@ -1,14 +1,10 @@
 package de.lmu.ifi.sosylab.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  * Displays the logo and allows for choice between hotseat and server based multiplayer.
@@ -84,7 +80,7 @@ public class StartMenuView extends JFrame {
     multiPlayerButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        MultiplayerLobbyView multiplayerLobbyView = new MultiplayerLobbyView();
+        new MultiplayerLobbyView();
         thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         // thisFrame.setVisible(false);

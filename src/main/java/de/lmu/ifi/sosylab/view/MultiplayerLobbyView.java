@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import de.lmu.ifi.sosylab.client.ClientApplication;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.server.Room;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,9 +14,12 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -67,15 +71,35 @@ public class MultiplayerLobbyView extends JFrame {
     // Lobby Elemente positionieren
     // TODO: Zahl der existierenden Räume abfragen (Bsp 5), Elementliste anlegen
     // TODO: laufendes update, davor Elementliste nach join requests durchsuchen und in den neuen Zyklus weiterreichen...
-    List<String> fakeRooms = Arrays.asList("Buenos Aires", "Córdoba", "La Plata", "Montevideo", "Ascunión", "münchen");    // FAKE!
+    List<String> fakeRooms = Arrays.asList("Buenos Aires", "Córdoba", "La Plata", "Montevideo", "Ascunión");    // FAKE!
     List<String> players = Arrays.asList("Player1", "Player2", "Player3");                                      // FAKE!
 
+
+/*    List<String> rooms = null;
+    try {
+      rooms = clientApplication.requestRooms().stream().
+          map(Room::getName).
+          collect(Collectors.toList());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }*/
     JPanel lobbyElementsPanel = new JPanel(new GridLayout(5, 1));
-    for (int i = 0; i < 5; i++) {
-      LobbyElements lobbyElements = new LobbyElements(fakeRooms.get(i), players);
+    try {
+      for (Room room : clientApplication.requestRooms()) {
+        LobbyElements lobbyElements = new LobbyElements(room.getName(), room.getUsers());
+        lobbyElementsList.add(lobbyElements);
+        lobbyElementsPanel.add(lobbyElements);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+
+/*    for (int i = 0; i < rooms.size(); i++) {
+      LobbyElements lobbyElements = new LobbyElements(rooms.get(i), players);
       lobbyElementsList.add(lobbyElements);
       lobbyElementsPanel.add(lobbyElements);
-    }
+    }*/
     multiPlayerLobbyPanel.add(lobbyElementsPanel, BorderLayout.CENTER);
     multiPlayerLobbyPanel.setBackground(new Color(135, 206, 250));
 
@@ -231,6 +255,7 @@ class LobbyElements extends JPanel {
     JPanel playersList = new JPanel(new GridLayout(4,1));
     for (int i = 0; i < 4; i++) {
       JTextField player = new JTextField("", 25);
+      player.setEditable(false);
       playerFields.add(player);
       playersList.add(player);
       if (i < players.size()) {

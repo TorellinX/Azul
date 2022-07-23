@@ -13,6 +13,7 @@ import lombok.Getter;
 
 public class Room {
 
+  @Getter
   public String name;
   //public String password;
   @Getter

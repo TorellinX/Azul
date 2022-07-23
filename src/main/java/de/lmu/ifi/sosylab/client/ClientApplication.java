@@ -6,6 +6,7 @@ import de.lmu.ifi.sosylab.server.Room;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,8 +34,9 @@ import org.json.JSONObject;
  * Http client application for multiplayer game.
  */
 public class ClientApplication {
-
+  @Getter
   List<Room> rooms;
+
 
 
   /**
@@ -68,7 +70,7 @@ public class ClientApplication {
    * Get a list of rooms from the server.
    * @return list of rooms
    */
-public void getRooms() throws IOException {
+public List<Room> requestRooms() throws IOException {
   ObjectMapper objectMapper = new ObjectMapper();
   System.out.println("Getting rooms...");
   OkHttpClient client = new OkHttpClient().newBuilder()
@@ -81,7 +83,7 @@ public void getRooms() throws IOException {
   Response response = client.newCall(request).execute();
   //get id and name of rooms from response
   rooms = new ObjectMapper().readValue(response.body().string(), new TypeReference<List<Room>>() {});
-  System.out.println(rooms.get(0).getId());
+  return rooms;
 }
 
   /**

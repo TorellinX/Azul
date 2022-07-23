@@ -1,5 +1,6 @@
 package de.lmu.ifi.sosylab.view;
 
+import de.lmu.ifi.sosylab.client.ClientApplication;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -9,6 +10,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import lombok.SneakyThrows;
 
 /**
  * Displays the logo and allows for choice between hotseat and server based multiplayer.
@@ -60,11 +62,9 @@ public class StartMenuView extends JFrame {
   }
 
 
-
   private void hotSeatButtonView() {
     hotSeatButton = new JButton("HOTSEAT");
     buttons.add(hotSeatButton);
-
     hotSeatButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -82,9 +82,12 @@ public class StartMenuView extends JFrame {
     buttons.add(multiPlayerButton);
 
     multiPlayerButton.addActionListener(new ActionListener() {
+      @SneakyThrows
       @Override
       public void actionPerformed(ActionEvent e) {
-        MultiplayerMenuView multiplayerMenuView = new MultiplayerMenuView();
+        System.out.println("actionPerformed thread: " + Thread.currentThread().getId());
+        ClientApplication client = new ClientApplication();
+        new MultiplayerLobbyView(client);
         thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
         // thisFrame.setVisible(false);
@@ -96,7 +99,6 @@ public class StartMenuView extends JFrame {
   public void showStartView() {
     thisFrame.setVisible(true);
   }
-
 
 
 }

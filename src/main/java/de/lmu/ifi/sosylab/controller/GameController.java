@@ -1,7 +1,5 @@
 package de.lmu.ifi.sosylab.controller;
 
-import static java.util.Objects.requireNonNull;
-
 import de.lmu.ifi.sosylab.model.Color;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Plate;
@@ -54,9 +52,9 @@ public class GameController implements Controller {
   /**
    * Player action: pick a tile from a plate.
    *
-   * @param color Color of the selected tiles.
+   * @param color  Color of the selected tiles.
    * @param player Player to move.
-   * @param plate Plate from where the tiles where selected.
+   * @param plate  Plate from where the tiles where selected.
    * @return true if success.
    */
   public boolean pickTilesFromPlate(Color color, Player player, Plate plate) {
@@ -83,7 +81,7 @@ public class GameController implements Controller {
   /**
    * Player action: pick a tile from table center.
    *
-   * @param color Color of the selected tiles.
+   * @param color  Color of the selected tiles.
    * @param player Player to move.
    * @return true if success.
    */
@@ -134,7 +132,7 @@ public class GameController implements Controller {
    *
    * @param player current Player.
    * @param row    selected Row.
-   * @return       true if success
+   * @return true if success
    */
   public boolean placeTiles(Player player, int row) {
     if (player == model.getPlayerToMove()) {

@@ -164,6 +164,26 @@ public class ModelTest {
   }
 
   @Test
+  public void addTileToFloorLine_floorLineWhenPenaltyTileIsBeingAddedToFloorLine() {
+    //Arrange test
+    GameModel model = newModelAndCreatePlayers();
+    Player testingPlayer = model.getPlayers().get(0);
+    testingPlayer.playerBoard.floorLine = new ArrayList<>();
+    for (int i = 0; i < 6; i++) {
+      Color currentColor = Color.values()[i % (Color.values().length - 1)];
+      testingPlayer.playerBoard.floorLine.add(new ColorTile(currentColor));
+    }
+    List<Tile> expectedFloorLine = new ArrayList<>(testingPlayer.playerBoard.floorLine);
+    expectedFloorLine.add(0, new PenaltyTile());
+
+    //Act test
+    testingPlayer.playerBoard.addTileToFloorLine(new PenaltyTile());
+
+    //Assert test
+    assertEquals(expectedFloorLine, testingPlayer.playerBoard.floorLine);
+  }
+
+  @Test
   public void addTileToFloorLine_boxWhenColorTileIsBeingAddedToFullFloorLine() {
     //Arrange test
     GameModel model = newModelAndCreatePlayers();

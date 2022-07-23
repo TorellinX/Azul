@@ -81,7 +81,7 @@ public class DrawPlayerBoard extends JPanel {
    */
   public void setPlayerLabelBackgroundColor(Player player) {
 
-    if (player.getState().equals(PlayerState.TO_MOVE)) {
+    if (player.getPlayerState().equals(PlayerState.TO_MOVE)) {
       labelPanel.setBackground(colorScheme.activePlayer());
     } else {
       labelPanel.setBackground(colorScheme.inactivePlayer());
@@ -104,7 +104,7 @@ public class DrawPlayerBoard extends JPanel {
    * Getter for the preferred size of the complete player board for pack method in playing view.
    *
    * @param playerNumberScaling number of players scaling factor for table center (1/2: 1; 3/4: 2)
-   * @return                    preferred dimension
+   * @return preferred dimension
    */
   public Dimension playerBoardPreferredSize(int playerNumberScaling) {
     int horizontal = 0;
@@ -127,6 +127,7 @@ public class DrawPlayerBoard extends JPanel {
 
   /**
    * Setter for color scheme of the player board.
+   *
    * @param colorScheme current color scheme
    */
   public void setColorScheme(ColorScheme colorScheme) {
@@ -134,5 +135,16 @@ public class DrawPlayerBoard extends JPanel {
     drawWall.setColorScheme(colorScheme);
     drawPattern.setColorScheme(colorScheme);
     drawFloorline.setColorScheme(colorScheme);
+  }
+
+  /**
+   * Routing for my nickname from multiplayer mode client for identification of active board events
+   * listeners.
+   *
+   * @param myNickname
+   */
+  public void setMyNickname(String myNickname) {
+    drawPattern.setMyNickname(myNickname);
+    drawFloorline.setMyNickname(myNickname);
   }
 }

@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -148,8 +147,7 @@ public class PlayerBoard {
 
 
   public List<Tile> getFloorLine() {
-    List<Tile> unmodifiableTilesList = Collections.unmodifiableList(floorLine);
-    return unmodifiableTilesList;
+    return floorLine;
   }
 
 

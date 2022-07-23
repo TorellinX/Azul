@@ -3,6 +3,7 @@ package de.lmu.ifi.sosylab.view;
 import de.lmu.ifi.sosylab.controller.Controller;
 import de.lmu.ifi.sosylab.model.ColorTile;
 import de.lmu.ifi.sosylab.model.Player;
+import de.lmu.ifi.sosylab.model.PlayerState;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -30,6 +31,7 @@ public class DrawPattern extends JPanel {
   private final Player player;
   private final Controller controller;
   private ColorTile[][] patternLines;
+  private String myNickname = "";
 
   /**
    * Constructs the pattern lines and links it to player and controller.
@@ -83,7 +85,12 @@ public class DrawPattern extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
           System.out.println(player.getNickname() + " - " + count);
-          controller.placeTiles(player, count);
+          if (myNickname.equals("") ||
+              (player.getPlayerState().equals(PlayerState.TO_MOVE) && player.getNickname()
+                  .equals(myNickname))) {
+            controller.placeTiles(player, count);
+          }
+//          controller.placeTiles(player, count);
         }
       });
     }
@@ -147,5 +154,15 @@ public class DrawPattern extends JPanel {
    */
   public void setColorScheme(ColorScheme colorScheme) {
     this.colorScheme = colorScheme;
+  }
+
+  /**
+   * Routing endpoint for my nickname from multiplayer mode client for identification of allowed
+   * pattern events.
+   *
+   * @param myNickname
+   */
+  public void setMyNickname(String myNickname) {
+    this.myNickname = myNickname;
   }
 }

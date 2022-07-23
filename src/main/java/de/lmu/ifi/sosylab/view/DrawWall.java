@@ -8,7 +8,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.HashMap;
 import javax.swing.JPanel;
 
 /**
@@ -24,7 +23,6 @@ public class DrawWall extends JPanel {
   private final Controller controller;
   private boolean[][] wall;
   private ColorScheme colorScheme;
-
 
   /**
    * Constructs the wall and links it to player and controller.
@@ -68,6 +66,7 @@ public class DrawWall extends JPanel {
   // Draws the wall
   @Override
   protected void paintComponent(Graphics g) {
+
     super.paintComponent(g);
 
     setBackground(colorScheme.playerboard());
@@ -107,6 +106,7 @@ public class DrawWall extends JPanel {
 
   /**
    * Setter for color scheme of the wall.
+   *
    * @param colorScheme current color scheme
    */
   public void setColorScheme(ColorScheme colorScheme) {

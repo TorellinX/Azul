@@ -1,6 +1,9 @@
 
 package de.lmu.ifi.sosylab.model;
 import static java.util.Objects.requireNonNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.lmu.ifi.sosylab.model.Plate.SelectedAndRemainingTiles;
 import de.lmu.ifi.sosylab.model.TableCenter.SelectedTilesAndMaybePenaltyTile;
 import java.beans.PropertyChangeListener;
@@ -26,10 +29,12 @@ public class GameModel {
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
   private List<Plate> plates;
   private final TableCenter tableCenter;
+  @JsonProperty("bag")
   private final List<ColorTile> bag = Arrays.stream(Color.values())
           .flatMap(color -> IntStream.range(0, TILES_PER_COLOR).mapToObj(i -> new ColorTile(color)))
           .collect(Collectors.toList());
   private final Random random = new Random();
+  @JsonProperty("box")
   List<ColorTile> box = new ArrayList<>();
 
   public State getState() {
@@ -51,11 +56,10 @@ public class GameModel {
    *
    * @return player instance
    */
+  @JsonIgnore
   public Player getPlayerToMove() {
-
-    return playerToMove;
+    return players.get(playerToMoveIndex);
   }
-
 
   /**
    * Creates a new table with game components.
@@ -101,8 +105,7 @@ public class GameModel {
    */
   private void chooseRandomStartingPlayer() {
     startingPlayerIndex = playerToMoveIndex = random.nextInt(players.size());
-    playerToMove = players.get(playerToMoveIndex);
-    playerToMove.setState(PlayerState.TO_MOVE);
+    players.get(playerToMoveIndex).setPlayerState(PlayerState.TO_MOVE);
   }
 
   /**
@@ -130,16 +133,16 @@ public class GameModel {
   /**
    * Set tiles from selected tiles list to selected row.
    *
-   * @param player  player to move
-   * @param row     row to set
-   * @return        true if success
+   * @param player player to move
+   * @param row    row to set
+   * @return true if success
    */
   // (patternLines (0-4) or floorLine (-1)
   public synchronized boolean setTiles(Player player, int row) {
     if (roundState != RoundState.PICKED) {
       return false;
     }
-    if (player.getState() != PlayerState.TO_MOVE) {
+    if (player.getPlayerState() != PlayerState.TO_MOVE) {
       throw new IllegalArgumentException("\"set to row\" event from non-active player");
     }
     System.out.println("    Setting tiles to row " + row + "...");
@@ -147,22 +150,23 @@ public class GameModel {
       return false;
     }
     setPlayerToMove(getNextPlayerIndex());
+
     if (!areThereMoreTiles()) {
       endRound();
       return true;
     }
     System.out.println(
-            "Active Player: " + getPlayerToMoveIndex() + " State: " + playerToMove.getState());
+            "Active Player: " + getPlayerToMoveIndex() + " State: " + players.get(playerToMoveIndex)
+            .getPlayerState());
     roundState = RoundState.WAIT;
     System.out.println("    roundState: " + roundState);
     return true;
   }
 
   private void setPlayerToMove(int newPlayerToMoveIndex) {
-    playerToMove.setState(PlayerState.READY);
+    players.get(playerToMoveIndex).setPlayerState(PlayerState.READY);
     playerToMoveIndex = newPlayerToMoveIndex;
-    playerToMove = players.get(playerToMoveIndex);
-    playerToMove.setState(PlayerState.TO_MOVE);
+    players.get(playerToMoveIndex).setPlayerState(PlayerState.TO_MOVE);
     notifyListeners(MODEL_CHANGED);
   }
 
@@ -384,13 +388,11 @@ public class GameModel {
   }
 
   public List<Plate> getPlates() {
-    List<Plate> unmodifiablePlateList = Collections.unmodifiableList(plates);
-    return unmodifiablePlateList;
+    return plates;
   }
 
   public List<Player> getPlayers() {
-    List<Player> unmodifiablePlayersList = Collections.unmodifiableList(players);
-    return unmodifiablePlayersList;
+    return players;
   }
 
   /**

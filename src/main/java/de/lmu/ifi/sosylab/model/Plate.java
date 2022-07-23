@@ -1,5 +1,6 @@
 package de.lmu.ifi.sosylab.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,9 +32,15 @@ public class Plate {
 
   }
 
+  @JsonProperty("state")
   private PlateState state = PlateState.FULL;
 
+  @JsonProperty("tiles")
   private final List<ColorTile> tiles = new ArrayList<>();
+
+  public Plate() {
+
+  }
 
   public Plate(List<ColorTile> tiles) {
     this.addTiles(tiles);
@@ -88,4 +95,12 @@ public class Plate {
     return tiles.stream().anyMatch(t -> t.getColor() == color);
   }
 
+
+  @Override
+  public String toString() {
+    return "Plate{" +
+        "state=" + state +
+        ", tiles=" + tiles +
+        '}';
+  }
 }

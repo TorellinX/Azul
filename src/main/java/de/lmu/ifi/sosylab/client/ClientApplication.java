@@ -37,6 +37,14 @@ public class ClientApplication {
   @Getter
   List<Room> rooms;
 
+  @Getter
+  String username;
+  @Getter
+  String userToken;
+  @Getter
+  String roomID;
+
+
 
 
   /**
@@ -119,12 +127,13 @@ public List<Room> requestRooms() throws IOException {
    * @param roomId id of the room
    * @return
    */
-  public boolean joinRoom(String roomId, String userToken) throws IOException {
+  public boolean joinRoom(String roomId) throws IOException {
     System.out.println("Joining room...");
     OkHttpClient client = new OkHttpClient().newBuilder()
         .build();
     MediaType mediaType = MediaType.parse("application/json");
-    RequestBody body = RequestBody.create("{\n    \"userToken\": \"" +userToken  + ",\n    \"roomId\": \"" + roomId + "\"\n}", mediaType);
+    RequestBody body = RequestBody.create("{\n    \"userToken\": \"" + userToken  + ",\n    \"roomId\": \"" + roomId + "\"\n}", mediaType);
+    System.out.println(body.toString());
     Request request = new Request.Builder()
         .url("http://localhost:8080/api/rooms/join")
         .method("POST", body)
@@ -255,6 +264,18 @@ public List<Room> requestRooms() throws IOException {
     }
 
   }
+
+  // get room index by id
+  public int getRoomIndex(String roomId) {
+    for (int i = 0; i < rooms.size(); i++) {
+      if (rooms.get(i).getId().equals(roomId)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+
 
   // end class
 }

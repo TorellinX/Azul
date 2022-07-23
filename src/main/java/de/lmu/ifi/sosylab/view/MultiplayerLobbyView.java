@@ -86,7 +86,7 @@ public class MultiplayerLobbyView extends JFrame {
     JPanel lobbyElementsPanel = new JPanel(new GridLayout(5, 1));
     try {
       for (Room room : clientApplication.requestRooms()) {
-        LobbyElements lobbyElements = new LobbyElements(room.getName(), room.getUsers());
+        LobbyElements lobbyElements = new LobbyElements(room.getName(), room.getId(), room.getUsers());
         lobbyElementsList.add(lobbyElements);
         lobbyElementsPanel.add(lobbyElements);
       }
@@ -136,10 +136,15 @@ public class MultiplayerLobbyView extends JFrame {
         // Generate room view(s) (with chat function?) offering to start game, or leave back to lobby
         for (int room = 0; room < lobbyElementsList.size(); ++room) {
           if (!lobbyElementsList.get(room).getNickName().isEmpty()) {
-            //ToDo: Change players list to type PLayer and work with corrsponding getters.
+            try {
+              clientApplication.joinRoom(lobbyElementsList.get(room).getRoomId());
+            } catch (IOException ex) {
+              throw new RuntimeException(ex);
+            }
+            /*//ToDo: Change players list to type PLayer and work with corrsponding getters.
             List<String> players = new ArrayList<>(lobbyElementsList.get(room).getPlayersAlreadyInRoom());
             players.add(lobbyElementsList.get(room).getNickName());
-            RoomView roomView = new RoomView(lobbyElementsList.get(room).getRoomID(), players, clientApplication);
+            RoomView roomView = new RoomView(lobbyElementsList.get(room).getRoomID(), players, clientApplication);*/
           }
         }
         // Anmerkung: Man kann theoretisch mehrere Räume joinen, das ist kein bug, sondern ein feature... ("simultan - Azul" :D )
@@ -234,18 +239,21 @@ class LobbyElements extends JPanel {
   private String nickname = "";
   ArrayList<JTextField> playerFields = new ArrayList<>();
   JButton joinRoom;
-  private String roomID;
+  private String roomId;
+
+  private String roomName;
   private List<String> players;
 
   /**
    * Generate lobby elements from server data.
    *
-   * @param roomID    room name
+   * @param roomId    room name
    * @param players   players list (preliminary: String, else: Player)
    */
   //ToDo: Change players list to type PLayer and work with corrsponding getters.
-  public LobbyElements(String roomID, List<String> players) {
-    this.roomID = roomID;
+  public LobbyElements(String roomId, String roomName, List<String> players) {
+    this.roomId = roomId;
+    this.roomName = roomName;
     this.players = players;
 
     // Main panel for one lobby element
@@ -253,7 +261,7 @@ class LobbyElements extends JPanel {
 
     // Add header label to lobby element with room name
     JPanel roomText = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    JLabel roomLabel = new JLabel("Room: " + roomID);
+    JLabel roomLabel = new JLabel("Room: " + roomName);
     roomText.add(roomLabel);
     add(roomText, BorderLayout.NORTH);
 
@@ -323,8 +331,8 @@ class LobbyElements extends JPanel {
    *
    * @return room identifier
    */
-  public String getRoomID() {
-    return roomID;
+  public String getRoomId() {
+    return roomId;
   }
 
   /**
@@ -343,7 +351,7 @@ class LobbyElements extends JPanel {
       public void actionPerformed(ActionEvent e) {
         if (playerFields.get(players.size()).getText().isEmpty()) {
           nickname = JOptionPane.showInputDialog(null,
-              "Enter nickname:", "Join " + roomID, JOptionPane.QUESTION_MESSAGE);
+              "Enter nickname:", "Join " + roomId, JOptionPane.QUESTION_MESSAGE);
           if (nickname == null) {
             nickname = "";
           }

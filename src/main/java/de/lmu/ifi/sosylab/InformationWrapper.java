@@ -13,8 +13,6 @@ public class InformationWrapper {
   private Plate plate;
   private Color color;
   private int row;
-  private Authenticator autenticatorPlayer;
-  private Authenticator authenticatorRoom;
   private Boolean wasInputSuccesful;
 
 
@@ -46,14 +44,6 @@ public class InformationWrapper {
     this.row = row;
   }
 
-  public void setAutenticatorPlayer(Authenticator authenticator) {
-    this.autenticatorPlayer = authenticator;
-  }
-
-  public void setAuthenticatorRoom(Authenticator authenticator) {
-    this.authenticatorRoom = authenticator;
-  }
-
   public void setWasInputSuccesful(Boolean succesful) {
     this.wasInputSuccesful = succesful;
   }
@@ -81,14 +71,6 @@ public class InformationWrapper {
 
   public Plate getPlate() {
     return plate;
-  }
-
-  public Authenticator getAuthenticatorPlayer() {
-    return autenticatorPlayer;
-  }
-
-  public Authenticator getAuthenticatorRoom() {
-    return authenticatorRoom;
   }
 
   public Boolean getWasInputSuccesful() {

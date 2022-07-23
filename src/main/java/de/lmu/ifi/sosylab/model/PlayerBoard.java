@@ -233,12 +233,12 @@ public class PlayerBoard {
       addTileToBox((ColorTile) floorLine.get(floorLine.size() - 1));
       floorLine.set(floorLine.size() - 1, null);
     }
-    int i = floorLine.size();
-    floorLine.add(floorLine.get(i-1));
-    --i;
-    while (i > 0) {
+    int lastColorTileIndex = floorLine.size() - 1;
+    if (floorLine.get(lastColorTileIndex) != null) {
+      floorLine.add(floorLine.get(lastColorTileIndex));
+    }
+    for (int i = floorLine.size() - 1; i > 0; i--) {
       floorLine.set(i, floorLine.get(i - 1));
-      --i;
     }
     floorLine.set(0, null);
   }

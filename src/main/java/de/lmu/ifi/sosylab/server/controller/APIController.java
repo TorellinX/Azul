@@ -6,21 +6,30 @@ import de.lmu.ifi.sosylab.model.Plate;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.PlayerBoard;
 import de.lmu.ifi.sosylab.model.TableCenter;
-import de.lmu.ifi.sosylab.server.RoomManager;
-import de.lmu.ifi.sosylab.server.Rooms;
+//import de.lmu.ifi.sosylab.server.RoomManager;
+import de.lmu.ifi.sosylab.server.Room;
 import java.util.List;
-import org.springframework.boot.autoconfigure.data.ConditionalOnRepositoryType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class GameController {
+public class APIController {
 
-  RoomManager roomManager = new RoomManager();
+  //RoomManager roomManager = new RoomManager();
 
   // Send message if client connects to server
+
+  @Autowired
+  private SimpMessagingTemplate messagingTemplate;
+
+  @MessageMapping("/secured/room")
+  public void sendSpecific(@Payload String msg) {
+  }
 
   @MessageMapping("/game/newUser")
   @SendTo("/topic/public")
@@ -30,10 +39,11 @@ public class GameController {
 
   @MessageMapping("/game/create")
   @SendTo("/topic/rooms")
-  public List<Rooms> create(String name) {
+  public List<Room> create(String name) {
     System.out.println(name);
-    roomManager.createRoom(name, "klklfjfdk");
-    return roomManager.roomsList;
+
+    //return roomManager.roomsList;
+    return null;
   }
 
 
@@ -50,12 +60,12 @@ public class GameController {
     return model.getPlates();
   }
 
-  @MessageMapping("/game/model")
-  @SendTo("/topic/messages")
+  @MessageMapping("/game/room/{roomId}/model")
+  @SendTo("/topic/room/{roomId}/model")
   public GameModel model(String message) throws Exception {
     System.out.println("model: " + message);
     Thread.sleep(1000); // simulated delay
-    List<String> players = List.of("Player1", "Player2", "Player3", "Player4");
+    List<String> players = List.of("Player1", "Player222", "Player3", "Player4");
     GameModel model = new GameModel();
     //de.lmu.ifi.sosylab.controller.Controller controller = new GameController(model);
     model.createPlayers(players);
@@ -101,12 +111,12 @@ public class GameController {
     return model.getPlayerToMove().getPlayerBoard();
   }
 
-  @MessageMapping("/process-message") // /app/process-message
-  @SendTo("/topic/messages")
-  public String processMessage(String message) throws Exception {
-    System.out.println("Hello, " + message);
-    Thread.sleep(1000); // simulated delay
-    return "Hello, " + message + "!";
+
+  //publish GameModel to a specific topic with roomId
+  //@MessageMapping("/game/model/{roomId}")
+  //send current GameModel to all clients in the room
+  public void sendGameModel(@DestinationVariable String roomId, GameModel model) {
+    this.messagingTemplate.convertAndSend("/topic/room/" + roomId + "/model", model);
   }
 
 

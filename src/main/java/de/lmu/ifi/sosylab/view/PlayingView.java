@@ -35,7 +35,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
   private static final long serialVersionUID = 1L;
   private JPanel menu;
   JComboBox<String> menuItems = new JComboBox<String>(
-      new String[]{"- menu -", "restart", "leave", "end game"});
+      new String[]{"MENU", "restart", "leave", "end game"});
   private DrawboardTableCenter drawboardTableCenter;
   private int playerCount;
   private List<String> nicknames;
@@ -153,6 +153,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     // menu.setSize(1200, 75);
     menu.setLayout(new FlowLayout(FlowLayout.CENTER));
     menu.setBackground(colorScheme.menu());
+    ColorScheme.changeFontOf(menuItems);
     menu.add(menuItems);
     add(menu, BorderLayout.NORTH);
 
@@ -228,8 +229,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   private void closeWindow() {
     Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-    if (window != null)
-    {
+    if (window != null) {
       WindowEvent windowClosing = new WindowEvent(window, WindowEvent.WINDOW_CLOSING);
       window.dispatchEvent(windowClosing);
     }

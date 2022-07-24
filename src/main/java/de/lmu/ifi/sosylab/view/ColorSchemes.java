@@ -1,6 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
 import java.awt.Color;
+import javax.swing.JComponent;
 
 public final class ColorSchemes {
 
@@ -28,6 +29,11 @@ public final class ColorSchemes {
                             Color playingView,
                             String boardBackgroundImage) {
 
+    static void changeFontOf(JComponent component) {
+      if (component.getFont() != null) {
+        component.setFont(component.getFont().deriveFont(1, 16));
+      }
+    }
   }
 
   public static ColorScheme classic = new ColorScheme(

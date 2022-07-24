@@ -1,6 +1,7 @@
 package de.lmu.ifi.sosylab.view;
 
 import de.lmu.ifi.sosylab.client.ClientApplication;
+import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -17,15 +18,13 @@ import lombok.SneakyThrows;
  */
 public class StartMenuView extends JFrame {
 
+  private static final String LOCAL_GAME = "localGame";
+  private static final String MULTIPLAYER = "multiplayer";
   private JPanel graphic;
   private JPanel buttons;
   private JButton hotSeatButton;
   private JButton multiPlayerButton;
   private JFrame thisFrame;
-
-
-  private static final String LOCAL_GAME = "localGame";
-  private static final String MULTIPLAYER = "multiplayer";
 
   /**
    * Constructor - see class description.
@@ -64,6 +63,7 @@ public class StartMenuView extends JFrame {
 
   private void hotSeatButtonView() {
     hotSeatButton = new JButton("HOTSEAT");
+    ColorScheme.changeFontOf(hotSeatButton);
     buttons.add(hotSeatButton);
     hotSeatButton.addActionListener(new ActionListener() {
       @Override
@@ -79,6 +79,7 @@ public class StartMenuView extends JFrame {
 
   private void multiPlayerButtonView() {
     multiPlayerButton = new JButton("MULTIPLAYER");
+    ColorScheme.changeFontOf(multiPlayerButton);
     buttons.add(multiPlayerButton);
 
     multiPlayerButton.addActionListener(new ActionListener() {

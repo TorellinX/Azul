@@ -11,6 +11,7 @@ import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -103,11 +104,12 @@ public class HotseatMenuView extends JFrame {
     nicknameFieldsPanel.setLayout(layout);
     nicknameFieldsPanel.setOpaque(false);
     for (int i = 0; i < 4; i++) {
-      nicknameInputFields.add(i, new JTextField(25));
+      nicknameInputFields.add(i, new JTextField());
+      nicknameInputFields.get(i).setPreferredSize(new Dimension(200, 35));
+      ColorScheme.changeFontOf(nicknameInputFields.get(i));
       nicknameInputFields.get(i).setText("Player " + (i + 1));
       nicknameFieldsPanel.add(nicknameInputFields.get(i));
       nicknameInputFields.get(i).addActionListener(e -> {
-        //
         int fieldIndex = nicknameInputFields.indexOf(e.getSource());
         if (fieldIndex < numberOfPlayers - 1) {
           nicknameInputFields.get(fieldIndex + 1).requestFocusInWindow();
@@ -130,11 +132,11 @@ public class HotseatMenuView extends JFrame {
     nicknameInputFields.get(3).setEnabled(false);
     playerNicknamePanel.add(nicknameFieldsPanel);
     playerControlPanel.add(playerNicknamePanel, BorderLayout.NORTH);
-
   }
 
   private void addAddPlayerButton() {
     JButton addPlayerButton = new JButton("ADD PLAYER");
+    ColorScheme.changeFontOf(addPlayerButton);
     playerButtonsPanel.add(addPlayerButton);
 
     addPlayerButton.addActionListener(e -> {
@@ -150,6 +152,7 @@ public class HotseatMenuView extends JFrame {
 
   private void addRemovePlayerButton() {
     JButton removePlayerButton = new JButton("REMOVE PLAYER");
+    ColorScheme.changeFontOf(removePlayerButton);
     playerButtonsPanel.add(removePlayerButton);
 
     removePlayerButton.addActionListener(e -> {
@@ -166,6 +169,7 @@ public class HotseatMenuView extends JFrame {
 
   private void addStartGameButton() {
     JButton startGameButton = new JButton("START GAME");
+    ColorScheme.changeFontOf(startGameButton);
     controlButtonsPanel.add(startGameButton);
     startGameButton.addActionListener(e -> startGame());
   }
@@ -188,10 +192,14 @@ public class HotseatMenuView extends JFrame {
 
   private void addColorThemeMenu() {
     JLabel theme = new JLabel("  THEME: ");
+    ColorScheme.changeFontOf(theme);
     controlButtonsPanel.add(theme);
+
     JComboBox<String> startGameComboBox = new JComboBox<>(new String[]{
         "Classic", "Beach", "Candy", "Cosmic"});
+    ColorScheme.changeFontOf(startGameComboBox);
     controlButtonsPanel.add(startGameComboBox);
+
     startGameComboBox.addActionListener(e -> {
       String selectedTheme = (String) startGameComboBox.getSelectedItem();
       Objects.requireNonNull(selectedTheme);
@@ -207,6 +215,7 @@ public class HotseatMenuView extends JFrame {
 
   private void addBackButton() {
     JButton backGameButton = new JButton("BACK TO MAIN MENU");
+    ColorScheme.changeFontOf(backGameButton);
     controlButtonsPanel.add(backGameButton);
 
     backGameButton.addActionListener(e -> {

@@ -69,10 +69,32 @@ public class HotseatMenuView extends JFrame {
     // Mit Buttons
     playerButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     playerButtonsPanel.setOpaque(false);
-    addPlayerButtonView();
-    removePlayerButtonView();
+    addNicknameInputArea();
+    addAddPlayerButton();
+    addRemovePlayerButton();
     playerControlPanel.add(playerButtonsPanel, BorderLayout.CENTER);
 
+    // Game-Kontroll-Panel
+    JPanel gameControlPanel = new JPanel(new BorderLayout());
+    gameControlPanel.setBackground(hotseatMenu);
+    // Im Main Frame positionieren
+    add(gameControlPanel, BorderLayout.SOUTH);
+    // Game-Kontroll-Panel befüllen
+    controlButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    controlButtonsPanel.setOpaque(false);
+    addStartGameButton();
+    addColorThemeMenu();
+    addBackButton();
+    gameControlPanel.add(controlButtonsPanel, BorderLayout.CENTER);
+
+    // Ende set-up, packen, sichtbar machen
+    pack();
+    setVisible(true);
+
+  }
+
+  private void addNicknameInputArea() {
+    // TODO
     JPanel playerNicknamePanel = new JPanel();
     playerNicknamePanel.setOpaque(false);
     playerNicknamePanel.setLayout(new FlowLayout());
@@ -109,26 +131,9 @@ public class HotseatMenuView extends JFrame {
     playerNicknamePanel.add(nicknameFieldsPanel);
     playerControlPanel.add(playerNicknamePanel, BorderLayout.NORTH);
 
-    // Game-Kontroll-Panel
-    JPanel gameControlPanel = new JPanel(new BorderLayout());
-    gameControlPanel.setBackground(hotseatMenu);
-    // Im Main Frame positionieren
-    add(gameControlPanel, BorderLayout.SOUTH);
-    // Game-Kontroll-Panel befüllen
-    controlButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    controlButtonsPanel.setOpaque(false);
-    addStartGameButton();
-    startGameThemeView();
-    backGameButtonView();
-    gameControlPanel.add(controlButtonsPanel, BorderLayout.CENTER);
-
-    // Ende set-up, packen, sichtbar machen
-    pack();
-    setVisible(true);
-
   }
 
-  private void addPlayerButtonView() {
+  private void addAddPlayerButton() {
     JButton addPlayerButton = new JButton("ADD PLAYER");
     playerButtonsPanel.add(addPlayerButton);
 
@@ -143,7 +148,7 @@ public class HotseatMenuView extends JFrame {
     });
   }
 
-  private void removePlayerButtonView() {
+  private void addRemovePlayerButton() {
     JButton removePlayerButton = new JButton("REMOVE PLAYER");
     playerButtonsPanel.add(removePlayerButton);
 
@@ -181,7 +186,7 @@ public class HotseatMenuView extends JFrame {
     }
   }
 
-  private void startGameThemeView() {
+  private void addColorThemeMenu() {
     JLabel theme = new JLabel("  THEME: ");
     controlButtonsPanel.add(theme);
     JComboBox<String> startGameComboBox = new JComboBox<>(new String[]{
@@ -197,11 +202,10 @@ public class HotseatMenuView extends JFrame {
         case "Cosmic" -> colorScheme = cosmic;
         default -> throw new IllegalArgumentException("Non valid color scheme: " + selectedTheme);
       }
-      //dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
     });
   }
 
-  private void backGameButtonView() {
+  private void addBackButton() {
     JButton backGameButton = new JButton("BACK TO MAIN MENU");
     controlButtonsPanel.add(backGameButton);
 

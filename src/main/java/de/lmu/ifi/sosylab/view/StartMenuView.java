@@ -20,11 +20,11 @@ public class StartMenuView extends JFrame {
 
   private static final String LOCAL_GAME = "localGame";
   private static final String MULTIPLAYER = "multiplayer";
-  private JPanel graphic;
-  private JPanel buttons;
+  private final JPanel graphic;
+  private final JPanel buttons;
   private JButton hotSeatButton;
   private JButton multiPlayerButton;
-  private JFrame thisFrame;
+  private final JFrame thisFrame;
 
   /**
    * Constructor - see class description.
@@ -32,6 +32,7 @@ public class StartMenuView extends JFrame {
   public StartMenuView() {
     super("Azul");
     thisFrame = this;
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLayout(new BorderLayout());
 
     // Link zu MainMenuView, temporär nötig
@@ -68,13 +69,16 @@ public class StartMenuView extends JFrame {
     hotSeatButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        HotseatMenuView hotseatMenuView = new HotseatMenuView();
-        thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+        new HotseatMenuView();
+        closeWindow();
         // thisFrame.setVisible(false);
       }
     });
+  }
 
+  private void closeWindow() {
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
   }
 
   private void multiPlayerButtonView() {
@@ -86,20 +90,12 @@ public class StartMenuView extends JFrame {
       @SneakyThrows
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.out.println("actionPerformed thread: " + Thread.currentThread().getId());
-        ClientApplication client = new ClientApplication();
-        new MultiplayerLobbyView(client);
-        thisFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
+        System.out.println("multiPlayerButton actionPerformed, "
+            + "thread: " + Thread.currentThread().getId());
+        new MultiplayerLobbyView(new ClientApplication());
+        closeWindow();
         // thisFrame.setVisible(false);
       }
     });
-
   }
-
-  public void showStartView() {
-    thisFrame.setVisible(true);
-  }
-
-
 }

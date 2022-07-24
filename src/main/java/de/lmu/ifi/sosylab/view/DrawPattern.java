@@ -97,7 +97,7 @@ public class DrawPattern extends JPanel {
   }
 
 
-  private void addButtonsActionListener(){
+  private void addButtonsActionListener() {
     for (int i = 0; i < 5; i++) {
       final int count = i;
       patternButtons.get(count).addActionListener(e -> {
@@ -131,15 +131,7 @@ public class DrawPattern extends JPanel {
         // TODO: invern indexes and get rid of initializePatternLines() invertion
         if (patternLines[row][4 - col] != null) {
           String customColor = patternLines[row][4 - col].toString();
-          Color tileColor = switch (customColor) {
-            case "BLACK" -> colorScheme.black();
-            case "WHITE" -> colorScheme.green();
-            case "BLUE" -> colorScheme.blue();
-            case "YELLOW" -> colorScheme.yellow();
-            case "RED" -> colorScheme.red();
-            default -> colorScheme.playerboard();
-          };
-
+          Color tileColor = ColorSchemes.getColorByName(customColor, colorScheme);
           g.setColor(tileColor);
           g.fillRoundRect(col * slotSize + borderSize,
               10 + row * slotSize + row * 5 + borderSize,

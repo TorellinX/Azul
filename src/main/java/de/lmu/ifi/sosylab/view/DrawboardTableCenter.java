@@ -11,6 +11,7 @@ import de.lmu.ifi.sosylab.model.State;
 import de.lmu.ifi.sosylab.model.Tile;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -142,15 +143,9 @@ public class DrawboardTableCenter extends JPanel {
       IntPair[] tilesCoordinates = tilesOnAllPlatesCoordinates.get(i);
 
       for (int j = 0; j < colorTilesOnCurrentPlate.size(); j++) {
-        de.lmu.ifi.sosylab.model.Color color = colorTilesOnCurrentPlate.get(j).getColor();
-        switch (color) {
-          case YELLOW -> g2D.setColor(colorScheme.yellow());
-          case RED -> g2D.setColor(colorScheme.red());
-          case BLUE -> g2D.setColor(colorScheme.blue());
-          case BLACK -> g2D.setColor(colorScheme.black());
-          case WHITE -> g2D.setColor(colorScheme.green());
-          default -> throw new IllegalStateException("Unexpected value: " + color);
-        }
+        String color = colorTilesOnCurrentPlate.get(j).getColor().toString();
+        Color tileColor = ColorSchemes.getColorByName(color, colorScheme);
+        g2D.setColor(tileColor);
         g2D.fillRoundRect(tilesCoordinates[j].getX(), tilesCoordinates[j].getY(), cellSize,
             cellSize, arcSize, arcSize);
       }
@@ -217,14 +212,8 @@ public class DrawboardTableCenter extends JPanel {
    */
   private void drawColorTileOnTableCenter(Graphics2D g2D, Tile tile, int i) {
     de.lmu.ifi.sosylab.model.Color colorOfTile = ((ColorTile) tile).getColor();
-    switch (colorOfTile) {
-      case YELLOW -> g2D.setColor(colorScheme.yellow());
-      case RED -> g2D.setColor(colorScheme.red());
-      case BLUE -> g2D.setColor(colorScheme.blue());
-      case BLACK -> g2D.setColor(colorScheme.black());
-      case WHITE -> g2D.setColor(colorScheme.green());
-      default -> throw new IllegalStateException("Unexpected value: " + colorOfTile);
-    }
+    Color tileColor = ColorSchemes.getColorByName(colorOfTile.toString(), colorScheme);
+    g2D.setColor(tileColor);
     g2D.fillRoundRect(positionTilesTableCenter.get(i).getX(),
         positionTilesTableCenter.get(i).getY(),
         cellSize, cellSize, arcSize, arcSize);

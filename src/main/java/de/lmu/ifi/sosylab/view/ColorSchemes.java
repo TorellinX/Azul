@@ -36,6 +36,19 @@ public final class ColorSchemes {
     }
   }
 
+  static Color getColorByName(String colorName, ColorScheme colorScheme) {
+    Color color;
+    switch (colorName) {
+      case "BLUE" -> color = colorScheme.blue();
+      case "YELLOW" -> color = colorScheme.yellow();
+      case "RED" -> color = colorScheme.red();
+      case "BLACK" -> color = colorScheme.black();
+      case "GREEN" -> color = colorScheme.green();
+      default -> throw new IllegalArgumentException("Color not recognized: " + colorName);
+    }
+    return color;
+  }
+
   public static ColorScheme classic = new ColorScheme(
       new Color(255, 193, 37),
       new Color(205, 50, 120),

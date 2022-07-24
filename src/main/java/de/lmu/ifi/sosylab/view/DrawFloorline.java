@@ -75,7 +75,7 @@ public class DrawFloorline extends JPanel {
   private void drawFloorlineText(Graphics g) {
     g.setColor(colorScheme.floorlineFrame());
     for (int i = 0; i < textPenaltyPoints.length; i++) {
-      g.drawString(textPenaltyPoints[i], slotSize * i  + (slotSize/3), 15);
+      g.drawString(textPenaltyPoints[i], slotSize * i + (slotSize / 3), 15);
     }
   }
 
@@ -96,14 +96,8 @@ public class DrawFloorline extends JPanel {
       if (floorLineTiles.get(col) instanceof PenaltyTile) {
         g.setColor(colorScheme.penalty());
       } else {
-        switch (floorLineTiles.get(col).toString()) {
-          case "BLUE" -> g.setColor(colorScheme.blue());
-          case "YELLOW" -> g.setColor(colorScheme.yellow());
-          case "RED" -> g.setColor(colorScheme.red());
-          case "BLACK" -> g.setColor(colorScheme.black());
-          case "WHITE" -> g.setColor(colorScheme.green());
-          default -> g.setColor(colorScheme.playerboard());
-        }
+        g.setColor(
+            ColorSchemes.getColorByName(floorLineTiles.get(col).toString(), colorScheme));/**/
       }
       g.fillRoundRect(col * slotSize + borderSize, 20 + borderSize, tileSize, tileSize,
           arcSize, arcSize);

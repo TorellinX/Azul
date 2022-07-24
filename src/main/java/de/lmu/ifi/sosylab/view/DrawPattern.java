@@ -10,8 +10,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -42,7 +40,6 @@ public class DrawPattern extends JPanel {
   public DrawPattern(Player player, Controller controller) {
     this.player = player;
     this.controller = controller;
-    initializePatternLines();
 
     setPreferredSize(new Dimension(5 * slotSize + 5, 5 * slotSize + 40));
     setLayout(null);
@@ -51,7 +48,7 @@ public class DrawPattern extends JPanel {
     addButtonsActionListener();
   }
 
-  private void initializePatternLines() {
+  private void updatePatternLines() {
     // TODO: change drawing and get rid of this method
     ColorTile[][] invPatternLines = player.getPlayerBoard().getPatternLines();
     patternLines = player.getPlayerBoard().getPatternLines();
@@ -99,7 +96,7 @@ public class DrawPattern extends JPanel {
   }
 
 
-  private void addButtonsActionListener() {
+  private void addButtonsActionListener(){
     for (int i = 0; i < 5; i++) {
       final int count = i;
       patternButtons.get(count).addActionListener(e -> {
@@ -118,6 +115,7 @@ public class DrawPattern extends JPanel {
   protected void paintComponent(Graphics g) {
     // super.paintComponent(g);
     setOpaque(false);
+    updatePatternLines();
     drawPatternLines(g);
   }
 

@@ -96,18 +96,22 @@ public class DrawFloorline extends JPanel {
       if (floorLineTiles.get(col) instanceof PenaltyTile) {
         g.setColor(colorScheme.penalty());
       } else {
-        g.setColor(
-            ColorSchemes.getColorByName(floorLineTiles.get(col).toString(), colorScheme));/**/
+        g.setColor(ColorSchemes.getColorByName(floorLineTiles.get(col).toString(), colorScheme));
       }
       g.fillRoundRect(col * slotSize + borderSize, 20 + borderSize, tileSize, tileSize,
           arcSize, arcSize);
+
       if (floorLineTiles.get(col) instanceof PenaltyTile) {
-        g.setColor(colorScheme.penaltyText());
-        g.setFont(this.getFont().deriveFont(Font.BOLD, 18));
-        g.drawString("1", col * slotSize + borderSize + tileSize / 3,
-            20 + borderSize + 2 * tileSize / 3);
+        drawPenaltyTileText(g, col);
       }
     }
+  }
+
+  private void drawPenaltyTileText(Graphics g, int floorlineColumn) {
+      g.setColor(colorScheme.penaltyText());
+      g.setFont(this.getFont().deriveFont(Font.BOLD, 18));
+      g.drawString("1", floorlineColumn * slotSize + borderSize + tileSize / 3,
+          20 + borderSize + 2 * tileSize / 3);
   }
 
   /**

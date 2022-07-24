@@ -8,8 +8,6 @@ import de.lmu.ifi.sosylab.model.State;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.KeyboardFocusManager;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -19,7 +17,6 @@ import java.io.Serial;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
-import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -267,18 +264,17 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       if (model.getState() == State.FINISHED && stateFinishedprocessed == 0) {
         stateFinishedprocessed = 1;
         String winText = "The winner is:\n";
-        String winners = "";
-        String allPlayers = "";
+        StringBuilder winners = new StringBuilder();
         int highScore = 0;
-        for (int i = 0; i < players.size(); i++) {
-          if (highScore <= players.get(i).getScore()) {
-            highScore = players.get(i).getScore();
+        for (Player player : players) {
+          if (highScore <= player.getScore()) {
+            highScore = player.getScore();
           }
         }
         int count = 0;
-        for (int i = 0; i < players.size(); i++) {
-          if (players.get(i).getScore() == highScore) {
-            winners += players.get(i).getNickname() + "\n";
+        for (Player player : players) {
+          if (player.getScore() == highScore) {
+            winners.append(player.getNickname()).append("\n");
             count++;
             if (count > 1) {
               winText = "The winners are:\n";
@@ -299,16 +295,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     }
   }
 
-
   private void setColors(ColorScheme colorScheme) {
     this.colorScheme = colorScheme;
-  }
-
-
-  private void setPlayingViewBackground() {
-    ImageIcon backgroundImage = new ImageIcon(
-        getClass().getResource(colorScheme.boardBackgroundImage()));
-
   }
 
 }

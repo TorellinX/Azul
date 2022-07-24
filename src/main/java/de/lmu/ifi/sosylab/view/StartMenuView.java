@@ -20,7 +20,6 @@ public class StartMenuView extends JFrame {
 
   private static final String LOCAL_GAME = "localGame";
   private static final String MULTIPLAYER = "multiplayer";
-  private final JPanel graphic;
   private final JPanel buttons;
   private JButton hotSeatButton;
   private JButton multiPlayerButton;
@@ -35,11 +34,8 @@ public class StartMenuView extends JFrame {
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLayout(new BorderLayout());
 
-    // Link zu MainMenuView, temporär nötig
-    // this.view = view;
-
     // Logo einrichten und anzeigen
-    graphic = new JPanel();
+    JPanel graphic = new JPanel();
     add(graphic, BorderLayout.CENTER);
     GraphicAzul graphicAzul = new GraphicAzul();
     graphic.add(graphicAzul.azulPanel);
@@ -58,7 +54,6 @@ public class StartMenuView extends JFrame {
 
     // Default action beim Klicken auf "X"
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
   }
 
 
@@ -66,13 +61,10 @@ public class StartMenuView extends JFrame {
     hotSeatButton = new JButton("HOTSEAT");
     ColorScheme.changeFontOf(hotSeatButton);
     buttons.add(hotSeatButton);
-    hotSeatButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        new HotseatMenuView();
-        closeWindow();
-        // thisFrame.setVisible(false);
-      }
+    hotSeatButton.addActionListener(e -> {
+      new HotseatMenuView();
+      closeWindow();
+      // thisFrame.setVisible(false);
     });
   }
 

@@ -26,7 +26,7 @@ public class DrawPattern extends JPanel {
   private final int tileSize = slotSize - borderSize * 2;
   private final int arcSize = 6;
   private ColorScheme colorScheme;
-  private final ArrayList<JButton> patternButtons;
+  private ArrayList<JButton> patternButtons;
   int count;
   private final Player player;
   private final Controller controller;
@@ -42,78 +42,17 @@ public class DrawPattern extends JPanel {
   public DrawPattern(Player player, Controller controller) {
     this.player = player;
     this.controller = controller;
+    initializePatternLines();
+
     setPreferredSize(new Dimension(5 * slotSize + 5, 5 * slotSize + 40));
     setLayout(null);
 
-    patternButtons = new ArrayList<>();
-    JButton firstRowButton = new JButton();
-    firstRowButton.setBounds(slotSize * 4, 10, slotSize,
-        slotSize);
-    patternButtons.add(firstRowButton);
-    add(firstRowButton);
-    JButton secondRowButton = new JButton();
-    secondRowButton.setBounds(slotSize * 3, 15 + slotSize,
-        slotSize * 2, slotSize);
-    patternButtons.add(secondRowButton);
-    add(secondRowButton);
-    JButton thirdRowButton = new JButton();
-    thirdRowButton.setBounds(slotSize * 2, 20 + slotSize * 2,
-        slotSize * 3, slotSize);
-    patternButtons.add(thirdRowButton);
-    add(thirdRowButton);
-    JButton fourthRowButton = new JButton();
-    fourthRowButton.setBounds(slotSize, 25 + slotSize * 3,
-        slotSize * 4, slotSize);
-    patternButtons.add(fourthRowButton);
-    add(fourthRowButton);
-    JButton fifthRowButton = new JButton();
-    fifthRowButton.setBounds(0, 30 + slotSize * 4, slotSize * 5,
-        slotSize);
-    patternButtons.add(fifthRowButton);
-    add(fifthRowButton);
-
-    // hide buttons
-    for (int i = 0; i < patternButtons.size(); i++) {
-      patternButtons.get(i).setOpaque(false);
-      patternButtons.get(i).setContentAreaFilled(false);
-      patternButtons.get(i).setBorderPainted(false);
-    }
-
-    for (int i = 0; i < 5; i++) {
-      final int count = i;
-      patternButtons.get(count).addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          System.out.println(player.getNickname() + " - " + count);
-          if (myNickname.equals("") ||
-              (player.getPlayerState().equals(PlayerState.TO_MOVE) && player.getNickname()
-                  .equals(myNickname))) {
-            controller.placeTiles(player, count);
-          }
-//          controller.placeTiles(player, count);
-        }
-      });
-    }
+    addPatternLineButtons();
+    addButtonsActionListener();
   }
 
-  public int getPatternCellSize() {
-    return slotSize;
-  }
-
-  public void setPatternSlotSize(int newSize) {
-    this.slotSize = newSize;
-  }
-
-  @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-
-    setBackground(colorScheme.playerboard());
-    Graphics2D g2D = (Graphics2D) g;
-
-    g2D.setColor(colorScheme.playerboard());
-    g2D.setStroke(new BasicStroke(1));
-
+  private void initializePatternLines() {
+    // TODO: change drawing and get rid of this method
     ColorTile[][] invPatternLines = player.getPlayerBoard().getPatternLines();
     patternLines = player.getPlayerBoard().getPatternLines();
     for (int i = 0; i < 5; i++) {
@@ -121,12 +60,77 @@ public class DrawPattern extends JPanel {
         patternLines[i][invPatternLines[i].length - 1 - j] = invPatternLines[i][j];
       }
     }
+  }
+
+  private void addPatternLineButtons() {
+    patternButtons = new ArrayList<>();
+    // TODO: use loop, get rid of button variables, calculate y-coordinate
+    JButton firstRowButton = new JButton();
+    firstRowButton.setBounds(slotSize * 4, 10, slotSize, slotSize);
+    patternButtons.add(firstRowButton);
+    add(firstRowButton);
+    JButton secondRowButton = new JButton();
+    secondRowButton.setBounds(slotSize * 3, 15 + slotSize, slotSize * 2, slotSize);
+    patternButtons.add(secondRowButton);
+    add(secondRowButton);
+    JButton thirdRowButton = new JButton();
+    thirdRowButton.setBounds(slotSize * 2, 20 + slotSize * 2, slotSize * 3, slotSize);
+    patternButtons.add(thirdRowButton);
+    add(thirdRowButton);
+    JButton fourthRowButton = new JButton();
+    fourthRowButton.setBounds(slotSize, 25 + slotSize * 3, slotSize * 4, slotSize);
+    patternButtons.add(fourthRowButton);
+    add(fourthRowButton);
+    JButton fifthRowButton = new JButton();
+    fifthRowButton.setBounds(0, 30 + slotSize * 4, slotSize * 5, slotSize);
+    patternButtons.add(fifthRowButton);
+    add(fifthRowButton);
+
+    hidePatternLineButtons();
+  }
+
+
+  private void hidePatternLineButtons() {
+    for (JButton patternButton : patternButtons) {
+      patternButton.setOpaque(false);
+      patternButton.setContentAreaFilled(false);
+      patternButton.setBorderPainted(false);
+    }
+  }
+
+
+  private void addButtonsActionListener() {
+    for (int i = 0; i < 5; i++) {
+      final int count = i;
+      patternButtons.get(count).addActionListener(e -> {
+        System.out.println(player.getNickname() + ", pattern row: " + count);
+        if (myNickname.equals("") ||
+            (player.getPlayerState().equals(PlayerState.TO_MOVE) && player.getNickname()
+                .equals(myNickname))) {
+          controller.placeTiles(player, count);
+        }
+      });
+    }
+  }
+
+
+  @Override
+  protected void paintComponent(Graphics g) {
+    // super.paintComponent(g);
+    setOpaque(false);
+    drawPatternLines(g);
+  }
+
+
+  private void drawPatternLines(Graphics g) {
+    ((Graphics2D) g).setStroke(new BasicStroke(1));
 
     for (int row = 0; row < 5; row++) {
       for (int col = 4 - row; col < 5; col++) {
-        g2D.setColor(colorScheme.patternlineFrame());
-        g2D.drawRect(col * slotSize, 10 + row * slotSize + row * 5, slotSize, slotSize);
+        g.setColor(colorScheme.patternlineFrame());
+        g.drawRect(col * slotSize, 10 + row * slotSize + row * 5, slotSize, slotSize);
 
+        // TODO: invern indexes and get rid of initializePatternLines() invertion
         if (patternLines[row][4 - col] != null) {
           String customColor = patternLines[row][4 - col].toString();
           Color tileColor = switch (customColor) {
@@ -138,14 +142,15 @@ public class DrawPattern extends JPanel {
             default -> colorScheme.playerboard();
           };
 
-          g2D.setColor(tileColor);
-          g2D.fillRoundRect(col * slotSize + borderSize,
+          g.setColor(tileColor);
+          g.fillRoundRect(col * slotSize + borderSize,
               10 + row * slotSize + row * 5 + borderSize,
               tileSize, tileSize, arcSize, arcSize);
         }
       }
     }
   }
+
 
   /**
    * Setter for color scheme of the pattern lines.
@@ -156,13 +161,23 @@ public class DrawPattern extends JPanel {
     this.colorScheme = colorScheme;
   }
 
+
   /**
    * Routing endpoint for my nickname from multiplayer mode client for identification of allowed
    * pattern events.
    *
-   * @param myNickname
+   * @param myNickname player's nickname
    */
   public void setMyNickname(String myNickname) {
     this.myNickname = myNickname;
+  }
+
+
+  public int getPatternCellSize() {
+    return slotSize;
+  }
+
+  public void setPatternSlotSize(int newSize) {
+    this.slotSize = newSize;
   }
 }

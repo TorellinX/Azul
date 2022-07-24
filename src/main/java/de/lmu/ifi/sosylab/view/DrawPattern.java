@@ -42,6 +42,7 @@ public class DrawPattern extends JPanel {
     this.controller = controller;
 
     setPreferredSize(new Dimension(5 * slotSize + 5, 5 * slotSize + 40));
+    setOpaque(false);
     setLayout(null);
 
     addPatternLineButtons();
@@ -114,7 +115,6 @@ public class DrawPattern extends JPanel {
   @Override
   protected void paintComponent(Graphics g) {
     // super.paintComponent(g);
-    setOpaque(false);
     updatePatternLines();
     drawPatternLines(g);
   }

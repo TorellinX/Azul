@@ -28,6 +28,7 @@ public class DrawFloorline extends JPanel {
   private final String[] textPenaltyPoints = new String[]{"-1", "-1", "-2", "-2", "-2", "-3", "-3"};
   private final Player player;
   private String myNickname = "";
+  private final int FLOORLINE_CAPACITY = 7;
 
   /**
    * Constructs the floorline and links it to player and controller.
@@ -37,15 +38,21 @@ public class DrawFloorline extends JPanel {
    */
   public DrawFloorline(Player player, Controller controller) {
     this.player = player;
-    setPreferredSize(new Dimension(7 * slotSize + 10, 60));
+    setPreferredSize(new Dimension(FLOORLINE_CAPACITY * slotSize + 10, 60));
+    setOpaque(false);
     setLayout(null);
 
+    addFloorLineButton(controller);
+  }
+
+  private void addFloorLineButton(Controller controller) {
     JButton floorlineButton = new JButton();
-    add(floorlineButton);
-    floorlineButton.setBounds(0, 20, getFloorlineCellSize() * 7, getFloorlineCellSize());
+    floorlineButton.setBounds(0, 20, slotSize * FLOORLINE_CAPACITY, slotSize);
     floorlineButton.setOpaque(false);
     floorlineButton.setContentAreaFilled(false);
     floorlineButton.setBorderPainted(false);
+    add(floorlineButton);
+
     floorlineButton.addActionListener(e -> {
       System.out.println(player.getNickname() + " - " + "floorLineButton");
       if (myNickname.equals("") ||
@@ -53,62 +60,58 @@ public class DrawFloorline extends JPanel {
               .equals(myNickname))) {
         controller.placeTiles(player, -1);
       }
-      // controller.placeTiles(player, -1);
     });
-
-  }
-
-  public int getFloorlineCellSize() {
-    return slotSize;
-  }
-
-  public void setFloorlineCellSize(int newSize) {
-    this.slotSize = newSize;
   }
 
 
   @Override
   protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    setBackground(colorScheme.playerboard());
-    Graphics2D g2D = (Graphics2D) g;
+    //super.paintComponent(g);
+    drawFloorlineText(g);
+    drawFloorlineFrames(g);
+    drawFloorlineTiles(g);
+  }
 
-    g2D.setColor(colorScheme.floorlineFrame());
+  private void drawFloorlineText(Graphics g) {
+    g.setColor(colorScheme.floorlineFrame());
     for (int i = 0; i < textPenaltyPoints.length; i++) {
-      g2D.drawString(textPenaltyPoints[i], slotSize * i, 15);
+      g.drawString(textPenaltyPoints[i], slotSize * i  + (slotSize/3), 15);
     }
+  }
 
-    g2D.setStroke(new BasicStroke(2));
-
-    List<Tile> floorLine = player.getPlayerBoard().getFloorLine();
-
-    for (int col = 0; col < textPenaltyPoints.length; col++) {
-      g2D.setColor(colorScheme.floorlineFrame());
-      g2D.drawRect(col * slotSize, 20, slotSize, slotSize);
+  public void drawFloorlineFrames(Graphics g) {
+    ((Graphics2D) g).setStroke(new BasicStroke(2));
+    g.setColor(colorScheme.floorlineFrame());
+    for (int col = 0; col < FLOORLINE_CAPACITY; col++) {
+      g.drawRect(col * slotSize, 20, slotSize, slotSize);
     }
+  }
 
-    if (floorLine.size() != 0) {
-      for (int col = 0; col < floorLine.size(); col++) {
-        if (floorLine.get(col) instanceof PenaltyTile) {
-          g.setColor(colorScheme.penalty());
-        } else {
-          switch (floorLine.get(col).toString()) {
-            case "BLUE" -> g.setColor(colorScheme.blue());
-            case "YELLOW" -> g.setColor(colorScheme.yellow());
-            case "RED" -> g.setColor(colorScheme.red());
-            case "BLACK" -> g.setColor(colorScheme.black());
-            case "WHITE" -> g.setColor(colorScheme.green());
-            default -> g.setColor(colorScheme.playerboard());
-          }
+  private void drawFloorlineTiles(Graphics g) {
+    List<Tile> floorLineTiles = player.getPlayerBoard().getFloorLine();
+    if (floorLineTiles.size() == 0) {
+      return;
+    }
+    for (int col = 0; col < floorLineTiles.size(); col++) {
+      if (floorLineTiles.get(col) instanceof PenaltyTile) {
+        g.setColor(colorScheme.penalty());
+      } else {
+        switch (floorLineTiles.get(col).toString()) {
+          case "BLUE" -> g.setColor(colorScheme.blue());
+          case "YELLOW" -> g.setColor(colorScheme.yellow());
+          case "RED" -> g.setColor(colorScheme.red());
+          case "BLACK" -> g.setColor(colorScheme.black());
+          case "WHITE" -> g.setColor(colorScheme.green());
+          default -> g.setColor(colorScheme.playerboard());
         }
-        g2D.fillRoundRect(col * slotSize + borderSize, 20 + borderSize, tileSize, tileSize,
-            arcSize, arcSize);
-        if (floorLine.get(col) instanceof PenaltyTile) {
-          g2D.setColor(colorScheme.penaltyText());
-          g2D.setFont(this.getFont().deriveFont(Font.BOLD, 18));
-          g2D.drawString("1", col * slotSize + borderSize + tileSize / 3,
-              20 + borderSize + 2 * tileSize / 3);
-        }
+      }
+      g.fillRoundRect(col * slotSize + borderSize, 20 + borderSize, tileSize, tileSize,
+          arcSize, arcSize);
+      if (floorLineTiles.get(col) instanceof PenaltyTile) {
+        g.setColor(colorScheme.penaltyText());
+        g.setFont(this.getFont().deriveFont(Font.BOLD, 18));
+        g.drawString("1", col * slotSize + borderSize + tileSize / 3,
+            20 + borderSize + 2 * tileSize / 3);
       }
     }
   }
@@ -126,10 +129,19 @@ public class DrawFloorline extends JPanel {
    * Routing for my nickname from multiplayer mode client for identification of allowed floorline
    * events.
    *
-   * @param myNickname
+   * @param myNickname player's nickname
    */
   public void setMyNickname(String myNickname) {
     this.myNickname = myNickname;
+  }
+
+
+  public int getFloorlineSlotSize() {
+    return slotSize;
+  }
+
+  public void setFloorlineCellSize(int newSize) {
+    this.slotSize = newSize;
   }
 }
 

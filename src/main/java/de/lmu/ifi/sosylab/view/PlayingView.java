@@ -1,12 +1,15 @@
 package de.lmu.ifi.sosylab.view;
 
 import de.lmu.ifi.sosylab.controller.Controller;
+import de.lmu.ifi.sosylab.controller.GameController;
 import de.lmu.ifi.sosylab.model.GameModel;
 import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.State;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.KeyboardFocusManager;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -167,6 +170,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       playerBoards[i] = new DrawPlayerBoard(players.get(i), controller, colorScheme);
       playerBoards[i].setColorScheme(colorScheme);
     }
+    System.out.println("myNicknameIndex: " + myNicknameIndex);
     playerBoards[myNicknameIndex].setMyNickname(
         myNickname);      // route myNickname for player board
 
@@ -207,7 +211,12 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     menuItems.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         if (menuItems.getSelectedItem().equals("end game")) {
-          System.exit(0);
+          // TODO: new JOptionPane "Do you want to end the game?
+          closeWindow();
+        }
+        if (menuItems.getSelectedItem().equals("restart")) {
+          // TODO: new JOptionPane "Do you want to restart the game?
+          restart();
         }
         System.out.println(menuItems.getSelectedItem());
       }
@@ -215,6 +224,23 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       private void dispose() {
       }
     });
+  }
+
+  private void closeWindow() {
+    Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+    if (window != null)
+    {
+      WindowEvent windowClosing = new WindowEvent(window, WindowEvent.WINDOW_CLOSING);
+      window.dispatchEvent(windowClosing);
+    }
+  }
+
+  private void restart() {
+    closeWindow();
+    GameModel newModel = new GameModel();
+    Controller newController = new GameController(newModel);
+    new PlayingView(players.size(), nicknames, nicknames.get(myNicknameIndex), colorScheme,
+        newController, newModel);
   }
 
   /**

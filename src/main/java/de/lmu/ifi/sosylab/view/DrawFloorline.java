@@ -74,6 +74,7 @@ public class DrawFloorline extends JPanel {
 
   private void drawFloorlineText(Graphics g) {
     g.setColor(colorScheme.floorlineFrame());
+    g.setFont(this.getFont().deriveFont(Font.BOLD, 14));
     for (int i = 0; i < textPenaltyPoints.length; i++) {
       g.drawString(textPenaltyPoints[i], slotSize * i + (slotSize / 3), 15);
     }

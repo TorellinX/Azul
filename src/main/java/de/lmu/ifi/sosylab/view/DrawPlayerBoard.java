@@ -19,9 +19,8 @@ public class DrawPlayerBoard extends JPanel {
   private final DrawWall drawWall;
   private final DrawPattern drawPattern;
   private final DrawFloorline drawFloorline;
-  private JLabel playerNameLabel;
-  private JPanel labelPanel;
-  private JLabel scoreLabel;
+  private final JPanel namePanel;
+  private final JLabel scoreLabel;
   private Player player;
   private ColorScheme colorScheme;
 
@@ -40,35 +39,46 @@ public class DrawPlayerBoard extends JPanel {
     setBackground(colorScheme.playerboard());
 
     // North: Player nick mit background color change für active player
-    labelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    playerNameLabel = new JLabel("<html><font size=\"5\">"
+    namePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JLabel playerNameLabel = new JLabel("<html><font size=\"5\">"
         + player.getNickname() + "</font></html>");
-    labelPanel.setPreferredSize(new Dimension(playerBoardPreferredWidth(), 30));
-    labelPanel.add(playerNameLabel);
+    namePanel.setPreferredSize(new Dimension(playerBoardPreferredWidth(), 30));
+    namePanel.add(playerNameLabel);
     setPlayerLabelBackgroundColor(player);
-    add(labelPanel, BorderLayout.NORTH);
+    add(namePanel, BorderLayout.NORTH);
 
     // linke Seite: die pattern lines mit Buttons
     add(drawPattern, BorderLayout.EAST);
 
     // Mitte ggf ein gap?
-    JPanel gapPanel = new JPanel();
-    gapPanel.setOpaque(false);
-    gapPanel.setPreferredSize(new Dimension(20, 150));
-    add(gapPanel, BorderLayout.CENTER);
+    JPanel gapPanelCenter = new JPanel();
+    gapPanelCenter.setOpaque(false);
+    gapPanelCenter.setPreferredSize(new Dimension(20, 150));
+    add(gapPanelCenter, BorderLayout.CENTER);
 
     // rechte Seite: die Wall
     add(drawWall, BorderLayout.WEST);
 
     // South: floor line mit score
-    JPanel floorLinePanel = new JPanel((new BorderLayout()));
+    JPanel floorLinePanel = new JPanel((new FlowLayout()));
     floorLinePanel.setBackground(colorScheme.playerboard());
-    floorLinePanel.add(drawFloorline, BorderLayout.WEST);
+
+    floorLinePanel.add(drawFloorline);
+
+    JPanel scorePanel = new JPanel(new BorderLayout());
+    scorePanel.setOpaque(false);
+    scorePanel.setPreferredSize(new Dimension(163, 60));
+    floorLinePanel.add(scorePanel);
     scoreLabel = new JLabel();
     setScoreLabel(player.getScore());
-    floorLinePanel.add(scoreLabel, BorderLayout.EAST);
-    add(floorLinePanel, BorderLayout.SOUTH);
+    scorePanel.add(scoreLabel, BorderLayout.EAST);
 
+    JPanel gapPanelFloor = new JPanel();
+    gapPanelFloor.setOpaque(false);
+    gapPanelFloor.setPreferredSize(new Dimension(0, 20));
+    floorLinePanel.add(gapPanelFloor);
+
+    add(floorLinePanel, BorderLayout.SOUTH);
     setPreferredSize(playerBoardPreferredSize(1));
     setVisible(true);
   }
@@ -82,9 +92,9 @@ public class DrawPlayerBoard extends JPanel {
   public void setPlayerLabelBackgroundColor(Player player) {
 
     if (player.getPlayerState().equals(PlayerState.TO_MOVE)) {
-      labelPanel.setBackground(colorScheme.activePlayer());
+      namePanel.setBackground(colorScheme.activePlayer());
     } else {
-      labelPanel.setBackground(colorScheme.inactivePlayer());
+      namePanel.setBackground(colorScheme.inactivePlayer());
     }
 
   }
@@ -96,8 +106,7 @@ public class DrawPlayerBoard extends JPanel {
    */
   public void setScoreLabel(int playerScore) {
     scoreLabel.setForeground(colorScheme.scoreText());
-    scoreLabel.setText("<html><font size=\"5\"> Score: " + Integer.toString(playerScore)
-        + "</font></html>");
+    scoreLabel.setText("<html><font size=\"5\"> Score: " + playerScore + "</font></html>");
   }
 
   /**
@@ -107,8 +116,8 @@ public class DrawPlayerBoard extends JPanel {
    * @return preferred dimension
    */
   public Dimension playerBoardPreferredSize(int playerNumberScaling) {
-    int horizontal = 0;
-    int vertical = 0;
+    int horizontal;
+    int vertical;
     horizontal = playerBoardPreferredWidth();
     vertical = playerNumberScaling * drawWall.getWallFrameSize() + 125;   // magic number ....
     return new Dimension(horizontal, vertical);
@@ -141,7 +150,7 @@ public class DrawPlayerBoard extends JPanel {
    * Routing for my nickname from multiplayer mode client for identification of active board events
    * listeners.
    *
-   * @param myNickname
+   * @param myNickname player's nickname
    */
   public void setMyNickname(String myNickname) {
     drawPattern.setMyNickname(myNickname);

@@ -59,7 +59,7 @@ public class DrawboardTableCenter extends JPanel {
     if (playerNumber > 2) {
       setPreferredSize(new Dimension(410, 900));
     } else {
-      setPreferredSize(new Dimension(410, 700));
+      setPreferredSize(new Dimension(410, 720));
     }
     this.model = model;
     this.controller = controller;
@@ -108,10 +108,10 @@ public class DrawboardTableCenter extends JPanel {
     try {
       Objects.requireNonNull(stream);
       backgroundImg = ImageIO.read(stream);
+      g2D.drawImage(backgroundImg, 0, 0, 410, 900, this);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    g2D.drawImage(backgroundImg, 0, 0, 410, 900, this);
   }
 
 
@@ -165,6 +165,26 @@ public class DrawboardTableCenter extends JPanel {
     g2D.fillRoundRect(tableCoordinates.getX(), tableCoordinates.getY(), tableWidth, tableHeight, 20,
         20);
     drawTableCenterTiles(g2D);
+
+    // message field
+    g2D.setColor(colorScheme.inactivePlayer());
+    g2D.fillRoundRect(tableCoordinates.getX(), tableCoordinates.getY() + tableHeight + 10,
+        tableWidth, 30, 20,
+        20);
+    drawMessage(g2D, model.getMessage());
+  }
+
+  /**
+   * Draws the turn's state message on the message field.
+   *
+   * @param g2D     graphics object
+   * @param message the turn's state message
+   */
+  private void drawMessage(Graphics2D g2D, String message) {
+    g2D.setColor(Color.BLACK);
+    g2D.setFont(this.getFont().deriveFont(Font.PLAIN, 14));
+    g2D.drawString(message, tableCoordinates.getX() + 5,
+        tableCoordinates.getY() + tableHeight + 25);
   }
 
   /**
@@ -263,6 +283,9 @@ public class DrawboardTableCenter extends JPanel {
       int horizontalCache = positionTilesTableCenter.get(i).getX();
       int verticalCache = positionTilesTableCenter.get(i).getY();
       if (x == horizontalCache && y == verticalCache) {
+        if (model.getTableCenter().getTiles().size() - 1 < i) {
+          return null;
+        }
         if (model.getTableCenter().getTiles().get(i) instanceof PenaltyTile) {
           return null; // try to pick the penalty tile
         }

@@ -7,7 +7,9 @@ import de.lmu.ifi.sosylab.model.Player;
 import de.lmu.ifi.sosylab.model.State;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -85,6 +87,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     createPlayingView();
     addListeners();
     pack();
+    setFrameLocationToScreenCenter();
     setVisible(true);
   }
 
@@ -144,10 +147,8 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   private void createPlayingView() {
 
-    // Menu
-    //Oberes Panel wird mit Combobox gefüllt.
+    // Menu with ComboBox
     menu = new JPanel();
-    // menu.setSize(1200, 75);
     menu.setLayout(new FlowLayout(FlowLayout.CENTER));
     menu.setBackground(colorScheme.menu());
     ColorScheme.changeFontOf(menuItems);
@@ -155,7 +156,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
     add(menu, BorderLayout.NORTH);
 
     // Mittlere Zone wird befüllt
-    // Center definieren: table center
+    // Center: table center
     JPanel playingViewCenter = new JPanel(new FlowLayout(FlowLayout.CENTER));
     playingViewCenter.setOpaque(false);
     drawboardTableCenter = new DrawboardTableCenter(model, controller, players.size());
@@ -188,7 +189,7 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
       playingViewLeft.add(playerBoards[2], BorderLayout.SOUTH);
     }
 
-    if (players.size() > 3) {
+    if (players.size() == 4) {
       playingViewRight.setPreferredSize(playerBoards[2].playerBoardPreferredSize(2));
       playingViewRight.add(playerBoards[2], BorderLayout.SOUTH);
       playingViewLeft.setPreferredSize(playerBoards[3].playerBoardPreferredSize(2));
@@ -297,6 +298,16 @@ public class PlayingView extends JFrame implements PropertyChangeListener {
 
   private void setColors(ColorScheme colorScheme) {
     this.colorScheme = colorScheme;
+  }
+
+  /**
+   * Places the window in the middle of the screen.
+   */
+  private void setFrameLocationToScreenCenter() {
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+    Dimension screenSize = toolkit.getScreenSize();
+    this.setLocation((screenSize.width - this.getWidth()) / 2,
+        (screenSize.height - this.getHeight()) / 2);
   }
 
 }

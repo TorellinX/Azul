@@ -125,8 +125,12 @@ public class DrawPattern extends JPanel {
 
     for (int row = 0; row < 5; row++) {
       for (int col = 4 - row; col < 5; col++) {
+        g.setColor(colorScheme.wallBackground());
+        g.fillRoundRect(col * slotSize, 10 + row * slotSize + row * 5, slotSize, slotSize, arcSize,
+            arcSize);
         g.setColor(colorScheme.patternlineFrame());
-        g.drawRect(col * slotSize, 10 + row * slotSize + row * 5, slotSize, slotSize);
+        g.drawRoundRect(col * slotSize, 10 + row * slotSize + row * 5, slotSize, slotSize, arcSize,
+            arcSize);
 
         // TODO: invern indexes and get rid of initializePatternLines() invertion
         if (patternLines[row][4 - col] != null) {

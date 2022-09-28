@@ -13,6 +13,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
@@ -45,7 +46,7 @@ public class HotseatMenuView extends JFrame {
   /**
    * Constructor - see class description.
    */
-  public HotseatMenuView() {
+  public HotseatMenuView(Point location) {
     super("Azul - New Local Game");
     thisFrame = this;
     setLayout(new BorderLayout());
@@ -88,7 +89,7 @@ public class HotseatMenuView extends JFrame {
     addBackButton();
     gameControlPanel.add(controlButtonsPanel, BorderLayout.CENTER);
 
-    // Ende set-up, packen, sichtbar machen
+    this.setLocation((int) location.getX(), (int) location.getY());
     pack();
     setVisible(true);
 

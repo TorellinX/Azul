@@ -47,6 +47,7 @@ public class GameModel {
   private Player playerToMove;
   private int round = 1;
   List<ColorTile> selectedTiles = new ArrayList<>();
+  private String message = "";
 
   public State getState() {
 
@@ -141,12 +142,18 @@ public class GameModel {
   // (patternLines (0-4) or floorLine (-1)
   public synchronized boolean setTiles(Player player, int row) {
     if (roundState != RoundState.PICKED) {
+      message = player.nickname + ", please pick tiles.";
+      notifyListeners(MODEL_CHANGED);
       return false;
     }
     if (player.getPlayerState() != PlayerState.TO_MOVE) {
+      message = "Set tiles to active player's board.";
+      notifyListeners(MODEL_CHANGED);
       throw new IllegalArgumentException("\"set to row\" event from non-active player");
     }
     System.out.println("    Setting tiles to row " + row + "...");
+    message = "";
+    notifyListeners(MODEL_CHANGED);
     if (!setTilesToRow(player, row)) {
       return false;
     }
@@ -291,6 +298,7 @@ public class GameModel {
     }
     roundState = RoundState.PICKED;
     System.out.println("    roundState: PICKED " + selectedTiles + " tiles");
+    message = selectedTiles.size() + " " + selectedTiles.get(0).toString() + " picked.";
     notifyListeners(MODEL_CHANGED);
     return true;
   }
@@ -316,6 +324,7 @@ public class GameModel {
     selectedTiles.addAll(tiles.colorTiles());
     roundState = RoundState.PICKED;
     System.out.println("    roundState: PICKED " + selectedTiles + " tiles");
+    message = selectedTiles.size() + " " + selectedTiles.get(0).toString() + " picked.";
     notifyListeners(MODEL_CHANGED);
     return true;
   }
@@ -352,11 +361,15 @@ public class GameModel {
     }
     if (player.playerBoard.countFreeFieldsInRow(row) == 0) {
       // the pattern line is full
+      message = "The selected line is full.";
+      notifyListeners(MODEL_CHANGED);
       System.out.println("    the pattern line is full");
       return false;
     }
     if (player.playerBoard.isColorAlreadyOnWall(selectedTiles.get(0).getColor(), row)) {
       // the color is already on the wall
+      message = "The color is already on the wall.";
+      notifyListeners(MODEL_CHANGED);
       System.out.println("    the color is already on the wall");
       return false;
     }
@@ -364,12 +377,16 @@ public class GameModel {
         .getPatternLines()[row].length
         && selectedTiles.get(0).getColor() != player.playerBoard.getPatternLineColor(row)) {
       // the line already has tiles with another color
+      message = "The color doesn't match.";
+      notifyListeners(MODEL_CHANGED);
       System.out.println("    the line already has tiles with another color "
           + player.playerBoard.getPatternLineColor(row));
       return false;
     }
     player.playerBoard.addColorTilesToLine(selectedTiles, row);
     selectedTiles.clear();
+    message = "";
+    notifyListeners(MODEL_CHANGED);
     return true;
   }
 
@@ -408,6 +425,10 @@ public class GameModel {
       names.add(player.getNickname());
     }
     return names;
+  }
+
+  public String getMessage() {
+    return new String(message);
   }
 
   /**

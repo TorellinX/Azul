@@ -4,7 +4,9 @@ import de.lmu.ifi.sosylab.client.ClientApplication;
 import de.lmu.ifi.sosylab.view.ColorSchemes.ColorScheme;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -21,9 +23,9 @@ public class StartMenuView extends JFrame {
   private static final String LOCAL_GAME = "localGame";
   private static final String MULTIPLAYER = "multiplayer";
   private final JPanel buttons;
+  private final JFrame thisFrame;
   private JButton hotSeatButton;
   private JButton multiPlayerButton;
-  private final JFrame thisFrame;
 
   /**
    * Constructor - see class description.
@@ -54,6 +56,7 @@ public class StartMenuView extends JFrame {
 
     // Default action beim Klicken auf "X"
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setFrameLocationToScreenCenter();
   }
 
 
@@ -62,10 +65,20 @@ public class StartMenuView extends JFrame {
     ColorScheme.changeFontOf(hotSeatButton);
     buttons.add(hotSeatButton);
     hotSeatButton.addActionListener(e -> {
-      new HotseatMenuView();
+      new HotseatMenuView(this.getLocation());
       closeWindow();
       // thisFrame.setVisible(false);
     });
+  }
+
+  /**
+   * Places the window in the middle of the screen.
+   */
+  private void setFrameLocationToScreenCenter() {
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+    Dimension screenSize = toolkit.getScreenSize();
+    this.setLocation((screenSize.width - this.getWidth()) / 2,
+        (screenSize.height - this.getHeight()) / 2);
   }
 
   private void closeWindow() {

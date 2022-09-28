@@ -84,7 +84,7 @@ public class DrawFloorline extends JPanel {
     ((Graphics2D) g).setStroke(new BasicStroke(2));
     g.setColor(colorScheme.floorlineFrame());
     for (int col = 0; col < FLOORLINE_CAPACITY; col++) {
-      g.drawRect(col * slotSize, 20, slotSize, slotSize);
+      g.drawRoundRect(col * slotSize, 20, slotSize, slotSize, arcSize, arcSize);
     }
   }
 
@@ -109,10 +109,10 @@ public class DrawFloorline extends JPanel {
   }
 
   private void drawPenaltyTileText(Graphics g, int floorlineColumn) {
-      g.setColor(colorScheme.penaltyText());
-      g.setFont(this.getFont().deriveFont(Font.BOLD, 18));
-      g.drawString("1", floorlineColumn * slotSize + borderSize + tileSize / 3,
-          20 + borderSize + 2 * tileSize / 3);
+    g.setColor(colorScheme.penaltyText());
+    g.setFont(this.getFont().deriveFont(Font.BOLD, 18));
+    g.drawString("1", floorlineColumn * slotSize + borderSize + tileSize / 3,
+        20 + borderSize + 2 * tileSize / 3);
   }
 
   /**
